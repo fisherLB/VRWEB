@@ -1,0 +1,261 @@
+﻿@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    //var dqlist = MvcCore.Unity.Get<JN.Data.Service.ITimeDepositService>().List(x => x.UID == Umodel.ID && x.Status < 2);
+    //decimal mydq = dqlist.Count() > 0 ? dqlist.Sum(x => x.DepositAmount) : 0;
+
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">@T("完善资料")</div>
+</header>
+
+<section class="container">
+    @*<div class="setting-menu setting-photo" onclick="showtab('coinWarp');">
+        <div class="setting-img">
+            <img src="@(string.IsNullOrEmpty(Model.HeadFace) ? "/Theme/App/images/member.png" : Model.HeadFace)" id="preview" />
+        </div>
+
+        <h1>ID:@Model.UserName</h1>
+        <div class="member">
+            <img src="/Theme/APP/images/ico_member.png">
+            G @Model.UserLevel @T("会员")
+        </div>
+        <div class="user-level">
+        </div>
+        <span>@T("更换头像")</span>
+    </div>
+    <div class="clr-small"></div>*@
+
+    <div class="setting-form">
+        <div class="form-widget">
+            <form method="post" id="form" enctype="multipart/form-data">
+                @*<div class="head-cont">
+                    <div id="preview">
+                        <img class="user-logo" id="imghead" onclick="$('#previewImg').click();" src="@(string.IsNullOrEmpty(Model.HeadFace) ? "/theme/app/picture/head_portrait60.png" : Model.HeadFace)" alt="">
+                    </div>
+                    <a class="edit-logo">@T("编辑头像")</a>
+                    <input class="avatar-input" name="face" onchange="previewImage(this)" id="previewImg" type="file" accept="/theme/app/image/jpg,image/jpeg,image/png">
+                </div>*@
+
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>@T("用户名")</label>
+                        <div class="form-control">@Model.UserName</div>
+                    </div>
+                    <div class="form-group">
+                        <label>@T("真实姓名")</label>
+                        <input class="form-control" placeholder="@T("请输入真实姓名")" type="text" name="RealName" value="@Model.RealName" @(string.IsNullOrEmpty(Model.RealName)?"":"readonly")>
+                    </div>
+                    <div class="form-group">
+                        <label>@T("身份证号")</label>
+                        <input class="form-control" placeholder="@T("请输入身份证号")" type="number" name="IDCard" value="@Model.IDCard" @(string.IsNullOrEmpty(Model.IDCard)?"":"readonly")>
+                    </div>
+                    @*<div class="form-group">
+                        <label>@T("支付宝")</label>
+                        <input class="form-control" placeholder="@T("请输入支付宝")" type="text" name="AliPay" value="@Model.AliPay" @(string.IsNullOrEmpty(Model.IDCard)?"":"readonly")>
+                    </div>
+                    <div class="form-group">
+                        <label>@T("微信")</label>
+                        <input class="form-control" placeholder="@T("请输入微信")" type="text" name="WeiXin" value="@Model.AliPay" @(string.IsNullOrEmpty(Model.IDCard)?"":"readonly")>
+                    </div>
+                    <div class="form-group">
+                        <label>@T("银行名称")</label>
+                        @Html.DropDownList("BankName", new SelectList(MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.PID == 5000).OrderBy(x => x.Sort), "Name", "Value", Model.BankName), new { @class = "form-control" })
+
+                    </div>
+                    <div class="form-group">
+                        <label>@T("银行卡号")</label>
+                        <input class="form-control" placeholder="@T("请输入银行卡号")" type="text" name="BankCard" value="@Model.BankCard" @(string.IsNullOrEmpty(Model.BankCard)?"":"readonly")>
+                    </div>
+                    <div class="form-group">
+                        <label>@T("开户行")</label>
+                        <input class="form-control" placeholder="@T("请输入开户行")" type="text" name="BankOfDeposit" value="@Model.BankOfDeposit" @(string.IsNullOrEmpty(Model.BankOfDeposit)?"":"readonly")>
+                    </div>
+                    <div class="form-group">
+                        <label>@T("银行户名")</label>
+                        <input class="form-control" placeholder="@T("请输入银行户名")" type="text" name="BankUser" value="@Model.BankUser" @(string.IsNullOrEmpty(Model.BankUser)?"":"readonly")>
+                    </div>*@
+                </div>
+                <div class="form-submit">
+                    <button type="button" class="form-submit-btn" onclick="changeSubmit()" id="btnEdit">@T("确定")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="container clear-float main">
+    @*@Html.Partial("/Areas/APP/Views/Home/_Security.cshtml")*@
+    @*<div class="fr">
+        <div class="setting-title">@T("基本信息")</div>
+        <form method="post" id="form" enctype="multipart/form-data">
+            <div class="setting-panel">
+                <div class="head-cont">
+                    <div id="preview">
+                        <img class="user-logo" id="imghead" onclick="$('#previewImg').click();" src="@(string.IsNullOrEmpty(Model.HeadFace) ? "/theme/app/picture/head_portrait60.png" : Model.HeadFace)" alt="">
+                    </div>
+                    <a class="edit-logo">@T("编辑头像")</a>
+                    <input class="avatar-input" name="face" onchange="previewImage(this)" id="previewImg" type="file" accept="/theme/app/image/jpg,image/jpeg,image/png">
+                </div><div class="user-profile">
+                    <div class="user-name"></div>
+                    <!-- <div class="grey-text">VIP 666</div> -->
+                    <ul class="profile-detail">
+                        <li class="profile-item">
+                            <span class="item-name">UID: </span><span class="item-text">@Model.UserName</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("身份认证"): </span>
+                            <a href="@(!(Model.IsAuthentication ?? false) ? "/App/user/NameAuth" : "###")" class="link">@T(!(Model.IsAuthentication ?? false) ? "未认证" : "已认证")</a>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("电子邮件"): </span>
+                            <a href="@(!(Model.IsEmail ?? false) ? "/App/user/EmailSettings" : "###")" class="link">@T(!(Model.IsEmail ?? false) ? "未验证" : "已验证")</a>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("手机号码"): </span>
+                            <a href="@(!(Model.IsMobile ?? false) ? "/App/user/phonesettings" : "###")" class="link">@T(!(Model.IsMobile ?? false) ? "未绑定" : Model.CountryCode + " " + Model.Mobile)</a>
+                        </li>
+
+                        <li class="profile-item">
+                            <span class="item-name">@T("注册时间"): </span>
+                            <span class="item-text">@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("最后一次登录时间"): </span>
+                            <span class="item-text">@((Model.LastLoginTime ?? DateTime.Now).ToString("yyyy-MM-dd HH:mm:ss"))</span>
+                        </li>
+                        @{
+                            //信任的人
+                            string[] ids = (Model.TrustPath ?? "").Split(',');
+                            var countnum = MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => ids.Contains(x.ID.ToString())).Count();
+                            //好评率
+                            double haopinlv = 0;
+                            if (((Model.Positive ?? 0) + (Model.Neutral ?? 0) + (Model.Negative ?? 0)) > 0)
+                            {
+                                haopinlv = ((double)(Model.Positive ?? 0) / (double)((Model.Positive ?? 0) + (Model.Neutral ?? 0) + (Model.Negative ?? 0))) * 100;
+                            }
+                        }
+                        <li class="profile-item">
+                            <span class="item-name">@T("信任人数"): </span>
+                            <span class="item-text">@T("被")@(countnum)@T("人信任")</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("累计交易次数"): </span>
+                            <span class="item-text">@(Model.TransactionNum ?? 0)</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("好评率"): </span>
+                            <span class="item-text">@(haopinlv)%</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("信用值"): </span>
+                            <span class="item-text">@(Model.CreditValue)</span>
+                        </li>
+                        <li class="profile-item">
+                            <span class="item-name">@T("好评分"): </span>
+                            <span class="item-text">@(Model.GoodScore)</span>
+                        </li>
+
+                    </ul>
+                    <div class="form-cont">
+                        <div class="input-cont new-ad">
+                            <textarea class="input textarea" name="intro" placeholder="@T("简介，在您的公共数据上展示您的介绍信息。纯文本，不超过200个字")">@Model.UserInfo</textarea>
+                            <div class="mt-10">@T("请勿填写您的注册邮箱，避免收到钓鱼邮件")</div>
+                        </div>
+                        <a class="btn submit fr save-mark" onclick="changeSubmit()">@T("保存")</a>
+                    </div>
+                </div>
+            </div>
+
+        </form>
+    </div>*@
+</div>
+
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script>
+
+    function changeSubmit() {
+        $("#form").ajaxSubmit({
+            url: "/App/user/MyInfo",
+            type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("修改成功")", { icon: 1 }, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                }
+            },
+            error: function (error) {
+                //alert(error);
+                layer.msg(error, { icon: 2 });
+            }
+        });
+}
+
+</script>
+
+<script>
+    //图片上传预览    IE是用了滤镜。
+    function previewImage(file) {
+        var MAXWIDTH = 90;
+        var MAXHEIGHT = 90;
+        var div = document.getElementById('preview');
+        if (file.files && file.files[0]) {
+            div.innerHTML = '<img id=imghead onclick=$("#previewImg").click()>';
+            var img = document.getElementById('imghead');
+            img.onload = function () {
+                var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+                img.width = rect.width;
+                img.height = rect.height;
+                //                 img.style.marginLeft = rect.left+'px';
+                img.style.marginTop = rect.top + 'px';
+            }
+            var reader = new FileReader();
+            reader.onload = function (evt) { img.src = evt.target.result; }
+            reader.readAsDataURL(file.files[0]);
+        }
+        else //兼容IE
+        {
+            var sFilter = 'filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';
+            file.select();
+            var src = document.selection.createRange().text;
+            div.innerHTML = '<img id=imghead>';
+            var img = document.getElementById('imghead');
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);
+            status = ('rect:' + rect.top + ',' + rect.left + ',' + rect.width + ',' + rect.height);
+            div.innerHTML = "<div id=divhead style='width:" + rect.width + "px;height:" + rect.height + "px;margin-top:" + rect.top + "px;" + sFilter + src + "\"'></div>";
+        }
+        layer.msg("@T("头像上传成功，请点击保存")", { icon: 1 });
+        //alert("头像上传成功，请点击保存")
+    }
+    function clacImgZoomParam(maxWidth, maxHeight, width, height) {
+        var param = { top: 0, left: 0, width: width, height: height };
+        if (width > maxWidth || height > maxHeight) {
+            rateWidth = width / maxWidth;
+            rateHeight = height / maxHeight;
+
+            if (rateWidth > rateHeight) {
+                param.width = maxWidth;
+                param.height = Math.round(height / rateWidth);
+            } else {
+                param.width = Math.round(width / rateHeight);
+                param.height = maxHeight;
+            }
+        }
+        param.left = Math.round((maxWidth - param.width) / 2);
+        param.top = Math.round((maxHeight - param.height) / 2);
+        return param;
+    }
+</script>
+
+
+
+

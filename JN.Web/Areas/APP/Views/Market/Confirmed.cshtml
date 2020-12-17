@@ -1,0 +1,294 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<link href="/Theme/App/css/trade.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return">
+	    <a href="javascript:history.go(-1);"></a>
+	</div>
+	
+	<div class="logo">@T(ViewBag.transaction)</div>
+</header>
+
+<section class="container">
+    @*<div class="tab-title">
+        <div class="tab-item">
+            <div class="lava"></div>
+            
+            <span class="active">未选择打款人</span>
+            <span>已选择打款人</span>
+        </div>
+	</div>*@
+    
+	<!--<div class="no-content">
+		<i></i>
+		<p>暂无内容</p>
+	</div>-->
+    <input type="hidden" value="@(Request["Status"])" id="Status" />
+    <input type="hidden" id="id" value="@Umodel.ID" />
+        <div id="matchingList" style="position:relative; padding-bottom:2rem;">
+            @*<div class="trade-order-list buy-order">
+                <div class="trade-order-title">
+                    <span class="fl">2018-6-29 11:01:21</span>
+                    <span class="trade-order-status fr">未完成</span>
+                </div>
+
+                <div class="trade-order-info">
+                    <a href="TradeOrderDetails.html">
+                        <div class="trade-order-people">
+                            <img src="../../Theme/images/Logo.png">
+                        </div>
+
+                        <div class="trade-order-content">
+                            <h3>卖出金额1000</h3>
+                            <p>价格：1000</p>
+                        </div>
+
+                        <div class="trade-order-number">
+                            <h1>1000</h1>
+                            <span>实付</span>
+                        </div>
+                    </a>
+                </div>
+
+                <div class="trade-order-operate">
+                    <ul>
+                        <li>
+                            <a href="">选择打款人</a>
+                            <a href="">取消</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div class="clr"></div>
+
+            <div class="load-more">
+                <a href="">点击加载更多</a>
+            </div>*@
+
+            <!--<div class="load-no-more">
+            <span>没有更多了</span>
+        </div>-->
+        </div>
+        
+        @*<div>
+            <div class="no-content">
+                <i></i>
+                <p>@T("暂无内容")</p>
+            </div>
+        </div>*@
+</section>
+<script>
+    ////Tab控制选项卡
+    //$(function () {
+    //    //下划线初始位置
+    //    $('.lava').css({ left: $('.tab-item span:first').position()['left'] });
+
+    //    $('.tab-item span').mouseover(function () {
+    //        //下划线滚动
+    //        $('.lava').stop().animate({ left: $(this).position()['left'] }, { duration: 200 });
+
+    //        //改变颜色
+    //        $(this).addClass('active').siblings().removeClass("active");
+
+    //        //内容切换
+    //        $('.tab-content').stop().animate({ left: $(this).position()['left'] * (-2) }, { duration: 200 });
+    //    });
+    //});
+</script>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script>
+
+    var Status = $("#Status").val();
+    var id = $("#id").val();
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#matchingList', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("GetConfirmed", "Market")?page=' + page + '&Status=' + Status, function (res) {
+                    var strhtml = "";
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function (index, item) {
+                        var OthersUser = item.SupplyUID == id ? item.AcceptUserName : item.SupplyUserName;
+                        var Othersid = item.SupplyUID == id ? item.AcceptUID : item.SupplyUID;
+                        var isbuy = item.SupplyUID == id ? 1 : 0;
+                        strhtml = '';
+                        strhtml += '<div class="trade-order-list buy-order">';
+                        strhtml += '<div class="trade-order-title">';
+                        strhtml += '<span class="fl">' + ChangeDateFormat(item.CreateTime) + '</span>';
+                        strhtml += '<span class="trade-order-status fr">' + item.ReserveStr1 + '</span>';
+                        strhtml += '</div>';
+                        strhtml += '<div class="trade-order-info">';
+                        strhtml += '<a href="@Url.Action("MatchDetails", "Market")?id=' + item.ID + '">';
+                        strhtml += ' <div class="trade-order-people">';
+                        strhtml += '<img src="' + item.ReserveStr2 + '">';
+                        strhtml += '</div>';
+                        strhtml += '<div class="trade-order-content">';
+                        strhtml += '<h3>@T("单号")：' + item.MatchingNo + '</h3>';
+                        if (item.Status == 1) {
+                            strhtml += '  <p>@T("剩余时间")：<span class="time_countdown" data="' + ChangeDateFormat(item.PayEndTime) + '"></span></p>';
+                        }
+                        if (item.Status == 3) {
+                            strhtml += '  <p>@T("剩余时间")：<span class="time_countdown" data="' + ChangeDateFormat(item.VerifiedEndTime) + '"></span></p>';
+                        }
+                        strhtml += '</div>';
+                        strhtml += '<div class="trade-order-number">';
+                        strhtml += '<h1>' + item.MatchAmount + '</h1>';
+                        strhtml += '<span>@T("金额")</span>';
+                        strhtml += '</div>';
+                        strhtml += '</a>';
+                        strhtml += '</div>';
+                        strhtml += '<div class="trade-order-operate">';
+                        strhtml += ' <ul>';
+                        strhtml += ' <li>';
+                        //if (item.Status == 1 && item.SupplyUID == id) {
+                        //    strhtml += '<div class="button">上传付款凭证';
+                        //    strhtml += '<form method="post" enctype="multipart/form-data" id="frmConfirmPay" class="g-core-image-upload-form frmConfirmPay' + item.ID + '" style="display: block; cursor: pointer; position: absolute; left: 0px; top: 0px; opacity: 0; margin: 0px; padding: 0px; overflow: hidden;">';
+                        //    strhtml += '<input id="g-core-upload-input-4912" onchange="checkinfo(' + item.ID + ')" name="imgurl" id="imgurl" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" style="width: 100%; height: 100%;" />';
+                        //    strhtml += '<input name="id" id="id"  type="hidden" value="' + item.ID + '" />';
+                        //    strhtml += '</form>';
+                        //    strhtml += '</div>';
+                        //}
+                        //if (item.Status == 3 && item.AcceptUID == id) {
+                        //    strhtml += ' <a href="javascript:void(0);" onclick = "VerifyPay(' + item.ID + ',1)">确认收款</a>';
+                        //    strhtml += ' <a href="javascript:void(0);" onclick = "Falsehood(' + item.ID + ',0)">虚假汇款信息</a>';
+                        //}
+                        strhtml += '<a href="@Url.Action("MatchDetails", "Market")?id=' + item.ID + '">@T("订单详情")</a>';
+                        strhtml += '</li>';
+                        strhtml += '</ul>';
+                        strhtml += '</div>';
+                        strhtml += '</div>';
+                        strhtml += '<div class="clr"></div>';
+                        lis.push(strhtml);
+                    });
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                    startime();
+                });
+            }
+        });
+
+    });
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return date.getFullYear()
+                + "-"
+                + month
+                + "-"
+                + currentDate
+                + ""
+                + " "
+                + date.getHours()
+                + ":"
+                + date.getMinutes();
+    }
+</script>
+<script>
+    @*if (window.FileReader) {
+        function checkinfo(id) {
+            $(".frmConfirmPay"+id).ajaxSubmit({
+                url: "@Url.Action("ConfirmPay", "Market")",
+                type: "post",
+                success: function (data) {
+                    if (data.Status == 200) {
+                        alert("您已成功上传凭证！确认打款：您已经成功点击【确认打款】，请联系对方点击【确认收款】！");
+                        location.href = location.href;
+                    } else {
+                        alert("付款失败：" + data.Message);
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        }
+    }
+    function VerifyPay(id, type) {
+        $.post("@Url.Action("FinshPay", "Market")", { id: id, type: type }, function (data) {
+            if (data.Status == 200) {
+                alert("您已经成功点击【确认收款】，若未收到款项，后果自负！");
+                location.href = location.href;
+            } else {
+                alert("确认失败：" + data.Message);
+            }
+        });
+    }
+    function Falsehood(id, type) {
+
+        layer.open({
+            title: false,
+            content: '不要轻易点击，否则会封掉您的账号'
+, btn: ['确定', '取消', ]
+, yes: function (index, layero) {
+    $.post("@Url.Action("FinshPay", "home")", { id: id, type: type }, function (data) {
+        if (data.Status == 200) {
+            alert("提交成功，即将为您跳转！");
+            location.href = location.href;
+        } else {
+            alert("提交失败：" + data.Message);
+        }
+    });
+}
+, cancel: function () {
+    //右上角关闭回调
+    //return false 开启该代码可禁止点击该按钮关闭
+}
+        });
+    }*@
+</script>
+<link href="~/Plugin/countdown/jquery.countdown.css" rel="stylesheet" />
+<script src="~/Plugin/countdown/jquery.countdown.js"></script>
+<script type="text/javascript">
+    function startime() {
+        $('.time_countdown').each(function () {
+            var $this = $(this);
+            var datez = new Date($this.attr('data') + '').getTime();
+            var date = new Date(datez);
+            Y = date.getFullYear() + '/';
+            M = (date.getMonth() + 1) + '/';
+            D = date.getDate() + ' ';
+            h = date.getHours() + ':';
+            m = date.getMinutes() + ':';
+            s = date.getSeconds();
+            dates = Y + M + D + h + m + s;
+            console.log(Y + M + D + h + m + s + '.......');
+            $this.countdown(datez, function (event) {
+                $(this).text(
+                        event.strftime('%-D 天 %-H 小时 %M 分钟 %S 秒')
+                );
+            });
+            datez = null;
+        });
+    }
+</script>
+
+

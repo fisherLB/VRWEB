@@ -1,0 +1,247 @@
+﻿@model JN.Data.Currency
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+
+    var cacheSysParam = JN.Services.Manager.CacheHelp.GetSysParamsList();
+    List<JN.Data.Currency> currencylist = JN.Services.Manager.CacheHelp.GetCurrencyList();
+    var cmodelList = currencylist.Where(x => x.LineSwitch && x.TranSwitch).OrderBy(x => x.ID).ToList();
+    int fromcoid = ViewBag.FromCoid;
+
+    string cashName = "现金";
+    JN.Data.Currency cashCurrency;
+    if (fromcoid != 0)
+    {
+        cashCurrency = cmodelList.SingleAndInit(x => x.ID == fromcoid);
+        cashName = cashCurrency.CurrencyName;
+    }
+    else
+    {
+        cashCurrency = cmodelList.SingleAndInit(x => x.ID == 2);
+    }
+
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<link href="/Theme/app/css/rangeslider.css" rel="stylesheet" type="text/css">
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo header-open-arrow">@T("发布") @T(Model.CurrencyName) @T("出售订单")</div>
+
+    @*<div class="header-btn">
+            <a href="../Region/Region.html">中国</a>
+        </div>*@
+</header>
+
+<section class="container">
+    @*<div class="balance">
+            <ul>
+                <li>
+                    <span>@T(Model.CurrencyName)</span>
+                    <h3>@JN.Services.Manager.Users.WalletCur((int)Model.WalletCurID, Umodel).ToDouble()</h3>
+                </li>
+
+                <li>
+                    <span>@T(cashCurrency.CurrencyName)</span>
+                    <h3>@JN.Services.Manager.Users.WalletCur((int)cashCurrency.WalletCurID, Umodel).ToDouble()</h3>
+                </li>
+            </ul>
+        </div>*@
+    <div class="clr"></div>
+
+    <div class="release-form">
+        <div class="form-widget">
+            <form id="form" method="get">
+                <input type="hidden" value="0" name="Direction">
+                <input type="hidden" value="@fromcoid" name="CoinID">
+                <input type="hidden" value="@Model.ID" name="CurID">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label lablecolor">@T("当前价格")</label>
+
+                        <div class="form-control">
+                            <input value="@JN.Services.Manager.PriceHelps.getcurrentprice(Model).ToString("F5")" class="primary-input lablecolor" readonly="readonly">
+                        </div>
+                    </div>
+
+                    <div class="form-group" style="border: none;">
+                        <label class="form-label lablecolor">@T("出售价格")</label>
+
+                        <div class="form-control">
+                            <input id="price" name="price" value="@JN.Services.Manager.PriceHelps.getcurrentprice(Model).ToString("F5")" readonly class="lablecolor">
+                        </div>
+                    </div>
+
+                    <div class="sell-price">
+                        <div class="sell-price-bar">
+                            <input type="range" min="0.00" max="10.00" step="0.01" value="0.00" data-rangeslider>
+
+                            <output class="sell-price-text lablecolor"></output>
+                            <span class="lablecolor">%</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label lablecolor">@T("出售数量")</label>
+
+                        <div class="form-control">
+                            <input placeholder="@T("请输入数量")" name="Quantity" type="number" id="Quantitynumber" onkeyup="getTotal()">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label lablecolor">@T("购买总额")</label>
+
+                        <div class="form-control">
+                            <input value="0" readonly="readonly" id="totalMoney" class="lablecolor">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-tips">@T("最低购买限制")：@((Model.IsLimit ?? false) == true ? (Model.MinLimit ?? 0).ToString() : T("不限制").ToString())</div>
+
+                <div class="form-submit">
+                    <button type="button" class="form-submit-btn red-btn" id="btnSubmit" onclick="checkform()">@T("发布")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!--选择币种弹窗-->
+<div id="coin" class="popup">
+    <div class="popup-box">
+        <div class="popup-box-content">
+            <div class="choose-list">
+                <ul>
+
+                    @if (cmodelList != null && cmodelList.Count() > 0)
+                    {
+                        foreach (var item in cmodelList)
+                        {
+                            <li>
+                                <input type="radio" name="tocoid" value="@(item.ID)" @(item.ID == fromcoid ? "checked" : "")>
+                                <label>@T(item.CurrencyName)</label>
+                            </li>
+
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+            <button type="button" class="confirm-btn" onclick="gotoSell()">@T("确认")</button>
+        </div>
+    </div>
+</div>
+
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<script src="/Theme/app/js/rangeslider.min.js"></script>
+<script>
+    //选择币种弹窗
+    $(function(){
+        $('.header-open-arrow').click(function(){
+            $('#coin.popup').fadeIn();
+
+            var h = ($(window).height() - $('#coin .popup-box').height())/2;
+            $('#coin .popup-box').css('margin-top',h);
+        });
+
+        $('.cancle-btn').click(function(){
+            $('#coin.popup').fadeOut();
+        });
+    });
+    function gotoSell() {
+        var tocoid = $('input[name="tocoid"]:checked').val();
+        if (tocoid <= 0) return;
+        window.location.href = '/APP/Advertise/Sell?fromcoid=' + tocoid + "&tocoid=" + tocoid;
+    }
+    //滑动条
+    $(function() {
+
+        var $document   = $(document);
+        var selector    = '[data-rangeslider]';
+        var $inputRange = $(selector);
+
+        // Example functionality to demonstrate a value feedback
+        // and change the output's value.
+        function valueOutput(element) {
+            var value = element.value;
+            var output = element.parentNode.getElementsByTagName('output')[0];
+
+            output.innerHTML = value;
+
+            var nowP = (@JN.Services.Manager.PriceHelps.getcurrentprice(Model).ToString("F5"))*value*0.01
+            document.getElementById("price").value = nowP + (@JN.Services.Manager.PriceHelps.getcurrentprice(Model).ToString("F5"));
+            getTotal();
+        }
+
+        // Initial value output
+        for (var i = $inputRange.length - 1; i >= 0; i--) {
+            valueOutput($inputRange[i]);
+        };
+
+        // Update value output
+        $document.on('input', selector, function(e) {
+            valueOutput(e.target);
+        });
+
+        // Initialize the elements
+        $inputRange.rangeslider({
+            polyfill: false
+        });
+    });
+</script>
+<script>
+    function checkform() {
+        layer.confirm("@T("您确定要发布该广告么？")", {
+            title: "@T("发布确认")" , //标题
+            btn : [ '@T("确定")', '@T("取消")' ]  //按钮
+        },
+        function (index) {
+            layer.close(index);
+            $.post('@Url.Action("NewAdvertise", "Advertise")', $('#form').serialize(), function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("发布成功")", { icon: 1 },function(){
+                        window.location.href = '@Url.Action("Order","advertise", new { Direction = 0, status = 1 })';
+                    });
+                } else {
+                    if (data.Message == "请先设置默认银行卡") {
+                        layer.msg("@T("请先设置默认银行卡")！", { icon: 2 }, function () {
+                            window.location.href = '@Url.Action("banklist", "User")';
+                        });
+                    }
+                    else {
+                        layer.msg("@T("操作失败")：" + data.Message, { icon: 2 });
+                    }
+                    //layer.msg(data.Message, { icon: 2 });
+                }
+            }, 'json')
+            //$('form').submit();
+        });
+
+
+    }
+
+    function getTotal(){
+        var money = parseFloat($("#Quantitynumber").val()) * parseFloat($("#price").val()) ;
+        if (isNaN(money)) {
+            money = 0;
+        }
+        $("#totalMoney").val(money.toFixed(5));
+    }
+
+</script>

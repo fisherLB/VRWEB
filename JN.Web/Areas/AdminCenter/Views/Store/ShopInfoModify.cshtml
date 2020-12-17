@@ -1,0 +1,113 @@
+﻿@model JN.Data.Shop_Info
+@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>     
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+@using (Ajax.BeginForm("ShopInfoModify", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "afterPost" }, new { id = "saveForm", @class = "form-horizontal" }))
+{
+            <div class="control-group">
+                <label class="control-label" for="username">用户名：</label>
+
+                <div class="controls">
+                    <div class="clearfix">
+                        <input type="text" name="username" class="form-control" value="@Model.UserName" readonly="readonly"/>
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="shopname">店铺名称：</label>
+
+                <div class="controls">
+                    <div class="clearfix">
+                        <input type="text" name="shopname" class="form-control" value="@Model.ShopName" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="phone">手机号码：</label>
+                <div class="controls">
+                    <input type="text" name="Tel" class="form-control" value="@Model.Tel" readonly="readonly" />
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label" for="email">地址：</label>
+                <div class="controls">
+                    <textarea name="Address" class="form-control" readonly="readonly">@Model.Address</textarea>                   
+                </div>
+            </div>
+            <div class="hr hr-dotted"></div>
+
+            <div class="control-group">
+            <label class="control-label" for="bankofdeposit">营业资质：</label>
+
+            <div class="controls">
+                <div class="clearfix">
+                    @{
+                        int ImgCount = 0;
+                        if (Model.ShopInfoImg == null || Model.ShopInfoImg.Length == 0)
+                        {
+                            <img style="width: 180px; height: 180px" src="~/Theme/mall/red_theme/images/goodslogo.jpg" />
+                        }
+                        else
+                        {
+                            string[] images = Model.ShopInfoImg.Split(';');
+                            string imgid = "";
+                            //ImgCount = images.Length;
+                            for (int i = 0; i < images.Length; i++)
+                            {
+                                if (images[i].Length > 0)
+                                {
+                                    ImgCount++;
+                                    imgid = "tmpImg" + i;
+                                    <img id="@imgid" style="width: 180px; height: 180px" src="@images[i]" />                                 
+                                }
+                            }
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+            <div class="hr hr-dotted"></div>
+            <div class="control-group">
+                <label class="control-label" for="ShopQQ">QQ客服：</label>
+
+                <div class="controls">
+                    <div class="clearfix">
+                        <input type="text" name="ShopQQ" class="form-control" value="@Model.ShopQQ" readonly="readonly" />
+                    </div>
+                </div>
+            </div>
+         
+            <div class="hr hr-dotted"></div>
+             <div class="control-group">
+               <label class="control-label">&nbsp;</label>
+                <div class="controls">
+                @*<button class="btn btn-primary" type="submit">
+                 保 存
+                </button>*@
+                <a href="javascript:history.go(-1);" class="btn btn-grey">
+                    <i class="icon-arrow-left"></i>
+                    返 回
+                </a>
+             </div>
+    </div>
+}
+        <!-- PAGE CONTENT ENDS -->
+</div><!-- /.row -->
+</div><!-- /.page-content -->
+@section scripts{
+
+}

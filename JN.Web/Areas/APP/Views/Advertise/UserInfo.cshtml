@@ -1,0 +1,60 @@
+﻿@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var bankDefault = MvcCore.Unity.Get<JN.Data.Service.IUserBankCardService>().SingleAndInit(x => x.UID == Model.ID && x.IsDefault);//默认银行卡
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T("交易伙伴")</div>
+</header>
+
+<section class="container">
+    <div class="trade-people">
+        <div class="trade-people-photo">
+            <img src="@(Model.HeadFace ?? "/Theme/app/images/member.png")">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@Model.UserName @(!string.IsNullOrWhiteSpace(Model.RealName) ? "(" + Model.RealName + ")" : "") </h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-order-details">
+        <h3>@T("详细信息")</h3>
+        <ul>
+            <li>
+                <label>@T("创建时间")</label>
+                <span>@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+            </li>
+
+            <li>
+                <label>@T("实名验证")</label>
+                <span>@((Model.IsAuthentication ?? false) ? "已验证" : "未验证")</span>
+            </li>
+
+            <li>
+                <label>@T("电话号码")</label>
+                <span>@(Model.Mobile ?? T("未验证").ToString())</span>
+            </li>           
+            @*<li>
+                <label>@T("开户银行")</label>
+                <span>@(bankDefault.BankName)</span>
+            </li> 
+            <li>
+                <label>@T("开户姓名")</label>
+                <span>@(bankDefault.BankCard)</span>
+            </li>
+            <li>
+                <label>@T("银行卡号")</label>
+                <span>@(bankDefault.BankCard)</span>
+            </li>*@
+
+                    
+        </ul>
+    </div>
+</section>

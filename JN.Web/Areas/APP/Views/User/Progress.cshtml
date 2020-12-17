@@ -1,0 +1,33 @@
+﻿
+@{
+    ViewBag.Title = "Progress";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var MOlist = MvcCore.Unity.Get<JN.Data.Service.IMachineOrderService>().List().OrderBy(x => x.ID).ToList();
+    var morder = MOlist.SingleAndInit(x => x.UID == Umodel.ID && x.ShopID == 1);
+}
+
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+@*<header class="header">
+    <div class="header-return">
+            <a href="javascript:history.go(-1);"></a>
+        </div>
+</header>*@
+<section class="container">
+    <div class="progress-box">
+        <img src="~/Theme/APP/img/mining-2.gif" />
+    </div>
+</section>
+
+<script language="javascript" type="text/javascript">
+    setTimeout(function () { this.location.href = "/APP/User/Mining2?moID=@morder.ID" }, 4000);
+</script>
+

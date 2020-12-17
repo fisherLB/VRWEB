@@ -1,0 +1,370 @@
+﻿@model JN.Data.AdvertiseOrder
+@{
+    JN.Data.User Umodel = JN.Services.UserLoginHelper.CurrentUser();
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var buyuser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(x => x.ID == Model.BuyUID);//买家
+    var selluser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(x => x.ID == Model.SellUID);//卖家
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000);
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+        @*<a href="@Url.Action("AdvertiseOrder", "Advertise", new { Status = 0 })"></a>*@
+    </div>
+
+    <div class="logo">@T("交易订单详情")</div>
+</header>
+
+<section class="container">
+    <div class="trade-people" onclick="goUrl(@(buyuser.ID == Umodel.ID ? selluser.ID:buyuser.ID))">
+        <div class="trade-people-photo">
+            <img src="@(buyuser.ID == Umodel.ID ? (selluser.HeadFace ?? "/Theme/app/images/member.png") : (buyuser.HeadFace ?? "/Theme/app/images/member.png")  )">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@(buyuser.ID == Umodel.ID ? selluser.UserName : buyuser.UserName) @(buyuser.ID == Umodel.ID ? (!string.IsNullOrWhiteSpace(selluser.RealName) ? "(" + selluser.RealName + ")" : "") : (!string.IsNullOrWhiteSpace(buyuser.RealName) ? "(" + buyuser.RealName + ")" : "") ) </h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-order-details">
+        <h3>@T("订单信息")</h3>
+        <ul>
+            <li>
+                <label>@T("创建时间")</label>
+                <span>@Model.CreateTime</span>
+            </li>
+
+            <li>
+                <label>@T("订单单号")</label>
+                <span>@Model.OrderID</span>
+            </li>
+
+            <li>
+                <label>@T("状态")</label>
+                <span class="order-details-status">@T(typeof(JN.Data.Enum.AdvertiseOrderStatus).GetEnumDesc(Model.Status))</span>
+            </li>
+
+            <li>
+                <label>@T("类型")</label>
+                <span>@T("购买")</span>
+            </li>
+
+            <li>
+                <label>@T("币种")</label>
+                <span>@Model.CurName</span>
+            </li>
+
+            <li>
+                <label>@T("购买价格")</label>
+                <span>@Model.Price</span>
+            </li>
+
+            <li>
+                <label>@T("数量")</label>
+                <span>@Model.Quantity.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("金额")</label>
+                <span class="order-details-price">@Model.Amount.ToDouble()</span>
+            </li>
+            <li>
+                <label>@T("支付方式")</label>
+                <span class="order-details-price">@Model.PayMethod</span>
+            </li>
+            <li>
+                <label>@T("支付账户")</label>
+                <span class="order-details-price">@Model.PayAccount</span>
+            </li>
+
+            @if (Model.PayID != -3003)
+            {
+                <li>
+                    <label>@T("付款二维码")</label>
+                    <div class="setting-img member-bg">
+                        <img src="@(string.IsNullOrEmpty(Model.PayAccountImgUrl) ? "" : Model.PayAccountImgUrl)" style="width:120px;height:120px;">
+                    </div>
+                </li>
+            }
+            @if (Model.CoinID == 0)
+            {
+                <li>
+                    <label>@T("付款方式")</label>
+                    <span>@T("线下支付")</span>
+                </li>
+            }
+            @if (Model.Status >= (int)JN.Data.Enum.AdvertiseOrderStatus.PendingPayment && !string.IsNullOrWhiteSpace(Model.Attachment) && Model.PayID != -3003)
+            {
+                <li>
+                    <label>
+                        @T("付款凭证")
+                    </label>
+                    <a href="@Url.Action("showpayimage",new { id =Model.ID })">
+                        <img src="@Model.Attachment" style="width:90px;height:90px;" />
+                    </a>
+                </li>
+            }
+
+        </ul>
+    </div>
+
+    <div class="trade-order-toolbar">
+        <ul class="transaction-btn-ul">
+            @if (Model.Status == (int)JN.Data.Enum.AdvertiseOrderStatus.PlaceOrder && buyuser.ID == Umodel.ID)
+            {
+                <li>
+                    <span onclick="pay()" class="active">@T("确认支付订单")</span>
+                </li>
+
+            }
+            else if (Model.Status == (int)JN.Data.Enum.AdvertiseOrderStatus.PendingPayment && selluser.ID == Umodel.ID)
+            {
+                <li>
+                    <span id="btnPayStage" class="active">@T("确认支付收据")</span>
+                </li>
+                <li>
+                    <span class="active" onclick="window.location.href='@Url.Action("write","mail")'">@T("虚假订单投诉")</span>
+                </li>
+            }
+            @if (Model.Status == (int)JN.Data.Enum.AdvertiseOrderStatus.PlaceOrder && (Model.SellUID == Umodel.ID || Model.BuyUID == Umodel.ID))
+            {
+                <li>
+                    <span id="btnCancel">@T("取消交易")</span>
+                </li>
+            }
+            <li>
+                <input id="adorderid" type="hidden" value="@Model.ID" />
+            </li>
+
+        </ul>
+    </div>
+</section>
+<!--出售弹窗-->
+<div id="sell" class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title"><span id="sellusername">@T("确认付款")</span></div>
+
+        <div class="popup-box-content">
+            <div class="form-widget">
+                <form action="" method="get" id="sellform">
+                    <input type="hidden" name="adid" value="0" id="sellid" />
+                    <div class="form-box">
+                        <div class="form-group">
+                            <label class="form-label">@T("上传凭证")</label>
+
+
+                            <div class="content upload-pic" id="uploader">
+                                <div class="imgs">
+                                    <div class="queueList">
+
+                                    </div>
+                                </div>
+                                <div class="upload-area">
+                                    <div class="square" style="margin-top:10px;">
+                                        <span class="defalt-img"></span>
+                                        <input type="hidden" name="payimg" id="payimg" class="hidImgSrc" value="" />
+                                        <div class="link btnUpPic">+@T("上传图片")</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+
+
+
+                        @*<div class="form-group">
+                                <label class="form-label">交易密码</label>
+                                <div class="form-control">
+                                    <input type="password" name="tradeoutPassword" placeholder="请输入支付密码">
+                                </div>
+                            </div>*@
+                    </div>
+
+                    @*<div class="form-tips">请在3小时内确认收款，否则将影响您的信用值并且会扣除100余额保证金！</div>*@
+                </form>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn m-b5">@T("取消")</button>
+            <button type="button" class="confirm-btn" id="btnPay">@T("确认")</button>
+        </div>
+    </div>
+</div>
+<link href="~/Plugin/countdown/jquery.countdown.css" rel="stylesheet" /><!--倒计时css-->
+<script src="~/Plugin/countdown/jquery.countdown.js"></script><!--倒计时js-->
+
+
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<!--上传图片-->
+<script src="~/Plugin/webuploader-0.1.5/webuploader.js"></script>
+<link href="~/Plugin/webuploader-0.1.5/webuploader.css" rel="stylesheet" />
+<script src="~/Plugin/webuploader-0.1.5/webuploader.Plugin.js"></script>
+
+
+<script>
+    function goUrl(id) {
+        window.location.href = "@Url.Action("UserInfo")?uid=" + id;
+    }
+    function pay() {
+        window.location.href = '@Url.Action("confirmed",new { id = Model.ID})';
+    }
+
+    //出售弹窗
+    function opensell() {
+        $('#sell.popup').fadeIn();
+        var h = ($(window).height() - $('#sell .popup-box').height()) / 2;
+    }
+    //关闭操作
+    $('.cancle-btn').click(function () {
+        $('#buy.popup').fadeOut();
+        $('#sell.popup').fadeOut();
+    });
+    //订单信息切换
+    $('#orderinfo li').on('click', function () {
+        $(".slidetable").addClass('show').siblings('slidetable ').removeClass('show');
+        //获取当前索引
+        var n = $(this).index();
+        $('.slidetable').eq(n).show().siblings('.slidetable').hide();
+        $('#orderinfo li').siblings().removeClass("active");//移除所有
+        $('#orderinfo li').eq(n).addClass("active");//给该索引加选中状态
+    });
+
+    $(function () {
+        $("#userinfo").click(function () {
+            $("#chat").removeClass("active");
+            $("#userinfo").addClass("active");
+            $("#chating").css("display", "none");
+            $("#user-info").css("display", "block");
+
+        })
+
+        //确认付款操作
+        $("#btnPay").click(function () {
+            layer.confirm("@T("确认已经付款？")", {
+                title: "@T("取消确认")", //标题
+                btn: ['@T("确定")', '@T("取消")']  //按钮
+            },
+            function (index) {
+                layer.close(index);
+                var adorderid = $("#adorderid").val();
+                $.post("@Url.Action("Confirmpayment")", { id: adorderid, payimg: payimg }, function (data) {
+                    if (data.Status == 200) {
+                        location.reload();
+                    } else {
+                        layer.msg(data.Message, { icon: 2 });
+                    }
+                })
+            });
+        })
+        //确认收货操作
+        $("#btnPayStage").click(function () {
+            layer.confirm("@T("确认收货？")", {
+                title: "@T("取消确认")", //标题
+                btn: ['@T("确定")', '@T("取消")']  //按钮
+            },
+            function (index) {
+                layer.close(index);
+                var adorderid = $("#adorderid").val();
+                $.post("@Url.Action("ConfirmReceipt")", { id: adorderid }, function (data) {
+                    if (data.Status == 200) {
+                        location.reload();
+                    } else {
+                        layer.msg(data.Message, { icon: 2 });
+                    }
+                })
+            });
+        })
+
+        //取消操作
+        $("#btnCancel").click(function () {
+            layer.confirm("@T("确认取消交易？")", {
+                title: "@T("取消确认")", //标题
+                btn: ['@T("确定")', '@T("取消")']  //按钮
+            },
+            function (index) {
+                layer.close(index);
+                var adorderid = $("#adorderid").val();
+                $.post("@Url.Action("ConfirmCancel")", { id: adorderid }, function (data) {
+                    if (data.Status == 200) {
+                        location.reload();
+                    } else {
+                        layer.msg(data.Message, { icon: 2 });
+                    }
+                })
+            });
+        })
+
+    })
+
+    $(function () {
+        // 初始化Web Uploader
+        var uploader = uploaderCreate({
+            MaxNum: 1,//默认设置为1张
+            //AutoHideArea: true,//超过上传限制后是否隐藏上传域默认设置为true
+            MaxSize: 1024 * 1024 * 6,//默认设置大小1024 * 1024 * 4     4M,
+            $container: $('#uploader'),//控件容器默设置认为null
+            Url: '@Url.Action("UpMainPic")',//服务器接收地址默设置认为null
+            FileVal: 'imgFile',//文件上传域的name值，默认设置为file
+            //Thumb: true,//是否显示缩略图默认设置true
+            //RecordReturnValue: true,//是否记录上传成功的返回值，容器为hidImgSrc
+            ThumbWidth: 160,//略缩图宽默认设置100
+            ThumbHeight: 160,//略缩图高默认设置100
+            //ThumbHorizontalShow: false,//缩略图水平显示默认设置true
+            //compress: false,//图片压缩设置false关闭压缩,默认开启
+            Error: function (message) {
+                layer.msg(message, { icon: 2 });
+            },//出错回调
+            Success: function (response) {
+                if (response.error == "0") {
+                    return response.url;//记录URL
+                } else {
+                    layer.msg(response.message, { icon: 2 });
+                    return false;//删除缩略图
+                }
+            },//成功回调
+            //Extensions: 'gif,jpg,png',//默认设置为gif,jpg,png格式
+            //Method:'post',//默认设置为POST方式请求
+            //Timeout:1000 * 10,//上传超时默认10秒
+            MessageArray: new Array('@T("不能预览")', '@T("上传失败")', '@T("您最多允许上传")', '@T("张图片")', '@T("您上传的文件大小超过")', '@T("您上传的文件格式不正确，只允许上传")', '@T("格式图片")')
+        });
+    });
+
+
+    //时间戳转时间
+    function getLocalTime(nS) {
+        var d = nS.replace("/Date(", "").replace(")/", "");
+        return ((new Date(parseInt(d)).getMonth() + 1).toString.length < 2 ? ("0" + (new Date(parseInt(d)).getMonth() + 1)) : new Date(parseInt(d)).getMonth() + 1)
+            + "-" + (new Date(parseInt(d)).getDate().toString().length < 2 ? ("0" + new Date(parseInt(d)).getDate()) : new Date(parseInt(d)).getDate())
+            + " " + (new Date(parseInt(d)).getHours().toString().length < 2 ? ("0" + new Date(parseInt(d)).getHours()) : new Date(parseInt(d)).getHours())
+            + ":" + (new Date(parseInt(d)).getMinutes().toString().length < 2 ? "0" + new Date(parseInt(d)).getMinutes() : new Date(parseInt(d)).getMinutes());
+    }
+</script>
+
+
+<script type="text/javascript">
+    //倒计时
+    $('.time_countdown').each(function () {
+        var $this = $(this);
+        var datez = new Date($this.attr('data') + '').getTime();
+        var date = new Date(datez);
+        Y = date.getFullYear() + '/';
+        M = (date.getMonth() + 1) + '/';
+        D = date.getDate() + ' ';
+        h = date.getHours() + ':';
+        m = date.getMinutes() + ':';
+        s = date.getSeconds();
+
+        dates = Y + M + D + h + m + s;
+        console.log(Y + M + D + h + m + s + '.......');
+        $this.countdown(datez, function (event) {
+
+            $(this).text(
+                    event.strftime('%-D @T("天") %-H @T("小时") %M @T("分钟") %S @T("秒")')
+            );
+        });
+        datez = null;
+    });
+</script>

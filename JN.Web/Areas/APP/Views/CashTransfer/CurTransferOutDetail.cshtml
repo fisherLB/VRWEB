@@ -1,0 +1,68 @@
+﻿@model JN.Data.RaCoin
+@{
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    ViewBag.Title = "提币详情";
+
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+}
+
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T(ViewBag.Title)</div>
+</header>
+
+<section class="container">
+    <div class="trade-people">
+        <div class="trade-people-photo">
+            <img src="@(Umodel.HeadFace ?? "/Theme/app/images/member.png") ">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@(Umodel.UserName)@(!string.IsNullOrWhiteSpace(Umodel.RealName) ? "(" + Umodel.RealName + ")" : "")</h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-order-details">
+        <ul>
+            <li>
+                <label>@T("时间")</label>
+                <span>@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+            </li>
+
+            <li>
+                <label>@T("提现数量")</label>
+                <span class="order-details-price">@Model.DrawMoney.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("币种")</label>
+                <span class="order-details-status">@T(Model.OutTable_Currency.CurrencyName)</span>
+            </li>
+
+            <li>
+                <label>@T("手续费")</label>
+                <span>@Model.Poundage.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("实收金额")</label>
+                <span>@Model.ActualDrawMoney.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("钱包地址")</label>
+                <span>@Model.WalletAddress</span>
+            </li>
+
+            <li>
+                <label>@T("状态")</label>
+                <span>@T(typeof(JN.Data.Enum.TakeCaseStatus).GetEnumDesc(Model.Status))</span>
+            </li>
+        </ul>
+    </div>
+</section>

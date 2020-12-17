@@ -1,0 +1,66 @@
+@charset "utf-8";
+/* CSS Document */
+
+.clearfix {
+	*zoom: 1;
+}
+
+.clearfix:after {
+	display: block;
+	overflow: hidden;
+	clear: both;
+	height: 0;
+	visibility: hidden;
+	content: ".";
+}
+
+.login_bg{
+	background: url(../images/tuiguang_bg.jpg) no-repeat;
+	background-size: cover;
+    height: 100%;
+}
+.logo_cont{		
+   display: block;
+    width: 100%;
+    text-align: center;   
+    padding: 17% 0 0;
+}
+.logo_cont img{
+	width: 30%;
+}
+.logo_name{
+	font-size: 1rem;
+	text-shadow: 1px 1px 2px #1673e2;
+	text-align: center;
+	color: #fff;
+	padding: .5rem;
+}
+
+.invitat_code{
+	margin-top: 1.2rem;
+	text-align: center;
+}
+.invitat_code button{
+	padding: .3rem .5rem;
+    border: 1px solid #fff;  
+	border-radius: .2rem;
+    margin: auto;
+    color: #fff;
+}
+.invitat_btn{
+	margin-top: 1.4rem;
+	text-align: center;
+}
+.invitat_btn li {
+	margin-bottom: 0.5rem;
+}
+.invitat_btn li a{
+	background: #1673e2;	
+	line-height: 1.6rem;
+	border-radius: 0.2rem;
+	display: block;
+	color: #fff;
+	width: 90%;
+	margin: 0 auto;
+}
+

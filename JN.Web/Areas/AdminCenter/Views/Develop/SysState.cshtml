@@ -1,0 +1,74 @@
+﻿@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+
+    decimal totaluser = 0;
+    decimal totalhq = 0;
+    decimal totaldq = 0;
+    decimal totalbuy = 0;
+    decimal totalsell = 0;
+    decimal totaldh = 0;
+    decimal totalxj = 0;
+
+    var userlist = MvcCore.Unity.Get<JN.Data.Service.IUserService>().List();
+    totaluser = userlist.Count();
+
+    totalxj = userlist.Count() > 0 ? userlist.Sum(x => x.Wallet2002) : 0;
+
+    totalhq = userlist.Count() > 0 ? userlist.Sum(x => x.Wallet2003) : 0;
+    var dqlist = MvcCore.Unity.Get<JN.Data.Service.ITimeDepositService>().List(x => x.Status < 2);
+    totaldq = dqlist.Count() > 0 ? dqlist.Sum(x => x.DepositAmount) : 0;
+
+}
+<!-- page specific plugin styles -->
+<link href="/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+<link href="/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+<script src="/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+<script src="/Plugin/kindeditor-4.1.9/lang/en.js"></script>
+<script src="/Plugin/kindeditor-4.1.9/plugins/code/prettify.js"></script>
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-4">
+            <!-- PAGE CONTENT BEGINS -->
+            <table class="table table-bordered table-hover no-margin-bottom">
+                <tr>
+                    <td>当前股票数量：</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>定期数量：@totaldq</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>活期数量：@totalhq</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>委托卖单数量：</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>现金数量：</td>
+                    <td>@totalxj</td>
+                </tr>
+                <tr>
+                    <td>分红总和：</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>委托买单数量：</td>
+                    <td>--</td>
+                </tr>
+                <tr>
+                    <td>用户数量：</td>
+                    <td>@totaluser</td>
+                </tr>
+            </table>
+
+            <!-- PAGE CONTENT ENDS -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
+<!-- page specific plugin scripts -->
+<!--[if lte IE 8]>
+<![endif]-->
+@section scripts{}

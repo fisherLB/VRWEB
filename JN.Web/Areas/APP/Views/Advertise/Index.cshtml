@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Trade";
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch && x.TranSwitch).OrderBy(x => x.ID).ToList();
+
+    var cashlList = cmodelList.Where(x => (x.IsCashCurrency ?? false) == true).ToList();
+    var noCashlList = cmodelList.Where(x => (x.IsCashCurrency ?? false) == false).ToList();
+
+    var cur = (!string.IsNullOrEmpty(Request["curid"])) ? cmodelList.SingleAndInit(x => x.ID == Request["curid"].ToInt()) : cmodelList.OrderBy(x => x.Sort).FirstOrDefault();
+
+    int curid = cur.ID;
+
+    int type = string.IsNullOrEmpty(Request["type"]) ? 1 : Request["type"].ToInt();
+
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="@Url.Action("index","home")"></a>*@
+    </div>
+
+    <div class="logo">@T("数字资产")</div>
+
+    @*<div class="header-btn">
+        <a href="DigitalAssetsRecord.html">交易记录</a>
+    </div>*@
+</header>
+@{ 
+    var firstModel = noCashlList.FirstOrDefault();
+}
+<section class="container">
+    <div class="balance">
+        <div class="balance-logo">
+            <img src="/Theme/app/images/Logo.png" style="width:55px;height:55px;">@*@firstModel.CurrencyLogo*@
+        </div>
+
+        <div class="balance-current">
+            @T("当前价格")：<h3>@JN.Services.Manager.PriceHelps.getcurrentprice(firstModel).ToString("F5")</h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+
+    @*<div class="digital-toolbar">
+            <div class="digital-address">
+                <p>VPay资产<b>0.0000</b></p>
+
+                <div class="digital-address-input">
+                    <input value="VjhheWy94trreRwrwe3rwwRew43" readonly>
+                    <button>复制钱包地址</button>
+                </div>
+            </div>
+
+            <div class="digital-toolbar-list">
+                <ul>
+                    <li>
+                        <a href="DigitalAssetsOut.html" class="digital-toolbar-1">
+                            <i></i>
+                            <span>转出</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../DigitalAssets/CrowdFunding.html" class="digital-toolbar-2">
+                            <i></i>
+                            <span>众筹</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="###" class="digital-toolbar-3">
+                            <i></i>
+                            <span>V宝</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a href="../Trade/TradeByAccount.html" class="digital-toolbar-4">
+                            <i></i>
+                            <span>交易</span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    <div class="clr"></div>*@
+
+    <div class="digital-assets">
+        @{
+            double tocount = 0;
+            foreach (var item in noCashlList)
+            {
+                tocount = JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel).ToDouble();
+                <div class="digital-assets-list">
+                    <h3>@item.EnSigns</h3>
+
+                    <div class="digital-assets-details">
+                        <div class="digital-assets-account">
+                            <h5>@tocount.ToString("F5")</h5>
+                            <span>@item.CurrencyName</span>
+                        </div>
+
+                        <div class="digital-assets-price">
+                            <h5>@JN.Services.Manager.PriceHelps.getcurrentprice(item).ToString("F5")</h5>
+                            <span>@T("当前价格")</span>
+                        </div>
+
+                        <div class="digital-assets-btn">
+                            @*@foreach (var citem in cashlList)
+                            {
+                                <a href="@Url.Action("trade","advertise",new { fromcoid = citem.ID,tocoid = item.ID})">@T(citem.CurrencyName)@T("交易")</a>
+                            }*@
+                            <a href="@Url.Action("trade","advertise",new { fromcoid = 0,tocoid = item.ID})">@T("现金")@T("交易")</a>
+                            <a href="@Url.Action("trade","advertise",new { fromcoid = 3,tocoid = item.ID})">@T("余额")@T("交易")</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="clr"></div>
+</section>

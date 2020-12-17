@@ -1,0 +1,222 @@
+﻿@model JN.Data.ShopSysSetting
+@{
+    ViewBag.Title = "商城设置";
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+
+    <div class="innerLR">
+        <!-- PAGE CONTENT BEGINS -->
+        @*<div class="alert alert-primary">
+                <strong>注意</strong> 修改参数后需要 <a class="btn btn-blue" href="@(Url.Action("ClearAllCache", "Home"))">
+                    清除所有缓存
+                </a> 才会生效，清除缓存所有会员及管理员会被强制登出。
+
+            </div>*@
+
+        <div class="tab-content">
+            <div class="table-responsive">
+
+                @if (Model != null)
+                {
+                    using (Ajax.BeginForm("Index", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "AfterAdd" }, new { id = "frmSet" }))
+                    {
+                        <table id="sample-table-1" class="table table-striped table-bordered table-hover" style="margin-bottom:10px">
+                            <tr>
+                                <td>开启会员登录：</td>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="UserCanLogin" value="True" @(Model.UserCanLogin ? "checked" : "") />开启
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="UserCanLogin" value="False" @(!Model.UserCanLogin ? "checked" : "") />关闭
+                                    </label>
+                                </td>
+                                <td>开启会员注册：</td>
+                                <td>
+                                    <label>
+                                        <input type="radio" name="UserCanReg" value="True" @(Model.UserCanReg ? "checked" : "") />开启
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="UserCanReg" value="False" @(!Model.UserCanReg ? "checked" : "") />关闭
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>代理额度：</td>
+                                <td>
+                                    <input name="Agentintegral" type="text" value="@Model.Agentintegral" style="width: 300px;" />分
+                                </td>
+                                <td>
+                                    消费积分比例：
+                                </td>
+                                <td>
+                                    1：<input name="Integralratio" type="text" value="@Model.Integralratio" style="width: 300px;" />分
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>支付商户号：</td>
+                                <td>
+                                    <input name="IpsPayId" type="text" value="@Model.IpsPayId" style="width: 300px;" />
+                                </td>
+                                <td>购买开放时间：</td>
+                                <td>
+                                    <input name="OpenBuyTime" type="text" value="@Model.OpenBuyTime" style="width: 300px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>支付密钥：</td>
+                                <td colspan="3">
+                                    <textarea name="IpsPayKey" style="width: 880px;height:50px">@Model.IpsPayKey</textarea>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>支付接口地址：</td>
+                                <td colspan="3">
+                                    <input name="IpsPayPost" type="text" value="@Model.IpsPayPost" style="width: 580px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>手机短信接口ID：</td>
+                                <td>
+                                    <input name="MsgId" type="text" value="@Model.MsgId" style="width: 300px;" />
+                                </td>
+                                <td>手机短信接口密钥：</td>
+                                <td>
+                                    <input name="MsgKey" type="text" value="@Model.MsgKey" style="width: 300px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>首页LOGO</td>
+                                <td>
+                                    <img style="width: 180px; height: 180px" id="MainPic" src="@Model.Logo1" />
+                                    <input type="button" id="btnUpManiPic" value="选择图片" class="" />
+                                    <input type="hidden" name="Logo1" id="hidMainimgSrc" value="@Model.Logo1" />
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            @*<tr>
+                                    <td>折扣：</td>
+                                    <td colspan="3">
+                                        所有代理二次进货产品都是  <input name="adiscount" type="text" value="@Model.Adiscount" style="width: 580px;" />折
+                                    </td>
+                                </tr>*@
+
+                            <tr>
+                                <td>开启多店铺：</td>
+                                <td colspan="3">
+                                    <label>
+                                        <input type="radio" name="MostStore" value="True" @(Model.MostStore.Value ? "checked" : "") />开启
+                                    </label>
+                                    <label>
+                                        <input type="radio" name="MostStore" value="False" @(Model.MostStore.Value ? "" : "checked") />关闭
+                                    </label>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>客服1：</td>
+                                <td>
+                                    <input name="KefuUrl1" type="text" value="@Model.KefuUrl1" style="width: 300px;" />
+                                </td>
+                                <td>客服2：</td>
+                                <td>
+                                    <input name="KefuUrl2" type="text" value="@Model.KefuUrl2" style="width: 300px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>客服3：</td>
+                                <td>
+                                    <input name="KefuUrl3" type="text" value="@Model.KefuUrl3" style="width: 300px;" />
+                                </td>
+                                <td>客服4：</td>
+                                <td>
+                                    <input name="KefuUrl4" type="text" value="@Model.KefuUrl4" style="width: 300px;" />
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>客服5：</td>
+                                <td>
+                                    <input name="KefuUrl5" type="text" value="@Model.KefuUrl5" style="width: 300px;" />
+                                </td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+
+                            <tr>
+                                <td></td>
+                                <td colspan="3">
+                                    <input name="hidSysId" type="hidden" value="@Model.Id" />
+                                    <input name="Submit" type="submit" class="btn" value="提 交" />
+                            </tr>
+                        </table>
+                    }
+                }
+
+            </div>
+        </div>
+    </div>
+</div>
+<script src="~/Plugin/Jquery/jquery-1.10.2.min.js"></script>
+<link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+<link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+
+<script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+<script src="~/Plugin/kindeditor-4.1.9/lang/zh_CN.js"></script>
+<link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+@*<script src="~/Plugins/kindeditor-4.1.9/kindeditor.js"></script>
+    <script src="~/Plugins/kindeditor-4.1.9/lang/zh_CN.js"></script>
+    <script src="~/Plugins/kindeditor-4.1.9/plugins/code/prettify.js"></script>*@
+
+
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<script>
+        //上传主图
+        KindEditor.ready(function (K) {
+            var editor = K.editor({
+                uploadJson: '@Url.Action("UpMainPic")?dir=Logo&size=200',
+                allowFileManager: true
+            });
+            K('#btnUpManiPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#MainPic').attr("src", url);
+                            K('#hidMainimgSrc').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+        });
+        //显示主图
+        function ShowPic(data) {
+            var url = data.SaveName;
+            $("#GalleryItem").attr("src", url);
+            $("#imgSrc").val(url);
+        }
+        //提交后返回结果
+        function AfterAdd(result) {
+            if (result == "ok") {
+                alert("设置成功！");
+            }
+            else {
+                alert(result);
+            }
+        }
+
+    </script>
+@section scripts{
+
+}

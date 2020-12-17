@@ -1,0 +1,168 @@
+﻿
+@{
+    ViewBag.Title = "转入";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+
+    JN.Data.Currency cur = ViewBag.Currency as JN.Data.Currency;
+
+    //账户余额
+    decimal balance = JN.Services.Manager.Users.WalletCur((int)cur.WalletCurID, Umodel);
+
+    var curList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch && x.IsCashTransfer).ToList();
+}
+<link href="/Theme/App/css/base.css" rel="stylesheet">
+
+
+<header class="header">
+    <div class="header-return">
+        <a href="@Url.Action("index", "home")"></a>
+    </div>
+    <div class="logo">@T("现金提现")</div>
+
+    <div class="header-btn">
+        <a href="@Url.Action("RMBCashList", "CashTransfer")?curid=@cur.ID">@T("提现记录")</a>
+    </div>
+</header>
+
+<section class="container tab-container">
+    <div class="tab-title">
+        <div class="tab-item">
+            <div class="lava" style="left:50%;"></div>
+            @foreach (var item in curList)
+            {
+                <a href="@((item.IsCashCurrency ?? false) ? Url.Action("RMBCash", "CashTransfer"): Url.Action("CurTransferOut", "CashTransfer"))?curid=@item.ID" class="@(item.ID == cur.ID ? "active":"")">@T(item.CurrencyName)</a>
+            }    
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div class="form-widget">
+            <form action="" id="frmEdit" method="post">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("转出数量")</label>
+
+                        <div class="form-control">
+                            <input placeholder="@T("可转出数量")@balance.ToString("F2")" name="drawmoney" id="drawmoney" class="primary-input">
+
+                            @*<span class="trade-all">全部</span>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">@T("到账金额")</label>
+
+                        <div class="form-control">
+                            <input value="0.0000" id="actualMoney" readonly="readonly">
+                        </div>
+
+                        <div id="ChooseUnit" class="choose-unit">
+                            <span>@T("选择银行卡")</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">@T("交易密码")</label>
+
+                        <div class="form-control">
+                            <input type="password" name="password2" placeholder="@T("请输入交易密码")">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-submit">
+                    <input type="hidden" id="rate" value="@(cur.TbPoundage ?? 0)"><!--手续费-->
+                    <input name="curid" value="@cur.ID" type="hidden" /><!--ID-->
+                    <button type="button" id="btnEdit" class="form-submit-btn">@T("确认转出")</button>
+                </div>
+                <!--弹框-->
+                <div class="popup">
+                    <div class="popup-box">
+                        <div class="popup-box-title">@T("选择银行")</div>
+
+                        <div class="popup-box-content">
+                            <div class="choose-list">
+                                <ul>
+                                    @{
+                                        var bankList = MvcCore.Unity.Get<JN.Data.Service.IUserBankCardService>().List(x => x.UID == Umodel.ID).OrderByDescending(x => x.IsDefault).ToList();
+                                        if (bankList.Any())
+                                        {
+                                            foreach (var item in bankList)
+                                            {
+                                                <li>
+                                                    <input type="radio" name="bankid" value="@item.ID">
+                                                    <label>@(item.BankName + item.BankCard)</label>
+                                                </li>
+                                            }
+                                        }
+                                    }
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="popup-submit">
+                            <button class="cancle-btn" type="button">@T("取消")</button>
+                            <button type="button" class="confirm-btn">@T("确认")</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+</section>
+
+
+
+
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    //提现提交
+    $("#btnEdit").click(function () {
+        $('#btnEdit').attr("disabled", "disabled");
+        $("#frmEdit").ajaxSubmit({
+            url: "@Url.Action("RMBCash")",
+            type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@(T("申请成功，请耐心等待系统审核"))!", { icon: 1 },function(){
+                        location.href = "@Url.Action("RMBCashList", "CashTransfer")?curid=@cur.ID"; 
+                    })
+                } else {
+                    layer.msg("@T("申请失败：")" + data.Message, { icon: 2 });
+                    $('#btnEdit').removeAttr("disabled");
+                }
+            },
+            error: function (error) {
+                layer.msg(error, { icon: 2 });
+                $('#btnEdit').removeAttr("disabled");
+            }
+        });
+    });
+
+    //选择银行卡
+    $('#ChooseUnit').click(function () {
+        $('.popup').fadeIn();
+
+        var h = ($(window).height() - $('.popup-box').height()) / 2;
+        $('.popup-box').css('margin-top', h);
+    });
+
+    //取消选择
+    $('.cancle-btn').click(function () {
+        $('.popup').fadeOut();
+    });
+
+    $("#drawmoney").keyup(function () {
+        $("#actualMoney").val(Math.round(parseFloat($("#drawmoney").val()) * (1-parseFloat($("#rate").val())) * 100) / 100);
+    })
+</script>

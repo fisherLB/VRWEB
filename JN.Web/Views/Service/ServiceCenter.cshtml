@@ -1,0 +1,70 @@
+﻿
+@{
+    Layout = "/Views/Shared/_Layout.cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+}
+
+<div class="wrapper"  >
+    <div class="page_wrap">
+        <div class="page">
+            <div class="aside">
+                <div class="subnav">
+                    <div class="head">
+                        <a href="###">帮助中心</a>
+                    </div>
+                    <div class="body">
+                        <ul>
+                            <li>
+                                <a href="###">充值指南</a>
+                            </li>
+                            <li>
+                                <a href="###">充值限量</a>
+                            </li>
+                            <li>
+                                <a href="###">交易指南</a>
+                            </li>
+                            <li>
+                                <a href="###">常见问题</a>
+                            </li>
+                            <li class="selected">
+                                <a href="###">API开发文档</a>
+                            </li>
+                            <li>
+                                <a href="###">基本知识问答</a>
+                            </li>
+                            <li>
+                                <a href="###">官方钱包下载</a>
+                            </li>
+                            <li>
+                                <a href="###">银行客服电话</a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="main">
+                <div class="main_title">
+                    交易指南
+                </div>
+                <div class="news_list">
+                    <div class="aboutText help_new">
+                        <p>充值或转入币到平台账户后，便可进行虚拟币交易了。</p>
+                        <p>下面以 人民币账户买入BTC 为例介绍交易流程。（人民币账户与美元账户的交易流程一样）</p>
+                        <p>1. 登陆比特币交易网（www.btctrade.com），在首页点击【交易中心】，进入【BTC交易】或 在首页【交易中心】处，选择【BTC交易】。</p>
+                        <p><img src="/Theme/17112702/img/lang/help/jiaoyi_help1.jpg" width="704"></p>
+                        <p>2. 在【买入BTC】输入框内填写买入价格和买入数量（买入数量不可大于最大可买数量），输入交易密码，确认后点击【买入】，挂单完成。挂单后，系统将自动成交。</p>
+                        <p>入口一：</p>
+                        <p><img src="/Theme/17112702/img/lang/help/jiaoyi_help2.jpg" width="704"></p>
+                        <p>入口二：</p>
+                        <p><img src="/Theme/17112702/img/lang/help/jiaoyi_help4.jpg" width="704"></p>
+                        <p>3. 查看交易状态</p>
+                        <p>请在【委托管理】查询所有委托记录，在【成交查询】查询所有已成交的挂单。</p>
+                        <p><img src="/Theme/17112702/img/lang/help/jiaoyi_help3.jpg" width="704"></p>
+                        <p>温馨提示：交易前请关注最新成交价，避免挂单后因委托价格与市场价格不符，影响成交时间。</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

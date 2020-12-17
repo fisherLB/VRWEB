@@ -1,0 +1,538 @@
+﻿正在安装程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0226...
+已成功安装服务 JN0226。
+正在日志 Application 中创建 EventLog 源 JN0226...
+正在提交程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 JN0226。
+正在从系统中移除服务 JN0226...
+已成功地从系统中移除服务 JN0226。
+尝试停止服务 JN0226。
+正在安装程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0226...
+已成功安装服务 JN0226。
+正在日志 Application 中创建 EventLog 源 JN0226...
+正在提交程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 JN0226。
+正在从系统中移除服务 JN0226...
+已成功地从系统中移除服务 JN0226。
+尝试停止服务 JN0226。
+正在卸载程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 JN0226。
+警告: 源 JN0226 未在本地计算机上注册。
+正在从系统中移除服务 JN0226...
+在卸载 System.ServiceProcess.ServiceInstaller 安装程序的过程中发生异常。
+System.ComponentModel.Win32Exception: 指定的服务未安装。
+在卸载的过程中发生异常。将忽略该异常并继续卸载。但是，在卸载完成之后应用程序可能未完全卸载。
+正在安装程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0226...
+已成功安装服务 JN0226。
+正在日志 Application 中创建 EventLog 源 JN0226...
+正在提交程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 JN0226。
+正在从系统中移除服务 JN0226...
+已成功地从系统中移除服务 JN0226。
+尝试停止服务 JN0226。
+正在安装程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0226...
+已成功安装服务 JN0226。
+正在日志 Application 中创建 EventLog 源 JN0226...
+正在提交程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = I:\JN0226\web\Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 JN0226。
+正在从系统中移除服务 JN0226...
+已成功地从系统中移除服务 JN0226。
+尝试停止服务 JN0226。
+正在安装程序集“E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0519...
+正在日志 Application 中创建 EventLog 源 JN0519...
+正在回滚程序集“E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 JN0519 的前一状态。
+在 System.Diagnostics.EventLogInstaller 安装程序的“回滚”阶段发生异常。
+System.Security.SecurityException: 未找到源，但未能搜索某些或全部事件日志。  不可访问的日志: Security。
+在安装的“回滚”阶段发生异常。将忽略该异常并继续回滚。但是，在完成回滚后计算机可能无法完全还原到它的初始状态。
+正在安装程序集“E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0519...
+正在日志 Application 中创建 EventLog 源 JN0519...
+正在回滚程序集“E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\项目\五月份项目\JN0519\web\Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 JN0519 的前一状态。
+在 System.Diagnostics.EventLogInstaller 安装程序的“回滚”阶段发生异常。
+System.Security.SecurityException: 未找到源，但未能搜索某些或全部事件日志。  不可访问的日志: Security。
+在安装的“回滚”阶段发生异常。将忽略该异常并继续回滚。但是，在完成回滚后计算机可能无法完全还原到它的初始状态。
+正在安装程序集“E:\项目\七月份项目\JN0710\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\项目\七月份项目\JN0710\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\项目\七月份项目\JN0710\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0710...
+正在日志 Application 中创建 EventLog 源 JN0710...
+正在回滚程序集“E:\项目\七月份项目\JN0710\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\项目\七月份项目\JN0710\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\项目\七月份项目\JN0710\web\Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 JN0710 的前一状态。
+在 System.Diagnostics.EventLogInstaller 安装程序的“回滚”阶段发生异常。
+System.Security.SecurityException: 未找到源，但未能搜索某些或全部事件日志。  不可访问的日志: Security。
+在安装的“回滚”阶段发生异常。将忽略该异常并继续回滚。但是，在完成回滚后计算机可能无法完全还原到它的初始状态。
+正在安装程序集“D:\JN0919\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = D:\JN0919\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = D:\JN0919\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 JN0919...
+已成功安装服务 JN0919。
+正在日志 Application 中创建 EventLog 源 JN0919...
+正在提交程序集“D:\JN0919\web\Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = D:\JN0919\web\Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = D:\JN0919\web\Web\TimingPlan\JN.WindowsService.exe
+正在安装程序集“E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 WL161207...
+正在日志 Application 中创建 EventLog 源 WL161207...
+正在回滚程序集“E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 WL161207 的前一状态。
+在 System.Diagnostics.EventLogInstaller 安装程序的“回滚”阶段发生异常。
+System.Security.SecurityException: 未找到源，但未能搜索某些或全部事件日志。  不可访问的日志: Security。
+在安装的“回滚”阶段发生异常。将忽略该异常并继续回滚。但是，在完成回滚后计算机可能无法完全还原到它的初始状态。
+正在安装程序集“E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 WL161207...
+正在日志 Application 中创建 EventLog 源 WL161207...
+正在回滚程序集“E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\公司项目\WL161207\JN.Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 WL161207 的前一状态。
+在 System.Diagnostics.EventLogInstaller 安装程序的“回滚”阶段发生异常。
+System.Security.SecurityException: 未找到源，但未能搜索某些或全部事件日志。  不可访问的日志: Security。
+在安装的“回滚”阶段发生异常。将忽略该异常并继续回滚。但是，在完成回滚后计算机可能无法完全还原到它的初始状态。
+正在安装程序集“F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 wl17030502...
+已成功安装服务 wl17030502。
+正在日志 Application 中创建 EventLog 源 wl17030502...
+正在提交程序集“F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 wl17030502。
+正在从系统中移除服务 wl17030502...
+已成功地从系统中移除服务 wl17030502。
+尝试停止服务 wl17030502。
+正在安装程序集“F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 wl17030502...
+已成功安装服务 wl17030502。
+正在日志 Application 中创建 EventLog 源 wl17030502...
+正在提交程序集“F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\三月份\wl170305020\www\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 wl17030502。
+正在从系统中移除服务 wl17030502...
+已成功地从系统中移除服务 wl17030502。
+尝试停止服务 wl17030502。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在回滚程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 w17063001 的前一状态。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在回滚程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 w17063001 的前一状态。
+正在卸载程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 w17063001。
+正在从系统中移除服务 w17063001...
+已成功地从系统中移除服务 w17063001。
+尝试停止服务 w17063001。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在回滚程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 w17063001 的前一状态。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 w17063001。
+正在从系统中移除服务 w17063001...
+已成功地从系统中移除服务 w17063001。
+尝试停止服务 w17063001。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在回滚程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 w17063001 的前一状态。
+正在卸载程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 w17063001。
+正在从系统中移除服务 w17063001...
+已成功地从系统中移除服务 w17063001。
+尝试停止服务 w17063001。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 w17063001。
+正在从系统中移除服务 w17063001...
+已成功地从系统中移除服务 w17063001。
+尝试停止服务 w17063001。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 w17063001。
+正在从系统中移除服务 w17063001...
+已成功地从系统中移除服务 w17063001。
+尝试停止服务 w17063001。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 w17063001。
+正在从系统中移除服务 w17063001...
+已成功地从系统中移除服务 w17063001。
+尝试停止服务 w17063001。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 w17063001。
+正在从系统中移除服务 w17063001...
+已成功地从系统中移除服务 w17063001。
+尝试停止服务 w17063001。
+正在安装程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 w17063001...
+已成功安装服务 w17063001。
+正在日志 Application 中创建 EventLog 源 w17063001...
+正在提交程序集“F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装程序集“G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 wp17063001...
+已成功安装服务 wp17063001。
+正在日志 Application 中创建 EventLog 源 wp17063001...
+正在提交程序集“G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = G:\2017年\六月份\wp17063001\wwwroot\wwwSvn\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 wp17063001。
+正在从系统中移除服务 wp17063001...
+已成功地从系统中移除服务 wp17063001。
+尝试停止服务 wp17063001。
+正在安装程序集“C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 wp18032302...
+已成功安装服务 wp18032302。
+正在日志 Application 中创建 EventLog 源 wp18032302...
+正在提交程序集“C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.exe
+正在卸载程序集“C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = C:\wp18032302\web\JN.Web\TimingPlan\JN.WindowsService.exe
+正在移除 EventLog 源 wp18032302。
+正在从系统中移除服务 wp18032302...
+已成功地从系统中移除服务 wp18032302。
+尝试停止服务 wp18032302。
+正在安装程序集“F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 wp18032302...
+已成功安装服务 wp18032302。
+正在日志 Application 中创建 EventLog 源 wp18032302...
+正在提交程序集“F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装程序集“F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe
+正在安装服务 wp18032302...
+正在日志 Application 中创建 EventLog 源 wp18032302...
+正在回滚程序集“F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = F:\wp18070301\web\JN.Web\TimingPlan\JN.WindowsService.exe
+正在将事件日志还原到源 wp18032302 的前一状态。
+正在安装程序集“E:\wwwroot\User008\wp18080102\wwwroot\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\wwwroot\User008\wp18080102\wwwroot\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\wwwroot\User008\wp18080102\wwwroot\TimingPlan\JN.WindowsService.exe
+正在安装服务 wp18080102...
+已成功安装服务 wp18080102。
+正在日志 Application 中创建 EventLog 源 wp18080102...
+正在提交程序集“E:\wwwroot\User008\wp18080102\wwwroot\TimingPlan\JN.WindowsService.exe”。
+受影响的参数是:
+   logtoconsole = 
+   logfile = E:\wwwroot\User008\wp18080102\wwwroot\TimingPlan\JN.WindowsService.InstallLog
+   assemblypath = E:\wwwroot\User008\wp18080102\wwwroot\TimingPlan\JN.WindowsService.exe

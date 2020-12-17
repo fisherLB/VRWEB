@@ -1,0 +1,166 @@
+﻿@{
+    Layout = null;// "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+
+    string lang = "";
+    if (Request["lang"] != null && Request["lang"] != "" && !string.IsNullOrWhiteSpace(Request["lang"]))
+    {
+        lang = Request["lang"].Trim();
+    }
+    else
+    {
+        lang = JN.Services.Resource.ResourceProvider.Culture ?? "zh-CN";
+    }
+}
+
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0">
+
+    <title>@T("登录")</title>
+
+    <link href="/Theme/App/css/base.css" rel="stylesheet">
+    <link href="/Theme/App/css/login.css" rel="stylesheet">
+    <script src="/Theme/App/js/jquery-1.11.2.min.js"></script>
+
+    <link href="~/Plugin/layer/skin/default/layer.css" rel="stylesheet" /><!--layer前端框架css-->
+    <script src="~/Plugin/layer/layer.js"></script><!--layer前端框架js-->
+    <style>
+
+    </style>
+</head>
+
+<body>
+    <div class="login">
+        <div class="lang changecolor">
+            @if (lang == "zh-CN" || lang == "cn")
+            {
+                <a href="@Url.Action("index","login",new {lang ="en-US" })">Change English</a>
+                @*<a href="###">Change English</a>*@
+            }
+            else
+            {
+                <a href="@Url.Action("index","login",new {lang ="zh-CN" })">切换中文</a>
+            }
+        </div>
+
+        <div class="login-logo">
+            <img src="@sysSet.AppLogoPic">
+            @*<h1></h1>*@
+        </div>
+
+        <div class="login-form">
+            <form method="get" id="form">
+                <div class="login-form-group placeholder">
+                    <label class="icon-phone">@T("手机/UID")</label>
+                    <div class="input-group">
+                        <input placeholder="@T("请输入手机号/UID")" name="username" type="text">
+                    </div>
+                </div>
+
+                <div class="login-form-group placeholder">
+                    <label class="icon-pw">@T("登录密码")</label>
+                    <div class="input-group">
+                        <input class="input" type="password" name="password" placeholder="@T("请输入登录密码")">
+                    </div>
+                </div>
+
+                <div class="login-links changecolor">
+                    <a href="@Url.Action("index","reg")" class="login-links-1">@T("立即注册")</a>
+                    <a href="@Url.Action("GetPwd","login")" class="login-links-2">@T("忘记密码")？</a>
+                </div>
+
+                <div class="login-submit">
+                    <input name="lang" value="@lang" type="hidden" />
+                    <button type="button" id="btnlogin">@T("登录")</button>
+                </div>
+                <div class="app-download changecolor">
+                    <a href="@JN.Services.Tool.ConfigHelper.GetConfigString("IphoneAppUrl")">iPhone</a>
+                    <a href="@JN.Services.Tool.ConfigHelper.GetConfigString("AndroidAppUrl")">Android</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+
+<script src="~/Plugin/layer/layer.js"></script>
+<script>
+    $(function () {
+        $("#btnlogin").click(function () {
+            $.post('/app/login/index', $('#form').serialize(), function (d) {
+                if (d.Status == 200) {
+                    layer.msg("@T("登录成功")", { icon: 1 }, function () {
+                        setname();
+                        location.href = d.Message;
+                    });
+                } else if (d.Status == 201) {
+                    // 判断是否已存在，如果已存在则直接显示
+                    layer.msg(d.Message, {
+                        icon: 2
+                    })
+                    TryLoginUsers = $("input[name='username']").val();
+                    $("#mobileCode").show();
+                    ChangeCheckCode();
+                } else {
+                    layer.msg(d.Message, {
+                        icon: 2
+                    })
+                    ChangeCheckCode();
+                }
+            }, 'json')
+        });
+
+        //记住账号
+        function setname() {
+            //判断是否保存用户名
+            var storage = window.localStorage;
+            if ($("#remb_me").is(':checked')) {
+                //存储到loaclStage
+                storage["loginname"] = $("#login_name").val();
+                storage["isstorename"] = "yes";
+            } else {
+                storage["loginphone"] = "";
+                storage["loginname"] = "";
+                storage["isstorename"] = "no";
+            }
+        };
+        //判断是否存在过用户
+        var storage = window.localStorage;
+        if ("yes" == storage["isstorename"]) {
+            $("#remb_me").attr("checked", true);
+            $("#login_name").val(storage["loginname"]);
+        };
+
+        @{
+            var us= Session["TryLoginUsers"] == null ? "null" : Session["TryLoginUsers"];
+        }
+        var TryLoginUsers =@us;
+        if ($("input[name='username']").val() == TryLoginUsers)
+            $("#mobileCode").show();
+        else
+            $("#mobileCode").hide();
+        $("input[name='username']").blur(function () {
+            if ($("input[name='username']").val() == TryLoginUsers)
+                $("#mobileCode").show();
+            else
+                $("#mobileCode").hide();
+        });
+    })
+    //$("#country").change(function () {
+    //    if (this.value != 86)
+    //    {
+    //        layer.msg("当前暂时只支持中国地区", {
+    //            icon: 2
+    //        })
+    //        $("#country").val(86);
+    //    }
+    //})
+
+    function ChangeCheckCode() {
+        var oldUrl = $('#captchaimg').attr("src");
+        $('#captchaimg').attr("src", oldUrl + '1');
+    }
+</script>

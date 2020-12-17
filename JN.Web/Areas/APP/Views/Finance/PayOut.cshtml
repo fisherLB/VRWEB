@@ -1,0 +1,109 @@
+﻿@model JN.Data.Currency
+@{
+    ViewBag.Title = "转入";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+
+    decimal money = JN.Services.Manager.Users.WalletCur((int)Model.WalletCurID, Umodel);
+
+    var cashCur = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().SingleAndInit(3);
+}
+<link href="/Theme/App/css/base.css" rel="stylesheet">
+
+
+<header class="header">
+    <div class="header-return">
+        <a href="@Url.Action("index", "home")"></a>
+    </div>
+
+    <div class="logo">@T("离线提现")</div>
+
+    <div class="header-btn">
+        <a href="@Url.Action("RMBCashList", "CashTransfer")">@T("提现记录")</a>
+    </div>
+</header>
+@*<div style="margin-top:50px;">
+    <a>离线</a>/
+    <a>现金</a>
+</div>*@
+<section class="container tab-container">
+    <div class="tab-title">
+        <div class="tab-item">
+            <div class="lava"></div>
+
+            <a href="@Url.Action("PayOut", "Finance")">@T("离线")</a>
+            <a href="@Url.Action("RMBCash", "CashTransfer")?curid=@cashCur.ID" class="active">@T("现金")</a>
+        </div>
+    </div>
+
+    <div class="tab-content">
+        <div class="form-widget">
+            <form action="" id="frmEdit" method="post">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("转出数量")</label>
+
+                        <div class="form-control">
+                            <input placeholder="@T("可转出数量")@money.ToString("F4")" name="drawmoney" class="primary-input">
+
+                            @*<span class="trade-all">全部</span>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">@T("接受地址")</label>
+
+                        <div class="form-control">
+                            <input name="address" value="">
+                        </div>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">@T("交易密码")</label>
+
+                        <div class="form-control">
+                            <input type="password" name="password2" placeholder="@T("请输入交易密码")">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-submit">
+                    <button type="button" id="btnEdit" class="form-submit-btn">@T("确认转出")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+</section>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    $("#btnEdit").click(function () {
+        $("#frmEdit").ajaxSubmit({
+            url: "@Url.Action("RaSend")",
+            type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                    alert("@(T("转出成功，请耐心等待系统审核"))!", function () {
+                    });
+                } else {
+                    alert("@T("转出失败：")" + data.Message);
+                }
+            },
+            error: function (error) {
+                alert(error);
+            }
+        });
+    });
+</script>
+
+
+

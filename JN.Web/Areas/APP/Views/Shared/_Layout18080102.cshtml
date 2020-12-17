@@ -1,0 +1,100 @@
+﻿@{
+    string curl = Request.Url.ToString().ToLower();//
+    string language = JN.Services.Resource.ResourceProvider.Culture;// "zh-CN";
+    if (Request["lang"] != null)
+    {
+        language = Request["lang"];
+    }
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0">
+    <title>@T(ViewBag.Title)</title>
+
+    <link href="~/Theme/APP/css/weui.min.css" rel="stylesheet" />
+    <link href="~/Theme/APP/css/jquery-weui.css" rel="stylesheet" />
+    <link href="/Theme/App/css/base.css" rel="stylesheet">
+    @*<link href="/Theme/App/css/user.css" rel="stylesheet">*@
+    @*<script src="/Theme/App/js/jquery-1.11.2.min.js"></script>*@
+    <script src="/Theme/App/js/jquery-2.1.4.js"></script>
+
+    @if (language == "zh-CN")
+    {
+        <!-- <script src="~/Plugin/layer/layui/layui.js"></script>layui加载数据js-->
+        <script src="~/Plugin/layer/layui/lay/dest/layui.all.js"></script>
+    }
+    else
+    {
+        <!--<script src="~/Plugin/layer/layui/layuiEN.js"></script>layui加载数据js-->
+        <script src="~/Plugin/layer/layui/lay/dest/layui.allEN.js"></script>
+    }
+
+    @*<link href="~/Plugin/layer/skin/default/layer.css" rel="stylesheet" /><!--layer前端框架css-->
+        <script src="~/Plugin/layer/layer.js"></script><!--layer前端框架js-->*@
+    @*<script src="~/Plugin/layer/layui/layui.js"></script>*@
+
+    <script src="~/Theme/APP/js/jquery-weui.js"></script>
+   
+</head>
+
+<body>
+    @RenderBody()
+
+    <!--暂未开放弹窗-->
+    @*<div class="popup">
+            <div class="popup-box coming-soon">
+                <div class="popup-box-content">
+                    <div class="coming-soon-content">
+                        <img src="/Theme/App/images/coming_soon.png">
+                        <p>@T("此功能暂未开放，敬请期待")</p>
+                    </div>
+                </div>
+
+                <div class="popup-submit">
+                    <button type="button" class="confirm-btn">@T("确认")</button>
+                </div>
+            </div>
+        </div>*@
+    <script type="text/javascript" src="~/Plugin/mui/js/mui.min.js"></script>
+    <script type="text/javascript">
+        //暂未开放
+        function NoOpen() {
+            layer.msg('@T("开发中")');
+        }
+        //暂未开放
+        $(function () {
+            $('.no-open').click(function () {
+                $('.popup').fadeIn();
+
+                var h = ($(window).height() - $('.popup-box').height()) / 2;
+                $('.popup-box').css('margin-top', h);
+            });
+
+            $('.confirm-btn').click(function () {
+                $('.popup').fadeOut();
+            });
+        });
+
+        mui.init();
+        //20190428 增加tap移动端跳转页面效果
+        mui('.muiopen').on('tap', 'a', function (e) {
+            var href = this.getAttribute('href');
+            //非plus环境，直接走href跳转
+            if (!mui.os.plus) {
+                location.href = href;
+                return;
+            }
+
+            var id = this.getAttribute("data-wid");
+            if (!id) {
+                id = href;
+            }
+            //打开新窗口
+            mui.openWindow("http://kj190416.uqitest.com/" + href, id);
+        });
+    
+    </script>
+</body>
+</html>

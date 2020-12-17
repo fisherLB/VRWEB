@@ -1,0 +1,274 @@
+﻿@{
+    ViewBag.Title = ViewBag.Title;
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    string lang = "";
+    if (Request["lang"] != null && Request["lang"] != "" && !string.IsNullOrWhiteSpace(Request["lang"]))
+    {
+        lang = Request["lang"].Trim();
+    }
+    else
+    {
+        lang = JN.Services.Resource.ResourceProvider.Culture ?? "zh-CN";
+    }
+    //JN.Data.ShopSysSetting sysShop = MvcCore.Unity.Get<JN.Data.Service.IShopSysSettingService>().Single(1);
+
+    decimal ReShowBuyTradeNum = (ViewBag.ReShowBuyTradeNum ?? 0);
+    decimal ReShowSellTradeNum = (ViewBag.ReShowSellTradeNum ?? 0);
+
+    decimal ReAdvertiseNum = ViewBag.ReAdvertiseNum;
+
+    decimal jdsf = cacheSysParam.Single(x => x.ID == 1104).Value.ToDecimal();
+    decimal fjsf = cacheSysParam.Single(x => x.ID == 1105).Value.ToDecimal();
+    decimal gdsf = cacheSysParam.Single(x => x.ID == 1106).Value.ToDecimal();
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+
+<header class="header muiopen">
+    <h1>@T("我的")</h1>
+    <div class="set-up muiopen">
+        <a href="/APP/User/Setting">
+            <img src="~/Theme/APP/images/icon_setting.png" />
+        </a>
+    </div>
+</header>
+<section class="container muiopen">
+    <div class="setting-menu setting-photo" onclick="showtab('coinWarp');">
+        <div class="setting-img member-bg">
+            <img src="@(string.IsNullOrEmpty(Umodel.HeadFace) ? "/Theme/App/images/member.png" : Umodel.HeadFace)" id="preview">
+        </div>
+        <div class="node">
+            <h1>ID:@Umodel.UserName</h1>
+            @if ((Umodel.Cur3001 ?? 0) >= jdsf)
+            {
+                <img src="~/Theme/APP/images/node1.png" />
+            }
+            @if ((Umodel.Cur3004 ?? 0) >= fjsf)
+            {
+                <img src="~/Theme/APP/images/node2.png" />
+            }
+            @if (ReAdvertiseNum >= gdsf && (Umodel.Cur3001 ?? 0) >= jdsf)
+            {
+                <img src="~/Theme/APP/images/node3.png" />
+            }
+
+        </div>
+
+        <div class="member">
+            <img src="~/Theme/APP/images/ico_member.png" />
+            @T(typeof(JN.Data.Enum.UserLevel).GetEnumDesc(Umodel.UserLevel))
+        </div>
+        <a href="/APP/QRCode/Android" class="receivables-btn colorfont">
+            <img src="~/Theme/APP/images/icon_scan.png" />
+            @T("扫一扫")
+        </a>
+    </div>
+    <div class="personal-m1">
+        <ul>
+            @*<li><a href="/APP/Finance/Recharge"><img src="~/Theme/APP/images/menu/icon-2.png" />@T("买商")</a></li>
+                <li><a href="/APP/Finance/Putforward"><img src="~/Theme/APP/images/menu/icon-1.png" />@T("兑商")</a></li>*@
+            <li><a href="/APP/Finance/ApplyExchangeCur" class="colorfont"><img src="~/Theme/APP/images/menu/icon-2.png" />@T("兑换")</a></li>
+            <li><a href="/APP/finance/UserWalletLog" class="colorfont"><img src="~/Theme/APP/images/menu/icon-1.png" />@T("资金明细")</a></li>
+            <li><a href="/APP/Finance/ApplyTransfer" class="colorfont"><img src="~/Theme/APP/images/menu/icon-3.png" />@T("转账")</a></li>
+        </ul>
+    </div>
+    <div class="clr-small"></div>
+    @*<div class="setting-menu replicating-address">
+            <button type="submit" data-clipboard-action="copy" data-clipboard-text="@Umodel.R3001" id="clip_button">@T("复制地址")</button>
+            @Umodel.R3001
+        </div>*@
+    @*<div class="personal-assets">
+            <div class="box">
+                <div class="assets-t">
+                    <span>888.00</span><br />@T("总资产")
+                </div>
+                <ul>
+                    <li><p><span>888.00</span><br>@T("斐济币")</p></li>
+                    <li><p><span>888.00</span><br>@T("原种子")</p></li>
+                    <li><p><span>888.00</span><br>@T("商务钱包")</p></li>
+                </ul>
+            </div>
+        </div>*@
+    <div class="clr-small"></div>
+
+    <div class="setting-menu">
+        <a href="/APP/User/Business" class="menu-icon16">
+            <i></i>
+            <h3 class="white">@T("业绩")</h3>
+        </a>
+        @*<a href="/APP/Finance/TransferIn" class="menu-icon1">
+                <i></i>
+                <h3>@T("个人买入")  @((Umodel.ShowBuyTradeNum ?? 0).ToString("F2"))</h3>
+            </a>
+            <a href="/APP/Finance/TransferIn" class="menu-icon1">
+                <i></i>
+                <h3>@T("伞下买入")  @ReShowBuyTradeNum.ToString("F2")</h3>
+            </a>
+            <a href="/APP/Finance/TransferIn" class="menu-icon1">
+                <i></i>
+                <h3>@T("伞下卖出") @ReShowSellTradeNum.ToString("F2")</h3>
+            </a>*@
+
+        @*<a href="/APP/Finance/TransferIn" class="menu-icon1">
+                <i></i>
+                <h3>@T("收款")</h3>
+            </a>*@
+        @*<a href="/APP/Finance/ApplyExchangeCur?fid=4&toid=2" class="menu-icon1">
+                <i></i>
+                <h3>@T("兑换")</h3>
+            </a>*@
+        @*<a href="/APP/Finance/Bill" class="menu-icon6">
+                <i></i>
+                <h3>@T("账单")</h3>
+            </a>*@
+        @*<a href="/APP/finance/UserWalletLog" class="menu-icon2">
+                <i></i>
+                <h3>@T("资金明细")</h3>
+            </a>*@
+        <a href="@Url.Action("banklist")" class="menu-icon3">
+            <i></i>
+            <h3 class="white">@T("我的收款信息")</h3>
+        </a>
+        @*<a href="@Url.Action("AdvertiseOrder", "Advertise",new {status= 1,fromcoid= 1})" class="menu-icon6">
+                <i></i>
+                <h3>@T("交易记录")</h3>
+            </a>
+            <a href="@Url.Action("Order","advertise", new { Direction = 1, status = 1 })" class="menu-icon6">
+                <i></i>
+                <h3>@T("C2C交易订单")</h3>
+            </a>*@
+    </div>
+    <div class="clr-small"></div>
+    <div class="setting-menu">
+        @*<a href="/APP/User/Coinmarketcap" class="menu-icon14">
+                <i></i>
+                <h3>@T("币币信息")</h3>
+            </a>*@
+        <a href="/APP/User/Mymine" class="menu-icon4">
+            <i></i>
+            <h3 class="white">@T("我的矿机")</h3>
+        </a>
+
+    </div>
+    <div class="clr-small"></div>
+    @*@if (JN.Services.Tool.ConfigHelper.GetConfigBool("HaveShop"))
+        {
+            var shopModel = MvcCore.Unity.Get<JN.Data.Service.IShop_InfoService>().Single(x => x.UID == Umodel.ID && x.IsActivation);
+            <div class="setting-menu">
+                @if (shopModel == null && sysShop.MostStore == true)
+                {
+                    <a href="/APP/shop/AddShopInfo" class="menu-icon5">
+                        <i></i>
+                        <h3>@T("申请开店")</h3>
+                    </a>
+                }
+                else if (shopModel != null && sysShop.MostStore == true)
+                {
+                    <a href="/APP/shop/AddShopInfo" class="menu-icon6">
+                        <i></i>
+                        <h3>@T("我的店铺")</h3>
+                    </a>
+                    <a href="/APP/shop/ShopProduct" class="menu-icon6">
+                        <i></i>
+                        <h3>@T("产品管理")</h3>
+                    </a>
+                    <a href="/APP/shop/AddProduct" class="menu-icon6">
+                        <i></i>
+                        <h3>@T("添加商品")</h3>
+                    </a>
+                    <a href="/APP/shop/ShopOrder" class="menu-icon6">
+                        <i></i>
+                        <h3>@T("店铺订单")</h3>
+                    </a>
+                }
+                <a href="/APP/shop/MyOrder" class="menu-icon6">
+                    <i></i>
+                    <h3>@T("购买订单")</h3>
+                </a>
+                <a href="/APP/shop/MyAddress" class="menu-icon7">
+                    <i></i>
+                    <h3>@T("地址管理")</h3>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="setting-menu">
+                <a href="###" class="menu-icon5" onclick="NoOpen()">
+                    <i></i>
+                    <h3>@T("我的店铺")</h3>
+                </a>
+                <a href="###" class="menu-icon6" onclick="NoOpen()">
+                    <i></i>
+                    <h3>@T("我的订单")</h3>
+                </a>
+                <a href="###" class="menu-icon7" onclick="NoOpen()">
+                    <i></i>
+                    <h3>@T("地址管理")</h3>
+                </a>
+            </div>
+        }*@
+    <div class="clr-small"></div>
+    <div class="setting-menu">
+        <a href="@Url.Action("index","notice")" class="menu-icon8">
+            <i></i>
+            <h3 class="white">@T("公告")</h3>
+        </a>
+
+        @*<a href="@Url.Action("MessageList", "Mail")" class="menu-icon9">
+                <i></i>
+                <h3>@T("个人消息")</h3>
+            </a>*@
+        <a href="@Url.Action("TreeView", "user")" class="menu-icon15">
+            <i></i>
+            <h3 class="white">@T("关系图谱")</h3>
+        </a>
+    </div>
+    <div class="setting-menu">
+        <a href="@Url.Action("Write", "Mail")" class="menu-icon10">
+            <i></i>
+            <h3 class="white">@T("投诉留言")</h3>
+        </a>
+        @*<a href="/APP/User/Register" class="menu-icon13">
+                <i></i>
+                <h3>@T("注册新会员")</h3>
+            </a>*@
+        <a href="@Url.Action("invite","user")" class="menu-icon11">
+            <i></i>
+            <h3 class="white">@T("分享")</h3>
+        </a>
+        @*<a href="###" class="menu-icon12">
+                <i></i>
+                <h3>@T("关于")</h3>
+            </a>*@
+    </div>
+</section>
+
+
+<!--底部导航-->
+
+@Html.Partial("~/Areas/APP/Views/Shared/_Footer.cshtml")
+<script src="~/Plugin/clipboard/js/clipboard.min.js"></script>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        var clipboard = new Clipboard('#clip_button');
+        clipboard.on('success', function (e) {
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            alert("@T("复制成功")");
+            e.clearSelection();
+        });
+    });
+
+</script>

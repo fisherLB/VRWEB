@@ -1,0 +1,168 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.Shop_Comments>
+@{
+    ViewBag.Title = "评论列表";
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+
+<div id="content">
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!--新闻搜索-->
+    <div class="filter-bar margin-bottom-none">
+        <form method="get">
+            <div>
+                <select name="datefiled" style="width: 80px;">
+                    <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>创建时间</option>
+                </select>
+            </div>
+            <div>
+                <label>从:</label>
+                <div class="input-append">
+                    <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                    <span class="add-on glyphicons calendar"><i></i></span>
+                </div>
+            </div>
+            <div>
+                <label>到:</label>
+                <div class="input-append">
+                    <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                    <span class="add-on glyphicons calendar"><i></i></span>
+                </div>
+            </div>
+            <div>
+            </div>
+            <div style="margin-left:10px">
+                <select name="keyfiled" style="width: 80px;">
+                    <option value="OrderNumber" @(Request["keyfiled"] == "OrderNumber" ? "selected" : "")>订单编号</option>
+                    <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>用户名</option>
+                    <option value="pid" @(Request["keyfiled"] == "pid" ? "selected" : "")>商品名称</option>
+                    @*<option value="sid" @(Request["keyfiled"] == "sid" ? "selected" : "")>店铺名称</option>*@
+                    <option value="Content" @(Request["keyfiled"] == "Content" ? "selected" : "")>评论内容</option>
+                </select>
+            </div>
+            <div>
+                <div class="input-append">
+                    <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                    <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                </div>
+            </div>
+            <div>
+                <div class="input-append">
+                    <input type="submit" value="查询" />
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+    </div>
+    <!--评论页面-->
+    <div>
+        <table class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th>订单编号</th>
+                    <th>用户</th>
+                    <th>商品</th>
+                    @*<th>店铺</th>*@
+                    <th>评论内容</th>
+                    <th>商品评价</th>
+                    <th>服务评价</th> 
+                    <th>描述相符</th>
+                    <th>卖家服务</th>
+                    <th>物流服务</th>
+                    <th>创建时间</th>
+                    <th>显示</th>
+                    
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count > 0)
+                {
+                    var pList = MvcCore.Unity.Get<JN.Data.Service.IShop_ProductService>().List().ToList();
+                    var shopList = MvcCore.Unity.Get<JN.Data.Service.IShop_InfoService>().List().ToList();
+                    var userList = MvcCore.Unity.Get<JN.Data.Service.IUserService>().List().ToList();
+                    for (int i = 0; i < Model.Count; i++)
+                    {
+                        <tr>
+                            <td>
+                                @Model[i].OrderNumber
+                            </td>
+                            <td>
+                                @Model[i].UserName
+                            </td>
+                            <td>
+                               @* @(MvcCore.Unity.Get<JN.Data.Service.IShop_ProductService>().Single(Model[i].pid).ProductName)*@
+                                @{
+                                    var pName = pList.Where(x => x.Id == Model[i].pid).ToList();
+                                    if (pName != null && pName.Count() > 0)
+                                    {
+                                        @pName.First().ProductName
+                                    }
+                                 }
+                            </td>
+                            @*<td>                             
+                                @{
+                                    var shopName = shopList.Where(x => x.ID == Model[i].sid).ToList();
+                                    if (shopName != null && shopName.Count() > 0)
+                                    {
+                                        @shopName.First().ShopName
+                                    }
+                                }
+                            </td>*@
+                            <td>
+                                @(Model[i].Content.ToString().Length > 60 ? Model[i].Content.ToString().Substring(0, 60) + "……" : Model[i].Content.ToString())
+                            </td>
+                            <td>
+                                @(Model[i].proComment.ToString().Length > 60 ? Model[i].proComment.ToString().Substring(0, 60) + "……" : Model[i].proComment.ToString())
+                            </td>
+                            <td>
+                                @(Model[i].shopComment.ToString().Length > 60 ? Model[i].shopComment.ToString().Substring(0, 60) + "……" : Model[i].shopComment.ToString())
+                            </td>
+                            <td>
+                                @Model[i].proStar
+                            </td>
+                            <td>
+                                @Model[i].shopStart
+                            </td>
+                            <td>
+                                @Model[i].wlStart
+                            </td>
+                            <td>
+                                @Model[i].CreateTime
+                            </td>
+                            <td>
+                                <input type="checkbox" data-value="@Model[i].ID" onclick="ShowOrCloseComment(this)" @(Convert.ToBoolean(Model[i].IsLock) == false ? "checked" : "") />
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="separator top form-inline small">
+            @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+        </div>
+    </div>
+</div>
+
+@section scripts{
+
+    <script type="text/javascript">
+        //是否显示
+        function ShowOrCloseComment(obj) {
+            var id = $(obj).attr("data-value");
+            $.post("@Url.Action("ShowOrCloseComment", "MallManagement")", { id: id }, function (data) {
+                if (data.Status != 200) {
+                    alert("操作失败！");
+                }
+
+            });
+        }
+    </script>
+}

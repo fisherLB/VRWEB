@@ -1,0 +1,55 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.ActLog>
+          
+                    <!--数据开始-->
+                  <table id="sample-table-1" width="100%" border="0" cellpadding="0" cellspacing="0" class="table_list">
+    <thead>
+        <tr>
+            <th width="33.333%">@T("登录时间")</th>
+            <th width="33.333%">@T("登录IP")</th>
+            <th width="33.333%">@T("参考地点")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+
+                <tr>
+                    <td>@Model[i].CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                    <td>@Model[i].IP</td>
+                    <td>
+                        @Model[i].Source
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+            <td colspan="3" class="no-data-tips"><span>@T("没有更多数据了~~")</span> </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+                    <!--分页-->
+        
+
+<div class="row">
+    <div class="col-xs-8" style="margin: 0px 0 0 20px;">
+        @Ajax.Pager(Model, new Webdiyer.WebControls.Mvc.PagerOptions
+   {
+       PageIndexParameterName = "Page",
+       FirstPageText = "首页",
+       LastPageText = "尾页",
+       NextPageText = "下一页",
+       PrevPageText = "上一页"
+      , CurrentPagerItemTemplate = "<span class=\"current\">{0}</span>", DisabledPagerItemTemplate = "<span class=\"disabled\">{0}</span>", Id = "badoopager" 
+   },
+                                                                              new MvcAjaxOptions { UpdateTargetId = "_loginlog", HttpMethod = "Post" })
+      
+    </div>
+</div>

@@ -1,0 +1,532 @@
+﻿@{
+    Layout = null;// "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000);
+}<!DOCTYPE html>
+<html style="font-size: 33.75px;">
+<head>
+    <title>@sysSet.SysName|邀请用户</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="keywords" content="@sysSet.SiteKeywords">
+    <meta name="description" content="@sysSet.SiteDescription">
+    <script src="~/Plugin/Jquery/jquery-2.0.3.min.js"></script>
+    <script src="~/Plugin/layer/layer.js"></script>
+    <link rel="stylesheet" href="/theme/app/css/signup_300e4ac5b5.css">
+    <link rel="stylesheet" href="/theme/app/css/signup-mobile_544af771d7.css">
+</head>
+<body class="bg-white">
+    <div class="wrap">
+        <img src="/theme/app/images/banner-signup.png" alt="" class="banner">
+        <form class="data-form" id="form">
+            <input type="hidden" name="isincite" value="true">
+            <input type="hidden" name="RefereeUser" value="@Request["rename"]">
+            <div class="input-cont icon-username">
+                <input class="input" type="text" name="username" placeholder="请设定英文用户名">
+            </div>
+            <div class="input-cont">
+                <select class="input-country-code" name="country_code" id="country">
+                    <option value="86">86&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中國</option>
+
+                    <option value="244">244&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安哥拉</option>
+
+                    <option value="93">93&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿富汗</option>
+
+                    <option value="355">355&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿尔巴尼亚</option>
+
+                    <option value="213">213&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿尔及利亚</option>
+
+                    <option value="376">376&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安道尔共和国</option>
+
+                    <option value="1264">1264&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安圭拉岛</option>
+
+                    <option value="1268">1268&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;安提瓜和巴布达</option>
+
+                    <option value="54">54&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿根廷</option>
+
+                    <option value="374">374&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;亚美尼亚</option>
+
+                    <option value="247">247&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿森松</option>
+
+                    <option value="61">61&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;澳大利亚</option>
+
+                    <option value="43">43&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;奥地利</option>
+
+                    <option value="994">994&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿塞拜疆</option>
+
+                    <option value="1242">1242&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴哈马</option>
+
+                    <option value="973">973&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴林</option>
+
+                    <option value="880">880&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;孟加拉国</option>
+
+                    <option value="1246">1246&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴巴多斯</option>
+
+                    <option value="375">375&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;白俄罗斯</option>
+
+                    <option value="32">32&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;比利时</option>
+
+                    <option value="501">501&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;伯利兹</option>
+
+                    <option value="229">229&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;贝宁</option>
+
+                    <option value="1441">1441&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;百慕大群岛</option>
+
+                    <option value="591">591&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;玻利维亚</option>
+
+                    <option value="267">267&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;博茨瓦纳</option>
+
+                    <option value="55">55&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴西</option>
+
+                    <option value="673">673&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;文莱</option>
+
+                    <option value="359">359&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;保加利亚</option>
+
+                    <option value="226">226&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;布基纳法索</option>
+
+                    <option value="95">95&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;缅甸</option>
+
+                    <option value="257">257&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;布隆迪</option>
+
+                    <option value="237">237&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;喀麦隆</option>
+
+                    <option value="1">1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加拿大</option>
+
+                    <option value="1345">1345&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;开曼群岛</option>
+
+                    <option value="236">236&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中非共和国</option>
+
+                    <option value="235">235&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;乍得</option>
+
+                    <option value="56">56&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;智利</option>
+
+                    <option value="86">86&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中国</option>
+
+                    <option value="57">57&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;哥伦比亚</option>
+
+                    <option value="242">242&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;刚果</option>
+
+                    <option value="682">682&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;库克群岛</option>
+
+                    <option value="506">506&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;哥斯达黎加</option>
+
+                    <option value="53">53&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;古巴</option>
+
+                    <option value="357">357&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;塞浦路斯</option>
+
+                    <option value="420">420&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;捷克</option>
+
+                    <option value="45">45&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;丹麦</option>
+
+                    <option value="253">253&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;吉布提</option>
+
+                    <option value="1890">1890&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;多米尼加共和国</option>
+
+                    <option value="593">593&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;厄瓜多尔</option>
+
+                    <option value="20">20&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;埃及</option>
+
+                    <option value="503">503&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;萨尔瓦多</option>
+
+                    <option value="372">372&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;爱沙尼亚</option>
+
+                    <option value="251">251&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;埃塞俄比亚</option>
+
+                    <option value="679">679&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;斐济</option>
+
+                    <option value="358">358&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;芬兰</option>
+
+                    <option value="33">33&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;法国</option>
+
+                    <option value="594">594&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;法属圭亚那</option>
+
+                    <option value="241">241&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加蓬</option>
+
+                    <option value="220">220&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;冈比亚</option>
+
+                    <option value="995">995&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格鲁吉亚</option>
+
+                    <option value="49">49&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;德国</option>
+
+                    <option value="233">233&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;加纳</option>
+
+                    <option value="350">350&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;直布罗陀</option>
+
+                    <option value="30">30&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;希腊</option>
+
+                    <option value="1809">1809&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;格林纳达</option>
+
+                    <option value="1671">1671&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;关岛</option>
+
+                    <option value="502">502&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;危地马拉</option>
+
+                    <option value="224">224&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;几内亚</option>
+
+                    <option value="592">592&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圭亚那</option>
+
+                    <option value="509">509&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;海地</option>
+
+                    <option value="504">504&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;洪都拉斯</option>
+
+                    <option value="852">852&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中国香港</option>
+
+                    <option value="36">36&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;匈牙利</option>
+
+                    <option value="354">354&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;冰岛</option>
+
+                    <option value="91">91&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;印度</option>
+
+                    <option value="62">62&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;印度尼西亚</option>
+
+                    <option value="98">98&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;伊朗</option>
+
+                    <option value="964">964&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;伊拉克</option>
+
+                    <option value="353">353&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;爱尔兰</option>
+
+                    <option value="972">972&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;以色列</option>
+
+                    <option value="39">39&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;意大利</option>
+
+                    <option value="225">225&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;科特迪瓦</option>
+
+                    <option value="1876">1876&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;牙买加</option>
+
+                    <option value="81">81&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;日本</option>
+
+                    <option value="962">962&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;约旦</option>
+
+                    <option value="855">855&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;柬埔寨</option>
+
+                    <option value="327">327&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;哈萨克斯坦</option>
+
+                    <option value="254">254&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;肯尼亚</option>
+
+                    <option value="82">82&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;韩国</option>
+
+                    <option value="965">965&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;科威特</option>
+
+                    <option value="331">331&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;吉尔吉斯坦</option>
+
+                    <option value="856">856&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;老挝</option>
+
+                    <option value="371">371&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;拉脱维亚</option>
+
+                    <option value="961">961&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;黎巴嫩</option>
+
+                    <option value="266">266&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;莱索托</option>
+
+                    <option value="231">231&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;利比里亚</option>
+
+                    <option value="218">218&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;利比亚</option>
+
+                    <option value="423">423&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;列支敦士登</option>
+
+                    <option value="370">370&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;立陶宛</option>
+
+                    <option value="352">352&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卢森堡</option>
+
+                    <option value="853">853&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中国澳门</option>
+
+                    <option value="261">261&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马达加斯加</option>
+
+                    <option value="265">265&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马拉维</option>
+
+                    <option value="60">60&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马来西亚</option>
+
+                    <option value="960">960&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马尔代夫</option>
+
+                    <option value="223">223&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马里</option>
+
+                    <option value="356">356&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马耳他</option>
+
+                    <option value="1670">1670&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马里亚那群岛</option>
+
+                    <option value="596">596&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;马提尼克</option>
+
+                    <option value="230">230&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;毛里求斯</option>
+
+                    <option value="52">52&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;墨西哥</option>
+
+                    <option value="373">373&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;摩尔多瓦</option>
+
+                    <option value="377">377&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;摩纳哥</option>
+
+                    <option value="976">976&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;蒙古</option>
+
+                    <option value="1664">1664&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;蒙特塞拉特岛</option>
+
+                    <option value="212">212&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;摩洛哥</option>
+
+                    <option value="258">258&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;莫桑比克</option>
+
+                    <option value="264">264&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;纳米比亚</option>
+
+                    <option value="674">674&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;瑙鲁</option>
+
+                    <option value="977">977&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尼泊尔</option>
+
+                    <option value="599">599&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;荷属安的列斯</option>
+
+                    <option value="31">31&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;荷兰</option>
+
+                    <option value="64">64&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新西兰</option>
+
+                    <option value="505">505&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尼加拉瓜</option>
+
+                    <option value="227">227&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尼日尔</option>
+
+                    <option value="234">234&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;尼日利亚</option>
+
+                    <option value="850">850&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;朝鲜</option>
+
+                    <option value="47">47&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;挪威</option>
+
+                    <option value="968">968&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿曼</option>
+
+                    <option value="92">92&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴基斯坦</option>
+
+                    <option value="507">507&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴拿马</option>
+
+                    <option value="675">675&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴布亚新几内亚</option>
+
+                    <option value="595">595&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;巴拉圭</option>
+
+                    <option value="51">51&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;秘鲁</option>
+
+                    <option value="63">63&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;菲律宾</option>
+
+                    <option value="48">48&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;波兰</option>
+
+                    <option value="689">689&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;法属玻利尼西亚</option>
+
+                    <option value="351">351&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;葡萄牙</option>
+
+                    <option value="1787">1787&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;波多黎各</option>
+
+                    <option value="974">974&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;卡塔尔</option>
+
+                    <option value="262">262&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;留尼旺</option>
+
+                    <option value="40">40&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;罗马尼亚</option>
+
+                    <option value="7">7&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;俄罗斯</option>
+
+                    <option value="1758">1758&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圣卢西亚</option>
+
+                    <option value="1784">1784&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圣文森特岛</option>
+
+                    <option value="684">684&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;东萨摩亚(美)</option>
+
+                    <option value="685">685&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;西萨摩亚</option>
+
+                    <option value="378">378&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圣马力诺</option>
+
+                    <option value="239">239&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圣多美和普林西比</option>
+
+                    <option value="966">966&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;沙特阿拉伯</option>
+
+                    <option value="221">221&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;塞内加尔</option>
+
+                    <option value="248">248&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;塞舌尔</option>
+
+                    <option value="232">232&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;塞拉利昂</option>
+
+                    <option value="65">65&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新加坡</option>
+
+                    <option value="421">421&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;斯洛伐克</option>
+
+                    <option value="386">386&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;斯洛文尼亚</option>
+
+                    <option value="677">677&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;所罗门群岛</option>
+
+                    <option value="252">252&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;索马里</option>
+
+                    <option value="27">27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;南非</option>
+
+                    <option value="34">34&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;西班牙</option>
+
+                    <option value="94">94&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;斯里兰卡</option>
+
+                    <option value="1758">1758&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圣卢西亚</option>
+
+                    <option value="1784">1784&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;圣文森特</option>
+
+                    <option value="249">249&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;苏丹</option>
+
+                    <option value="597">597&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;苏里南</option>
+
+                    <option value="268">268&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;斯威士兰</option>
+
+                    <option value="46">46&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;瑞典</option>
+
+                    <option value="41">41&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;瑞士</option>
+
+                    <option value="963">963&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;叙利亚</option>
+
+                    <option value="886">886&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;中国台湾</option>
+
+                    <option value="992">992&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;塔吉克斯坦</option>
+
+                    <option value="255">255&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;坦桑尼亚</option>
+
+                    <option value="66">66&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;泰国</option>
+
+                    <option value="228">228&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;多哥</option>
+
+                    <option value="676">676&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;汤加</option>
+
+                    <option value="1809">1809&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;特立尼达和多巴哥</option>
+
+                    <option value="216">216&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;突尼斯</option>
+
+                    <option value="90">90&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;土耳其</option>
+
+                    <option value="993">993&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;土库曼斯坦</option>
+
+                    <option value="256">256&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;乌干达</option>
+
+                    <option value="380">380&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;乌克兰</option>
+
+                    <option value="971">971&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;阿拉伯联合酋长国</option>
+
+                    <option value="44">44&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;英国</option>
+
+                    <option value="1">1&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;美国</option>
+
+                    <option value="598">598&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;乌拉圭</option>
+
+                    <option value="233">233&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;乌兹别克斯坦</option>
+
+                    <option value="58">58&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;委内瑞拉</option>
+
+                    <option value="84">84&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;越南</option>
+
+                    <option value="967">967&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;也门</option>
+
+                    <option value="381">381&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;南斯拉夫</option>
+
+                    <option value="27">27&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;南非</option>
+
+                    <option value="263">263&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;津巴布韦</option>
+
+                    <option value="243">243&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;扎伊尔</option>
+
+                    <option value="260">260&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;赞比亚</option>
+
+                </select>
+                <span class="input-country-code-before"></span>
+                <input class="input" type="tel" name="mobile" pattern="[0-9]*" placeholder="请输入手机号码" id="phone">
+            </div>
+            @if (cacheSysParam.Single(x => x.ID == 3501).Value.ToInt() >= 1)
+            {
+                <div class="input-cont icon-code">
+                    <input class="input" type="tel" name="smscode" placeholder="请输入验证码">
+                    <button class="link get-token" id="yzm" type="button" style="background-color: transparent; border: 0;">
+                        发送验证码
+                    </button>
+                </div>
+            }
+            <div class="input-cont icon-password">
+                <input class="input" type="password" name="password" placeholder="请输入登录密码">
+            </div>
+
+            <div class="input-cont icon-password">
+                <input class="input" type="password" name="password2" placeholder="请输入交易密码">
+            </div>
+            <a class="btn-signup" id="submit">接受邀请，领取福利</a>
+        </form>
+
+        <div class="app-decs" style="height:450px;">
+
+        </div>
+    </div>
+</body>
+</html>
+
+
+
+<script>
+    $(function () {
+        $("#submit").click(function () {
+            $.post('/App/reg/index', $('#form').serialize(), function (d) {
+                if (d.Status == 200) {
+                    layer.msg("邀请成功！", {
+                        icon: 1
+                    });
+                  location.href="/App/login"
+                } else {
+                    layer.msg(d.Message, {
+                        icon: 2
+                    });
+
+                }
+            }, 'json')
+
+        })
+    })
+
+
+    //验证手机
+    function codephone(thisval) {
+        var phone = $("#phone").val();
+        //var myreg = /^(((13[0-9]{1})|(18[0-9]{1})|(15[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        //if (!myreg.test(phone)) {
+        //    layer.msg('请输入有效的手机号码', { icon: 2 });
+        //    $("#phone").focus();
+        //    return false;
+        //}
+        if (phone != "") {
+            layer.msg('正在发送短信，请稍后...');
+            $.post("/App/reg/SendMobileMsm", { myphone: phone }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg('短信已发送', { icon: 1 });
+                    time(thisval);
+                } else {
+
+                    layer.msg(data.Message, { icon: 2 });
+                }
+            });
+        } else {
+            layer.msg('手机不能为空', { icon: 2 });
+
+            $("#phone").focus();
+            return false;
+        }
+    }
+
+    var yzmbtn = document.getElementById("yzm");
+    if (yzmbtn != null) {
+        var wait = 60;
+        document.getElementById("yzm").disabled = false;
+        function time(o) {
+            if (wait == 0) {
+                o.removeAttribute("disabled");
+                o.innerHTML = "重新获取验证码";
+                wait = 60;
+            } else {
+                o.setAttribute("disabled", true);
+                o.innerHTML = "重新发送(" + wait + ")";
+                wait--;
+                setTimeout(function () {
+                    time(o)
+                },
+                1000)
+            }
+        }
+        document.getElementById("yzm").onclick = function () {
+            codephone(this);
+        }
+    }
+
+
+    //$("#country").change(function () {
+    //    if (this.value != 86) {
+    //        layer.msg("当前暂时只支持中国地区", {
+    //            icon: 2
+    //        })
+    //        $("#country").val(86);
+    //    }
+    //})
+</script>

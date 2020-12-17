@@ -1,0 +1,114 @@
+﻿@using System.Text.RegularExpressions;
+@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+}
+<div class="container clear-float main">
+    @Html.Partial("/Areas/APP/Views/Home/_Security.cshtml")
+    <div class="fr">
+        <div class="setting-title">@T("安全设置")>@T("绑定邮箱")</div>
+        @using (Ajax.BeginForm("EmailSettings", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "afterPost" }, new { id = "saveForm", @class = "form-horizontal" }))
+        {
+        <div class="setting-panel">
+            <div class="setting-head">@T("验证邮箱")</div>
+            <div class="line"></div>
+            <div class="setting-flow clear-float step2">
+                <span class="flow-line"><span class="flow-line-active"></span></span>
+                <span class="flow-item no-margin"><span class="flow-point finish">1</span><div class="flow-decs">@T("绑定邮箱")</div></span>
+                <span class="flow-item"><span class="flow-point">2</span><div class="flow-decs">@T("完成")</div></span>
+            </div>
+            <div class="form-cont" id="step1">
+                <div class="input-cont">
+                    <span class="icon form-email"></span>
+                    <input class="input"  type="email"  name="email" placeholder="@T("请输入邮箱地址")">
+
+                    <div class="form-tips"></div>
+                    <div class="error-msg">@T("请输入正确的邮箱地址")</div>
+                </div>
+                <div class="input-cont">
+                    <span class="icon form-token"></span>
+                    <input class="input" type="number" name="codeEmail" placeholder="@T("请输入验证码")">
+                    <button class="link get-token" id="yzm" type="button" style="background: #fff;border: 0;">
+                       @T("发送验证码") 
+                    </button>
+                    <div class="form-tips"></div>
+                </div>
+                <a id="bindMail" class="btn submit" onclick="$('#saveForm').submit()">@T("确定提交")</a>
+            </div>
+        </div>
+        }
+    </div>
+
+</div>
+
+
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+    <script>
+        function afterPost(data) {
+            if (data.Status == 200) {
+                layer.msg("@T("操作成功")", { icon: 1 })
+                window.location.href = "/App/home";
+            } else {
+                layer.msg(data.Message, { icon: 2 })
+            }
+        }
+        //发送邮箱验证码
+        function getEmail(thisval) {
+            var email = $("input[name='email']").val();
+            if (email == null || email == "") {
+                layer.msg("@T("请您填写邮箱地址")", { icon: 2 })
+                $("input[name='email']").focus();
+                return false;
+            }
+            if (!isEmail(email))
+            {
+                layer.msg("@T("邮箱格式错误")", { icon: 2 })
+                $("input[name='email']").focus();
+                return false;
+            }
+
+            var gourl = "/App/user/SendEmail";
+            $.post(gourl, { Email: email }, function (result) {
+                if (result.Status == 200) {
+                    layer.msg("@T("发送成功")", { icon: 1 })
+                    time(thisval);
+                } else {
+                    layer.msg(result.Message, { icon: 2 })
+                }
+            });
+        }
+
+        function isEmail(str) {
+            var reg = /^([a-zA-Z0-9_-])+@@([a-zA-Z0-9_-])+(.[a-zA-Z0-9_-])+/;
+            return reg.test(str);
+        }
+
+
+
+        var yzmbtn = document.getElementById("yzm");
+        if (yzmbtn != null) {
+            var wait = 60;
+            document.getElementById("yzm").disabled = false;
+            function time(o) {
+                if (wait == 0) {
+                    o.removeAttribute("disabled");
+                    o.innerHTML = "重新获取验证码";
+                    wait = 60;
+                } else {
+                    o.setAttribute("disabled", true);
+                    o.innerHTML = "重新发送(" + wait + ")";
+                    wait--;
+                    setTimeout(function () {
+                        time(o)
+                    },
+                    1000)
+                }
+            }
+            document.getElementById("yzm").onclick = function () {
+                getEmail(this);
+            }
+        }
+</script>
+

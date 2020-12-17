@@ -1,0 +1,63 @@
+﻿@{
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var curList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().ListCache("coinList").Where(x => x.LineSwitch && !x.IsICO).OrderByDescending(x => x.ID).ToList();
+}
+<link href="/Theme/app/css/user.css" rel="stylesheet">
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return">
+	    <a href="javascript:history.go(-1);"></a>
+	</div>
+	
+	<div class="logo">左右区业绩</div>
+</header>
+
+<section class="container">
+	<div class="balance balance-s">
+		<ul>
+            @foreach (var item in curList)
+            {
+                <li>
+                    <a href="@Url.Action("UserWalletLog","finance")">
+                        <span>@T(item.CurrencyName)</span>
+                        <h3>@JN.Services.Manager.Users.WalletCurBalance((int)item.WalletCurID, Umodel).ToString("F2")</h3>
+                    </a>
+                </li>
+            }
+		</ul>
+	</div>
+	
+	<div class="assets-title">左右区业绩</div>
+	<div class="assets-list">
+		<ul>
+			<li>
+				<span>左区</span>
+				<h3>@((Umodel.LeftDpMargin ?? 0).ToString("F2"))</h3>
+			</li>
+			
+			<li>
+				<span>右区</span>
+				<h3>@((Umodel.RightDpMargin ?? 0).ToString("F2"))</h3>
+			</li>
+			
+			<li>
+				<span>历史左区</span>
+				<h3>@((Umodel.LeftAchievement ?? 0).ToString("F2"))</h3>
+			</li>
+			
+			<li>
+				<span>历史右区</span>
+				<h3>@((Umodel.RightAchievement ?? 0).ToString("F2"))</h3>
+			</li>
+		</ul>
+	</div>
+</section>

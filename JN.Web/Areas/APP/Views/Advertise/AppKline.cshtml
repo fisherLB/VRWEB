@@ -1,0 +1,106 @@
+﻿@model JN.Data.Currency
+@{
+    Layout = null;
+}
+<html>
+<head>
+    <meta name="renderer" content="webkit" />
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="/Theme/App/js/jquery-1.11.2.min.js"></script>
+    <script src="/Theme/app/js/echarts-all.js"></script>
+    <title>@T(ViewBag.Title)</title>
+</head>
+<body style="height:100%;width:100%;">
+    <div class="line-chart" id="lineChart">
+        3231231
+
+    </div>
+
+    <script type="text/javascript">
+     
+
+        var curid = "@Request["curid"]";//
+        var m = "@Request["m"]";//
+
+        function onloadLine(m){
+            //获取委托数据
+            $.post('@Url.Action("GetKLine")', { curid: curid ,m : 5}, function (d) {
+                var pricedata = [];
+                var pricetime = [];
+                for (var i = 0; i < d.Data.length; i++) {
+                    pricedata.push(d.Data[i].Close);
+                    pricetime.push(d.Data[i].XTime);
+                }
+
+                var myChart = echarts.init(document.getElementById('lineChart'));
+                var option = {
+                    tooltip : {
+                        trigger: 'axis'
+                    },
+                    grid: {
+                        x: 35,
+                        x2: 10,
+                        y: 30,
+                        y2: 25,
+                        borderWidth:'0'//设置外围边框为0
+                    },
+                    legend: {
+                        data:['@T(Model.CurrencyName)']
+                    },
+                    color: ['#529ad2'],
+                    toolbox: {
+                        show : false,
+                        feature : {
+                            mark : {show: true},
+                            dataView : {show: true, readOnly: false},
+                            magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                            restore : {show: true},
+                            saveAsImage : {show: true}
+                        }
+                    },
+                    calculable : false,//去边框
+                    xAxis : [
+                        {
+                            type : 'category',
+                            boundaryGap : false,//占满全图？
+                            data : pricetime,
+                            splitLine : {show : false}//保留网格区域
+                        }
+                    ],
+                    yAxis : [
+                        {
+                            type : 'value',
+                            splitLine: {
+                                show: false //去除网格线
+                            }
+
+                        }
+                    ],
+                    series : [
+                        {
+                            name:'@T(Model.CurrencyName)',
+                            type:'line',
+                            smooth:true,
+                            itemStyle: {normal: {areaStyle: {color:'#cce7fb'}}},//type: 'default'
+                            data:pricedata,
+                            //normal:{color:'#80c1f9'}
+                        }
+                    ]
+                };
+
+                // 为echarts对象加载数据
+                myChart.setOption(option);
+
+            });
+        }
+        $(function(){
+            onloadLine(m);//加载k图
+        })
+    </script>
+
+</body>
+</html>
+
+

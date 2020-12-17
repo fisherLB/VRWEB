@@ -1,0 +1,173 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Transfer>
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    JN.Data.Currency cmodel = ViewBag.Currency as JN.Data.Currency;
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List().ToList();
+    string curl = Request.Url.ToString().ToLower();
+    int num = 1;
+
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    decimal poundage = cacheSysParam.SingleAndInit(x => x.ID == 3102).Value3.ToDecimal();
+}
+
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<link href="~/Theme/APP/css/user.css" rel="stylesheet" />
+
+@{Html.RegisterMvcPagerScriptResource();}
+<header class="header muiopen">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+        @*<a href="/APP/user/Personal"></a>*@
+    </div>
+    <div class="logo text-l">@cmodel.CurrencyName@T("转账")</div>
+    <a class="my-mine" href="/APP/Finance/ApplyTransferList?curid=@cmodel.ID">@T("转账记录")</a>
+</header>
+
+<section class="container transter-box">
+    @*<div class="panel">
+            @{
+                decimal d = 0;//币种估值
+                decimal walletcur = JN.Services.Manager.Users.WalletCur((int)cmodel.WalletCurID, Umodel);//余额
+                if ((cmodel.GetPriceType ?? 0) == 1)
+                {
+                    d = JN.Services.Manager.Stocks.getcurrentprice(cmodel) * walletcur;
+                }
+                else
+                {
+                    d = JN.Services.Tool.StringHelp.GetPrice("https://api.coinmarketcap.com/v1/ticker/" + cmodel.English, cmodel.English, "usd", true).ToDecimal() * walletcur;
+                }
+            }
+            <div class="padding5">
+                <p class="text-c fs54 ccbcae4">@T("钱包可用余额")<br><span class="fs7 cf40">@walletcur</span>@cmodel.EnSigns</p>
+            </div>
+
+        </div>*@
+    <div class="form-box">
+        <form id="frmEdit">
+
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="lablecolor">@T("币种")</label>
+                <select name="coinid" id="coinid" class="weui-input form-control lablecolor">
+                    @foreach (var item in cmodelList)
+                    {
+                        <option value="@item.ID" @(item.ID == cmodel.ID ? "selected" : "")>@T(item.CurrencyName)</option>
+                    }
+
+                </select>
+
+            </div>
+
+            @*<div class="form-group">
+                    <label for="exampleInputEmail1">@T("转账地址")</label>
+                    <input type="text" name="r3001" class="form-control" oninput="getUser(this.value)" value="" placeholder="@T("请输入正确的转账地址")">
+                </div>*@
+
+
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="lablecolor">@T("转账用户")</label>
+                <input type="text" name="recuser" id="recuser" class="form-control" value="" @*readonly*@ placeholder="@T("请输入正确的转账用户")">
+            </div>
+
+            @*<div class="form-group">
+                    <label for="exampleInputEmail1">@T("真实姓名")</label>
+                    <input type="text" id="name" class="form-control" value="" readonly placeholder="@T("请输入正确的真实姓名")">
+                </div>
+
+                <div class="form-group">
+                    <label for="exampleInputEmail1">@T("手机")</label>
+                    <input type="text" id="shouji" class="form-control" value="" readonly placeholder="@T("请输入正确的手机")">
+                </div>*@
+
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="lablecolor">@T("转账金额")</label>
+                <input type="text" name="transfermoney" id="transfermoney" class="form-control" placeholder="@T("请输入正确的数量") ">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1" class="lablecolor">@T("备注")</label>
+                <input type="text" name="remark" placeholder="@T("填写备注")" class="form-control">
+            </div>
+            <div class="form-group">
+                <div id="reserve" style="display: none"></div>
+                <label for="exampleInputEmail1" class="lablecolor">@T("交易密码")</label>
+                <input type="password" name="password2" class="form-control" placeholder="@T("请输入交易密码") ">
+                <div class="form-tips"></div>
+                <input type="hidden" value="@cmodel.ID" name="curid" />
+                <div class="error-msg">@*@T("请输入交易密码")*@</div>
+            </div>
+            <button type="button" class="form-submit-btn border1 bgf40" id="btnEdit">@T("确认转账")</button>
+        </form>
+    </div>
+
+
+    @*<div class="panel transactions-panel">
+            <div class="filter">
+                <div class="body" id="_Transfer">
+
+                    @Html.Partial("_Transfer", Model)
+
+                </div>
+            </div>
+        </div>*@
+</section>
+
+<script>
+
+    $(".icon-qrcode").click(function () {
+        $("#qrcode-img").show(300);
+    });
+    $(".transparen-bg").click(function () {
+        $("#qrcode-img").hide(300);
+    });
+
+</script>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    $("#transfermoney").change(function () {
+        var ActualMoney = parseFloat($("#transfermoney").val()) * (1 + parseFloat($("#poundage").val()));
+        $("#actualmoney").val(ActualMoney.toFixed(2));
+    });
+    $("#btnEdit").click(function () {
+        //$('#btnEdit').attr("disabled", "disabled");
+        $("#frmEdit").ajaxSubmit({
+            url: "@Url.Action("ApplyTransfer")",
+            type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("提交成功！")", { icon: 1, time: 1000 }, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                    //$('#btnEdit').removeAttr("disabled");
+                }
+            },
+            error: function (error) {
+                layer.msg(error, { icon: 2 });
+                //$('#btnEdit').removeAttr("disabled");
+            }
+        });
+    });
+
+    function getUser(add) {
+        //var userid = $('#' + id).val();
+        $.post('/app/finance/TestingUser/', { recusername: add }, function (data) {
+            //$('#giveidname').html(data.Message);
+            $('#recuser').val(data.Message);
+            $('#name').val(data.Name);
+            $('#shouji').val(data.Shouji);
+        });
+    }
+
+
+</script>

@@ -1,0 +1,976 @@
+﻿@model JN.Data.SysSetting
+@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="widget">
+
+            <!-- Widget heading -->
+            <div class="widget-head">
+                <h3 class="heading">系统运行设置</h3>
+            </div>
+            <!-- // Widget heading END -->
+
+            <div class="widget-body">
+                <div class="tabbable">
+                    <form class="form-horizontal" id="validation-form" method="post">
+                        <div class="widget widget-tabs widget-tabs-double">
+
+                            <!-- Tabs Heading -->
+                            <div class="widget-head">
+                                <ul>
+                                    <li class="active"><a href="#tab1-2" class="glyphicons dribbble" data-toggle="tab"><i></i><span class="strong">站点运行设置</span><span>开启关闭站点/名称及版权等</span></a></li>
+                                    <li class=""><a href="#tab2-2" class="glyphicons pinboard " data-toggle="tab"><i></i><span class="strong">用户注册登录设置</span><span>用户注册选填/必填项,取回密码方式等</span></a></li>
+                                    <li class=""><a href="#tab3-2" class="glyphicons e-mail" data-toggle="tab"><i></i><span class="strong">邮件短信接口设置</span><span>邮件及短信发送所需配置</span></a></li>
+                                    <li class=""><a href="#tab4-2" class="glyphicons jolicloud" data-toggle="tab"><i></i><span class="strong">图片相关设置</span><span>图片上传及相关设置</span></a></li>
+                                    <li class=""><a href="#tab5-2" class="glyphicons readability" data-toggle="tab"><i></i><span class="strong">安全设置</span><span>系统运行方面安全设置</span></a></li>
+
+                                </ul>
+                            </div>
+                            <!-- // Tabs Heading END -->
+
+                            <div class="widget-body">
+                                <div class="tab-content" style="padding-top:30px">
+
+                                    <!-- Tab content -->
+                                    <div class="tab-pane active" id="tab1-2">
+                                        <div class="control-group">
+                                            <label class="control-label" for="closehint">关闭站点并提示：<br /><input name="isopenup" value="True" type="checkbox" @(Model.IsOpenUp ? "checked='checked'" : "")> 开启/关闭</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <textarea name="closehint" class="form-control" style="width:350px">@Model.CloseHint</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="closeregisterhint">关闭注册并提示：<br /><input name="isregisteropen" value="True" type="checkbox" @(Model.IsRegisterOpen ? "checked='checked'" : "")> 开启/关闭</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <textarea name="closeregisterhint" class="form-control" style="width:350px">@Model.CloseRegisterHint</textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="sysname">网站名称：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="sysname" class="form-control" value="@Model.SysName" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="sitetitle">网站标题：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="sitetitle" class="form-control" style="width:350px" value="@Model.SiteTitle" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="sitekeywords">网站关键词：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="sitekeywords" class="form-control" style="width:350px" value="@Model.SiteKeywords" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label">网站描述：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="sitedescription" class="form-control" style="width:350px" value="@Model.SiteDescription" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label">网站网址：</label>
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="siteurl" class="form-control" style="width:350px" value="@Model.SiteUrl" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label">网站底部版权文字</label>
+
+                                            <div class="controls">
+                                                <textarea name="copyinfo" class="form-control" style="width:350px">@Model.CopyInfo</textarea>
+                                            </div>
+                                        </div>
+                                        @*<hr />*@
+                                        <div class="control-group">
+                                            <label class="control-label">开启客服：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <label>
+                                                        <input name="isopenkefu" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @(Model.IsOpenKefu ? "checked='checked'" : "")>
+                                                        <span class="lbl"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">QQ客服：</label>
+
+                                            <div class="controls form-inline">
+                                                <div class="clearfix">
+                                                    <input type="text" name="kefuurl1" class="form-control" style="width:350px" placeholder="这里输入QQ1号码" value="@Model.KefuUrl1" />
+                                                    @*<input type="text" name="KefuUrl2" class="form-control" style="width:150px" placeholder="这里输入QQ2号码" value="@Model.KefuUrl2" />
+                                                        <input type="text" name="KefuUrl3" class="form-control" style="width:150px" placeholder="这里输入QQ3号码" value="@Model.KefuUrl2" />*@
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="control-group">
+                                                <label class="control-label">客服电话：</label>
+
+                                                <div class="controls form-inline">
+                                                    <div class="clearfix">
+                                                        <input type="text" name="KefuTel1" class="form-control" style="width:150px" placeholder="这里是客服电话" value="@Model.KefuTel1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">QQ群1：</label>
+
+                                                <div class="controls form-inline">
+                                                    <div class="clearfix">
+                                                        <input type="text" name="QQGroup1" class="form-control" style="width:350px" placeholder="这里输入QQ群号1" value="@Model.QQGroup1" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">QQ群2：</label>
+
+                                                <div class="controls form-inline">
+                                                    <div class="clearfix">
+                                                        <input type="text" name="QQGroup2" class="form-control" style="width:350px" placeholder="这里输入QQ群号2" value="@Model.QQGroup2" />
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="control-group">
+                                                <label class="control-label">QQ群3：</label>
+                                                <div class="controls form-inline">
+                                                    <div class="clearfix">
+                                                        <input type="text" name="QQGroup3" class="form-control" style="width:350px" placeholder="这里输入QQ群号3" value="@Model.QQGroup3" />
+                                                    </div>
+                                                </div>
+                                            </div>*@
+
+                                    </div>
+                                    <!-- // Tab content END -->
+                                    <!-- Tab content -->
+                                    <div class="tab-pane" id="tab2-2">
+                                        <div class="form-group">
+                                            <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="sitekeywords">注册显示项：</label>
+
+                                            <div class="col-xs-12 col-sm-5">
+                                                <div class="clearfix">
+                                                    <label>
+                                                        <div class="span4">
+                                                            <h4 style="margin-bottom: 10px;">选填项</h4>
+                                                            @*<input type="checkbox" name="ckxt" value="NickName" @(Model.RegistItems.Contains(",NickName,") ? "checked" : "")>昵称<br />*@
+                                                            <input type="checkbox" name="ckxt" value="RealName" @(Model.RegistItems.Contains(",RealName,") ? "checked" : "")>真实姓名<br />
+                                                            <input type="checkbox" name="ckxt" value="Mobile" @(Model.RegistItems.Contains(",Mobile,") ? "checked" : "")>手机号码<br />
+                                                            <input type="checkbox" name="ckxt" value="Email" @(Model.RegistItems.Contains(",Email,") ? "checked" : "")>邮箱地址<br />
+                                                            <input type="checkbox" name="ckxt" value="IDCard" @(Model.RegistItems.Contains(",IDCard,") ? "checked" : "")>身份证号码<br />
+                                                            @*<input type="checkbox" name="ckxt" value="Area" @(Model.RegistItems.Contains(",Area,") ? "checked" : "")>省市县<br />
+                <input type="checkbox" name="ckxt" value="Address" @(Model.RegistItems.Contains(",Address,") ? "checked" : "")>联系地址<br />*@
+                                                            <hr />
+                                                            <input type="checkbox" name="ckxt" value="AliPay" @(Model.RegistItems.Contains(",AliPay,") ? "checked" : "")>支付宝帐号<br />
+                                                            <input type="checkbox" name="ckxt" value="WeiXin" @(Model.RegistItems.Contains(",WeiXin,") ? "checked" : "")>微信帐号<br />
+                                                            <input type="checkbox" name="ckxt" value="QQ" @(Model.RegistItems.Contains(",QQ,") ? "checked" : "")>QQ帐号<br />
+                                                            @*<input type="checkbox" name="ckxt" value="BitCoin" @(Model.RegistItems.Contains(",BitCoin,") ? "checked" : "")>比特币地址<br />*@
+                                                            <hr />
+                                                            <input type="checkbox" name="ckxt" value="BankName" @(Model.RegistItems.Contains(",BankName,") ? "checked" : "")>银行卡名称<br />
+                                                            <input type="checkbox" name="ckxt" value="BankCard" @(Model.RegistItems.Contains(",BankCard,") ? "checked" : "")>银行卡卡号<br />
+                                                            <input type="checkbox" name="ckxt" value="BankUser" @(Model.RegistItems.Contains(",BankUser,") ? "checked" : "")>银行卡户名<br />
+                                                            <input type="checkbox" name="ckxt" value="BankOfDeposit" @(Model.RegistItems.Contains(",BankOfDeposit,") ? "checked" : "")>银行卡开户行<br />
+                                                            <hr />
+                                                            <input type="checkbox" name="ckxt" value="Question" @(Model.RegistItems.Contains(",Question,") ? "checked" : "")>取回密码问题<br />
+                                                            <input type="checkbox" name="ckxt" value="Answer" @(Model.RegistItems.Contains(",Answer,") ? "checked" : "")>取回密码答案<br />
+                                                            <input type="text" style="display:none" name="RegistItems" value="@Model.RegistItems" />
+                                                        </div>
+                                                        <div class="span4">
+                                                            <h4 style="margin-bottom: 10px;">必填项</h4>
+                                                            @*<input type="checkbox" name="ckbt" value="NickName" @(Model.RegistNotNullItems.Contains(",NickName,") ? "checked" : "")>昵称<br />*@
+                                                            <input type="checkbox" name="ckbt" value="RealName" @(Model.RegistNotNullItems.Contains(",RealName,") ? "checked" : "")>真实姓名<br />
+                                                            <input type="checkbox" name="ckbt" value="Mobile" @(Model.RegistNotNullItems.Contains(",Mobile,") ? "checked" : "")>手机号码<br />
+                                                            <input type="checkbox" name="ckbt" value="Email" @(Model.RegistNotNullItems.Contains(",Email,") ? "checked" : "")>邮箱地址<br />
+                                                            <input type="checkbox" name="ckbt" value="IDCard" @(Model.RegistNotNullItems.Contains(",IDCard,") ? "checked" : "")>身份证号码<br />
+                                                            <hr />
+                                                            <input type="checkbox" name="ckbt" value="AliPay" @(Model.RegistNotNullItems.Contains(",AliPay,") ? "checked" : "")>支付宝帐号<br />
+                                                            <input type="checkbox" name="ckbt" value="WeiXin" @(Model.RegistItems.Contains(",WeiXin,") ? "checked" : "")>微信帐号<br />
+                                                            <input type="checkbox" name="ckbt" value="QQ" @(Model.RegistItems.Contains(",QQ,") ? "checked" : "")>QQ帐号<br />
+                                                            <hr />
+                                                            <input type="checkbox" name="ckbt" value="BankName" @(Model.RegistNotNullItems.Contains(",BankName,") ? "checked" : "")>银行卡名称<br />
+                                                            <input type="checkbox" name="ckbt" value="BankCard" @(Model.RegistNotNullItems.Contains(",BankCard,") ? "checked" : "")>银行卡卡号<br />
+                                                            <input type="checkbox" name="ckbt" value="BankUser" @(Model.RegistNotNullItems.Contains(",BankUser,") ? "checked" : "")>银行卡户名<br />
+                                                            <input type="checkbox" name="ckbt" value="BankOfDeposit" @(Model.RegistNotNullItems.Contains(",BankOfDeposit,") ? "checked" : "")>银行卡开户行<br />
+                                                            <hr />
+                                                            <input type="checkbox" name="ckbt" value="Question" @(Model.RegistNotNullItems.Contains(",Question,") ? "checked" : "")>取回密码问题<br />
+                                                            <input type="checkbox" name="ckbt" value="Answer" @(Model.RegistNotNullItems.Contains(",Answer,") ? "checked" : "")>取回密码答案<br />
+                                                            <input type="text" style="display:none" name="RegistNotNullItems" value="@Model.RegistNotNullItems" />
+                                                        </div>
+                                                        <div class="span4">
+                                                            <h4 style="margin-bottom: 10px;">唯一项（如手机号只能使用一次）</h4>
+                                                            @*<input type="checkbox" name="ckwy" value="NickName" @(Model.RegistOnlyOneItems.Contains(",NickName,") ? "checked" : "")>昵称<br />*@
+                                                            <input type="checkbox" name="ckwy" value="RealName" @(Model.RegistOnlyOneItems.Contains(",RealName,") ? "checked" : "")>真实姓名<br />
+                                                            <input type="checkbox" name="ckwy" value="Mobile" @(Model.RegistOnlyOneItems.Contains(",Mobile,") ? "checked" : "")>手机号码<br />
+                                                            <input type="checkbox" name="ckwy" value="Email" @(Model.RegistOnlyOneItems.Contains(",Email,") ? "checked" : "")>邮箱地址<br />
+                                                            <input type="checkbox" name="ckwy" value="IDCard" @(Model.RegistOnlyOneItems.Contains(",IDCard,") ? "checked" : "")>身份证号码<br />
+                                                            <hr />
+                                                            <input type="checkbox" name="ckwy" value="AliPay" @(Model.RegistOnlyOneItems.Contains(",AliPay,") ? "checked" : "")>支付宝帐号<br />
+                                                            <input type="checkbox" name="ckwy" value="WeiXin" @(Model.RegistOnlyOneItems.Contains(",WeiXin,") ? "checked" : "")>微信帐号<br />
+                                                            <input type="checkbox" name="ckwy" value="BankCard" @(Model.RegistOnlyOneItems.Contains(",BankCard,") ? "checked" : "")>银行卡卡号<br />
+                                                            <input type="text" style="display:none" name="RegistOnlyOneItems" value="@Model.RegistOnlyOneItems" />
+                                                        </div>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        @*<div class="control-group">
+                                                <label class="control-label" for="isregbankinfo">注册是否需要手机验证：</label>
+
+                                                <div class="controls">
+                                                    <div class="clearfix">
+                                                        <label>
+                                                            <input name="RegistNeedSMSVerification" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @((Model.RegistNeedSMSVerification ?? false) ? "checked='checked'" : "")>
+                                                            <span class="lbl"></span>
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>*@
+                                        <hr />
+                                        <div class="control-group">
+                                            <label class="control-label" for="isregbankinfo">输错5次密码冻结：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <label>
+                                                        <input name="iswrongpwdlock" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @(Model.IsWrongPwdLock ? "checked='checked'" : "")>
+                                                        <span class="lbl"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="isregbankinfo">取回密码方式：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <select name="RetrievePasswordType">
+                                                        @*<option value="Email" @(Model.RetrievePasswordType=="Email" ? "selected" : "")>通过邮箱取回密码（邮箱必填）</option>*@
+                                                        <option value="SMS" @(Model.RetrievePasswordType == "SMS" ? "selected" : "")>通过短信取回密码（手机必填）</option>
+                                                        @*<option value="Security" @(Model.RetrievePasswordType== "Security" ? "selected" : "")>通过密保取回密码（密保必填）</option>*@
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="isregbankinfo">图形验证码方案：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input name="VerificationCodeType" type="radio" value="001" @(Model.VerificationCodeType == "001" ? "checked='checked'" : "")> <img src="~/common/theme/images/code1.png" style="height:30px" />
+                                                    <input name="VerificationCodeType" type="radio" value="002" @(Model.VerificationCodeType == "002" ? "checked='checked'" : "")> <img src="~/common/theme/images/code2.jpg" style="height:30px" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="sitetitle">图形验证码长度：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="VerificationCodeLength" class="form-control" style="width:50px" value="@(Model.VerificationCodeLength ?? 0)" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- // Tab content END -->
+                                    <!-- Tab content -->
+                                    <div class="tab-pane" id="tab3-2">
+                                        <div class="control-group">
+                                            <label class="control-label" for="isregbankinfo">邮箱发送配置：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix" style="line-height:35px">
+                                                    发送服务器(SmtpServer)：<input type="text" name="SmtpServer" class="form-control" value="@Model.SmtpServer" /><br />
+                                                    发件邮箱(EmailAddress)：<input type="text" name="SmtpEmailAddress" class="form-control" value="@Model.SmtpEmailAddress" /><br />
+                                                    用户名　(SmtpUserName)：<input type="text" name="SmtpUserName" class="form-control" value="@Model.SmtpUserName" /><br />
+                                                    密　码　(SmtpPassword)：<input type="text" name="SmtpPassword" class="form-control" value="@Model.SmtpPassword" /><br />
+                                                    端口号　(SmtpPort)：　　<input type="text" name="SmtpPort" class="form-control" value="@Model.SmtpPort" /><br />
+                                                    是否开启SSL ：　　　　　<input type="text" name="SmtpSSL" class="form-control" value="@Model.SmtpSSL" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        <div class="control-group">
+                                            <label class="control-label" for="isregbankinfo">短信发送配置：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix" style="line-height:35px">
+                                                    服务商：<select name="SMSSerivce">
+                                                        <option value="中国网建" @(Model.SMSSerivce == "中国网建" ? "selected" : "")>中国网建</option>
+                                                        <option value="C123" @(Model.SMSSerivce == "C123" ? "selected" : "")>C123</option>
+                                                    </select><br />
+                                                    用户名：<input type="text" name="SMSUid" class="form-control" value="@Model.SMSUid" /><br />
+                                                    密　钥：<input type="text" name="SMSKey" class="form-control" value="@Model.SMSKey" /><br />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <!-- // Tab content END -->
+                                    <!-- Tab content -->
+                                    <div class="tab-pane" id="tab4-2">
+                                        @*<div class="control-group">
+                                            <label class="control-label">电脑版LOGO(109*46)：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <img style="width: 180px; height: 180px" id="LogoPic" src="@Model.LogoPic" />
+                                                    <input type="button" id="btnUpLogoPic" value="选择图片" class="" />
+                                                    <input type="hidden" name="LogoPic" id="hidLogoimgSrc" value="@Model.LogoPic" />
+                                                </div>
+                                            </div>
+                                        </div>*@
+                                        <div class="control-group">
+                                            <label class="control-label">APP版LOGO(95*95)：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <img style="width: 95px; height: 95px" id="AppPic" src="@Model.AppLogoPic" />
+                                                    <input type="button" id="btnUpAppPic" value="选择图片" class="" />
+                                                    <input type="hidden" name="AppLogoPic" id="hidAppimgSrc" value="@Model.AppLogoPic" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <hr />
+                                        @*<div class="control-group">
+                                            <label class="control-label">电脑版BANNER图片(2160*1350)：</label>
+
+                                            <div class="controls">
+                                                <div id="MainPic" style="width: 460px">
+                                                    @{
+                                                        int ImgCount = 0;
+                                                        if (Model.BannerPic == null || Model.BannerPic.Length == 0)
+                                                        {
+                                                            <img style="width: 180px; height: 180px" src="/common/theme/images/nopictures.jpg" />
+                                                        }
+                                                        else
+                                                        {
+                                                            string[] images = Model.BannerPic.Split(';');
+                                                            string[] ImgAlts = Model.BannerAlt.Split(';');
+                                                            string imgid = "";
+
+                                                            //ImgCount = images.Length;
+                                                            for (int i = 0; i < images.Length; i++)
+                                                            {
+                                                                string imgAlt = "";
+                                                                if (images[i].Length > 0)
+                                                                {
+                                                                    ImgCount++;
+                                                                    if (ImgAlts.Length > i)
+                                                                    {
+                                                                        imgAlt = ImgAlts[i];
+                                                                    }
+                                                                    imgid = "tmpImg" + i;
+                                                                    <img id="@imgid" style="width: 180px; height: 180px" src="@images[i]" />
+                                                                    <input type="text" id="@("linkBtn" + i)" name="@("link" + i)" value="@imgAlt" placeholder="在此输入链接" />
+                                                                    <input type="image" id="@("delImg" + i)" onclick="funDelImg(@i, this, '@images[i]')" src="/common/theme/images/a_close.png" style="margin-left: 30px;" />
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+
+                                                <br />
+                                                <input type="button" id="btnUpManiPic" value="添加图片" class="" />
+                                                <input type="hidden" name="BannerPic" id="hidMainimgSrc" value="@Model.BannerPic" />
+                                                <input type="hidden" id="hidImgCount" name="ImgCount" value="@ImgCount" />
+                                            </div>
+                                        </div>*@
+
+                                        <div class="control-group">
+                                            <label class="control-label">APP版BANNER图片(375*83)：</label>
+
+                                            <div class="controls">
+                                                <div id="MainPic2" style="width: 460px">
+                                                    @{
+                                                        int appImgCount = 0;
+                                                        if (Model.AppBannerPic == null || Model.AppBannerPic.Length == 0)
+                                                        {
+                                                            <img style="width: 180px; height: 180px" src="/common/theme/images/nopictures.jpg" />
+                                                        }
+                                                        else
+                                                        {
+                                                            string[] images = Model.AppBannerPic.Split('|');
+                                                            string[] ImgAlts = Model.AppBannerAlt.Split('|');
+                                                            string imgid = "";
+
+                                                            //ImgCount = images.Length;
+                                                            for (int i = 0; i < images.Length; i++)
+                                                            {
+                                                                string imgAlt = "";
+                                                                if (images[i].Length > 0)
+                                                                {
+                                                                    appImgCount++;
+                                                                    if (ImgAlts.Length > i)
+                                                                    {
+                                                                        imgAlt = ImgAlts[i];
+                                                                    }
+                                                                    imgid = "apptmpImg" + i;
+                                                                    <img id="@imgid" style="width: 375px; height: 83px; margin-top:20px;" src="@images[i]" />
+                                                             
+                                                                    <input type="text" id="@("applinkBtn" + i)" name="@("applink" + i)" value="@imgAlt" placeholder="在此输入链接" style="margin-top:10px;"/>      
+                                                                    <input type="image" id="@("appdelImg" + i)" onclick="funDelImg2(@i, this, '@images[i]')" src="/common/theme/images/a_close.png" style="margin-top:10px;margin-left: 30px;" />                                                              
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                </div>
+
+                                                <br />
+                                                <input type="button" id="btnAppUpManiPic" value="添加图片" class="" />
+                                                <input type="hidden" name="AppBannerPic" id="hidAppMainimgSrc" value=";@Model.AppBannerPic" />
+                                                <input type="hidden" id="hidAppImgCount" name="appImgCount" value="@appImgCount" />
+                                            </div>
+
+                                        </div>
+
+                                        <hr />
+                                        <div class="control-group">
+                                            <label class="control-label">二维码1(150*150)：</label>
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <img style="width: 180px; height: 180px" id="QrPic1" src="@Model.QRUrl1" />
+                                                    <input type="button" id="btnUpQrPic1" value="选择图片" class="" />
+                                                    <input type="hidden" name="QrUrl1" id="hidQrimgSrc1" value="@Model.QRUrl1" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">二维码2(150*150)：</label>
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <img style="width: 180px; height: 180px" id="QrPic2" src="@Model.QRUrl2" />
+                                                    <input type="button" id="btnUpQrPic2" value="选择图片" class="" />
+                                                    <input type="hidden" name="QrUrl2" id="hidQrimgSrc2" value="@Model.QRUrl2" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">二维码3(150*150)：</label>
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <img style="width: 180px; height: 180px" id="QrPic3" src="@Model.QRUrl3" />
+                                                    <input type="button" id="btnUpQrPic3" value="选择图片" class="" />
+                                                    <input type="hidden" name="QrUrl3" id="hidQrimgSrc3" value="@Model.QRUrl3" />
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        @*<div class="controls">
+                                                <div class="clearfix" style="line-height:35px">
+                                                    图片上传到又拍云：
+                                                    <input name="isuploadyu" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @(Model.IsWrongPwdLock ? "checked='checked'" : "")><br />
+                                                    又拍云用户名：<input type="text" name="SMSUid" class="form-control" value="" /><br />
+                                                    又拍云密　钥：<input type="text" name="SMSKey" class="form-control" value="" /><br />
+                                                </div>
+                                            </div>*@
+                                    </div>
+                                    <!-- // Tab content END -->
+                                    <!-- Tab content -->
+                                    <div class="tab-pane" id="tab5-2">
+                                        <div class="control-group">
+                                            <label class="control-label">接收信息手机号：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    @Model.SysMobile (不可修改)
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label">是否接收预警短信：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input name="IsWarnningSMS" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @((Model.IsWarnningSMS ?? false) ? "checked='checked'" : "")>
+                                                    <span class="lbl"></span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label">常登录的城市：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    @Model.MostUseCity (注：如果在此城市之外的地方登录，可能会需要输入经理密码)
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <p style="color:#f00">以下部分选项需要给预网站目录下Web.Config可读写权限 <input name="ModifyWebConfig" class="ace ace-switch ace-switch-4" value="True" type="checkbox">已有权限（注意：勾选本荐后以下项目才会被修改） </p>
+                                        <hr />
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="sitetitle">后台路径及数据库链接加密：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    @if (JN.Services.Tool.ConfigHelper.GetConfigBool("HaveEncrypt"))
+                                                    {
+                                                        <span>已加密</span>
+                                                    }
+                                                    else
+                                                    {
+                                                        <input name="HaveEncrypt" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @((JN.Services.Tool.ConfigHelper.GetConfigBool("HaveEncrypt")) ? "checked='checked'" : "")>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="sitetitle">后台路径：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    @if (JN.Services.Tool.ConfigHelper.GetConfigBool("HaveEncrypt"))
+                                                    {
+                                                        <input type="text" name="AdminPath" class="form-control" style="width:200px" value="@(JN.Data.Extensions.DESEncrypt.Decrypt(JN.Services.Tool.ConfigHelper.GetConfigString("AdminPath"), JN.Services.Tool.ConfigHelper.GetConfigString("EncryptKey")))" />
+                                                    }
+                                                    else
+                                                    {
+                                                        <input type="text" name="AdminPath" class="form-control" style="width:200px" value="@(JN.Services.Tool.ConfigHelper.GetConfigString("AdminPath"))" />
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="control-group">
+                                            <label class="control-label" for="isregbankinfo">开启Https（域名证书）：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <label>
+                                                        <input name="HaveHttps" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @((JN.Services.Tool.ConfigHelper.GetConfigBool("HaveHttps")) ? "checked='checked'" : "") />
+                                                        <span class="lbl"></span>
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="sitetitle">安卓下载链接：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="AndroidAppUrl" class="form-control" style="width:500px" value="@(JN.Services.Tool.ConfigHelper.GetConfigString("AndroidAppUrl"))" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="control-group">
+                                            <label class="control-label" for="sitetitle">苹果下载链接：</label>
+
+                                            <div class="controls">
+                                                <div class="clearfix">
+                                                    <input type="text" name="IphoneAppUrl" class="form-control" style="width:500px" value="@(JN.Services.Tool.ConfigHelper.GetConfigString("IphoneAppUrl"))" />
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <!-- // Tab content END -->
+                                </div>
+
+                            </div>
+                            <span class="btn btn-toggle-code btn-mini btn-primary btn-icon glyphicons embed_close" data-toggle="hide" data-target="#code-3"><i></i> Source</span>
+                        </div>
+                        @*<div class="control-group">
+                                <label class="control-label">管理员是否独占登录：</label>
+
+                                <div class="controls">
+                                    <div class="clearfix">
+                                        <label>
+                                            <input name="adminoneself" class="ace ace-switch ace-switch-4" value="True" type="checkbox" @(Model.AdminOneSelf ? "checked='checked'" : "")>
+                                            <span class="lbl"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>*@
+                        <div class="hr hr-dotted"></div>
+                        <div class="control-group">
+                            <label class="control-label">&nbsp;</label>
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit">
+                                    保 存
+                                </button>
+                                <a href="javascript:history.go(-1);" class="btn btn-grey">
+                                    <i class="icon-arrow-left"></i>
+                                    返 回
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                    <!-- PAGE CONTENT ENDS -->
+                </div><!-- /.col -->
+            </div>
+        </div>
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
+<!-- page specific plugin scripts -->
+@section scripts{
+    <link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+    <script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+<script src="~/Plugin/kindeditor-4.1.9/lang/zh_CN.js"></script>
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+
+    <script>
+        $('.btn-primary').on('click', function (e) {
+            var ids = ",";
+            $("input[name='ckxt']").each(function () {
+                if (this.checked == true) {
+                    ids += $(this).val() + ",";
+                }
+            });
+            $("input[name='RegistItems']").val(ids);
+
+            var ids2 = ",";
+            $("input[name='ckbt']").each(function () {
+                if (this.checked == true) {
+                    ids2 += $(this).val() + ",";
+                }
+            });
+            $("input[name='RegistNotNullItems']").val(ids2);
+
+            var ids3 = ",";
+            $("input[name='ckwy']").each(function () {
+                if (this.checked == true) {
+                    ids3 += $(this).val() + ",";
+                }
+            });
+            $("input[name='RegistOnlyOneItems']").val(ids3);
+        });
+
+        //上传logo
+        KindEditor.ready(function (K) {
+            var editor = K.editor({
+                uploadJson: '@Url.Action("UpMainPic")?dir=SysSetImg&size=1024',
+                allowFileManager: true
+            });
+            K('#btnUpLogoPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#LogoPic').attr("src", url);
+                            K('#hidLogoimgSrc').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+            //app上传logo
+            K('#btnUpAppPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#AppPic').attr("src", url);
+                            K('#hidAppimgSrc').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+            K('#btnUpQrPic1').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlQrPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#QrPic1').attr("src", url);
+                            K('#hidQrimgSrc1').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+            K('#btnUpQrPic2').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlQrPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#QrPic2').attr("src", url);
+                            K('#hidQrimgSrc2').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+            K('#btnUpQrPic3').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlQrPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#QrPic3').attr("src", url);
+                            K('#hidQrimgSrc3').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+            //上传微信二维码
+            //K('#btnUpWeiXinPic').click(function () {
+            //    editor.loadPlugin('image', function () {
+            //        editor.plugin.imageDialog({
+            //            showRemote: false,
+            //            imageUrl: K('#UrlWeiXinPic').val(),
+            //            clickFn: function (url, title, width, height, border, align) {
+            //                K('#WeiXinPic').attr("src", url);
+            //                K('#hidWeiXinimgSrc').val(url);
+            //                editor.hideDialog();
+            //            }
+            //        });
+            //    });
+            //});
+        });
+
+        //上传首页幻灯片
+        KindEditor.ready(function (K) {
+            var editor = K.editor({
+                uploadJson: '@Url.Action("UpMainPic")?dir=Banner&size=2048',
+                allowFileManager: true
+            });
+            K('#btnUpManiPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            if (K('#hidImgCount').val() == "0") {
+                                K("#MainPic").html("");
+                            }
+                            if (K('#hidImgCount').val() == "6") {
+                                alert("最多可上传6张图片");
+                                editor.hideDialog();
+                                return false;
+                            }
+
+                            //添加图片
+                            var newImageHtml = "<img id=\"tmpImg" + parseInt(K('#hidImgCount').val()) + "\" style=\"width: 375px; height: 83px; margin-top:20px;\" src=\"" + url + "\" />";
+
+                            //添加链接输入框
+                            var linkBtnHtml = "<input type=\"text\" id=\"linkBtn" + parseInt(K('#hidImgCount').val()) + "\" name=\"link" + parseInt(K('#hidImgCount').val()) + "\" value=\"\" placeholder=\"在此输入链接\" style=\"margin-top:10px;\"/>";
+
+                            //添加删除图片
+                            var delHtml = "<input type=\"image\" id=\"delImg" + parseInt(K('#hidImgCount').val()) + "\" onclick=\"funDelImg(" + parseInt(K('#hidImgCount').val()) + ",this,'" + url + "')\" src=\"/common/theme/images/a_close.png\"  style=\"margin-top:10px;margin-left: 30px;\"  /> &nbsp;&nbsp;";
+                            K("#MainPic").append(newImageHtml);
+                            K("#MainPic").append(linkBtnHtml);
+                            K("#MainPic").append(delHtml);
+
+                            K('#hidMainimgSrc').val(K('#hidMainimgSrc').val() + "|" + url);
+                            var count = parseInt(K('#hidImgCount').val()) + 1;
+                            K('#hidImgCount').val(count);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+
+            //app上传首页幻灯片
+            K('#btnAppUpManiPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            if (K('#hidAppImgCount').val() == "0") {
+                                K("#MainPic2").html("");
+                            }
+                            if (K('#hidAppImgCount').val() == "6") {
+                                alert("最多可上传6张图片");
+                                editor.hideDialog();
+                                return false;
+                            }
+
+                            //添加图片
+                            var newImageHtml = "<img id=\"apptmpImg" + parseInt(K('#hidAppImgCount').val()) + "\" style=\"width: 375px; height: 83px; margin-top:20px;\" src=\"" + url + "\" />";
+
+                            //添加链接输入框
+                            var linkBtnHtml = "<input type=\"text\" id=\"applinkBtn" + parseInt(K('#hidAppImgCount').val()) + "\" name=\"applink" + parseInt(K('#hidAppImgCount').val()) + "\" value=\"\" placeholder=\"在此输入链接\" style=\"margin-top:10px;\"/>";
+
+                            //添加删除图片
+                            var delHtml = "<input type=\"image\" id=\"appdelImg" + parseInt(K('#hidAppImgCount').val()) + "\" onclick=\"funDelImg2(" + parseInt(K('#hidAppImgCount').val()) + ",this,'" + url + "')\" src=\"/common/theme/images/a_close.png\"  style=\"margin-left: 30px;margin-top:10px;\"  /> &nbsp;&nbsp;";
+                            K("#MainPic2").append(newImageHtml);
+                            K("#MainPic2").append(linkBtnHtml);
+                            K("#MainPic2").append(delHtml);
+
+                            K('#hidAppMainimgSrc').val(K('#hidAppMainimgSrc').val() + "|" + url);
+                            var count = parseInt(K('#hidAppImgCount').val()) + 1;
+                            K('#hidAppImgCount').val(count);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+        });
+
+        //删除
+        function funDelImg(index, obj, url) {
+            //删除点击的图片
+            var objName = "#tmpImg" + index;
+            var objBtnName = "#linkBtn" + index;
+
+            var MainimgSrc = $('#hidMainimgSrc').val();
+            MainimgSrc = MainimgSrc.replace(url, "");
+            MainimgSrc = MainimgSrc.replace("||", "|");
+            $('#hidMainimgSrc').val(MainimgSrc);
+            //修改当前图片的数量
+            var count = parseInt($('#hidImgCount').val()) - 1;
+            $('#hidImgCount').val(count);
+
+            //当删除所有图片时重新显示默认图片
+            if (count == 0) {
+                $('#hidMainimgSrc').val("");
+                var defImg = " <img style=\"width: 180px; height: 180px\" src=\"/common/theme/images/nopictures.jpg\" />";
+                $('#MainPic').append(defImg);
+            }
+            //删除当前图片和x图片
+            $(objName).remove();
+            $(objBtnName).remove();
+            $(obj).remove();
+
+            //遍历链接输入框，修改id和name  0 1 2 3
+            var fag = index;
+            for (var i = 0; i < 4 - index; i++) {
+                var objid = "#linkBtn" + (fag + 1);
+                var DelId = "#delImg" + (fag + 1);
+                var imgId = "#tmpImg" + (fag + 1);
+
+                if ($(objid).length > 0) {
+
+                    var newId = "linkBtn" + fag;
+                    var propName = "link" + fag;
+
+                    var objHtml = $(objid)[0].outerHTML;
+                    var name = $(objid).attr("name");
+                    var oldId = $(objid).attr("id");
+                    objHtml = objHtml.replace("name=\"" + name + "\"", "name=\"" + propName + "\"");
+                    objHtml = objHtml.replace("id=\"" + oldId + "\"", "id=\"" + newId + "\"");
+                    $(objid)[0].outerHTML = objHtml;
+
+                    var objDelHtml = $(DelId)[0].outerHTML;
+                    var delIndex = fag + 1;
+
+                    var oldDelId = $(DelId).attr("id");
+                    var newDelId = "delImg" + fag;
+                    objDelHtml = objDelHtml.replace("id=\"" + oldDelId + "\"", "id=\"" + newDelId + "\"");
+                    objDelHtml = objDelHtml.replace("funDelImg(" + delIndex + ",", "funDelImg(" + fag + ",");
+                    $(DelId)[0].outerHTML = objDelHtml;
+
+                    var newImgId = "tmpImg" + fag;
+                    $(imgId).attr("id", newImgId);
+
+                    fag++;
+                }
+            }
+        }
+
+        //app删除
+        function funDelImg2(index, obj, url) {
+            //删除点击的图片
+            var objName = "#apptmpImg" + index;
+            var objBtnName = "#applinkBtn" + index;
+
+            var MainimgSrc = $('#hidAppMainimgSrc').val();
+            MainimgSrc = MainimgSrc.replace(url, "");
+            MainimgSrc = MainimgSrc.replace("||", "|");
+            $('#hidAppMainimgSrc').val(MainimgSrc);
+            //修改当前图片的数量
+            var count = parseInt($('#hidAppImgCount').val()) - 1;
+            $('#hidAppImgCount').val(count);
+
+            //当删除所有图片时重新显示默认图片
+            if (count == 0) {
+                $('#hidAppMainimgSrc').val("");
+                var defImg = " <img style=\"width: 180px; height: 180px\" src=\"/common/theme/images/nopictures.jpg\" />";
+                $('#MainPic2').append(defImg);
+            }
+            //删除当前图片和x图片
+            $(objName).remove();
+            $(objBtnName).remove();
+            $(obj).remove();
+
+            //遍历链接输入框，修改id和name  0 1 2 3
+            var fag = index;
+            for (var i = 0; i < 4 - index; i++) {
+                var objid = "#applinkBtn" + (fag + 1);
+                var DelId = "#appdelImg" + (fag + 1);
+                var imgId = "#apptmpImg" + (fag + 1);
+
+                if ($(objid).length > 0) {
+
+                    var newId = "applinkBtn" + fag;
+                    var propName = "applink" + fag;
+
+                    var objHtml = $(objid)[0].outerHTML;
+                    var name = $(objid).attr("name");
+                    var oldId = $(objid).attr("id");
+                    objHtml = objHtml.replace("name=\"" + name + "\"", "name=\"" + propName + "\"");
+                    objHtml = objHtml.replace("id=\"" + oldId + "\"", "id=\"" + newId + "\"");
+                    $(objid)[0].outerHTML = objHtml;
+
+                    var objDelHtml = $(DelId)[0].outerHTML;
+                    var delIndex = fag + 1;
+
+                    var oldDelId = $(DelId).attr("id");
+                    var newDelId = "appdelImg" + fag;
+                    objDelHtml = objDelHtml.replace("id=\"" + oldDelId + "\"", "id=\"" + newDelId + "\"");
+                    objDelHtml = objDelHtml.replace("funDelImg2(" + delIndex + ",", "funDelImg2(" + fag + ",");
+                    $(DelId)[0].outerHTML = objDelHtml;
+
+                    var newImgId = "apptmpImg" + fag;
+                    $(imgId).attr("id", newImgId);
+
+                    fag++;
+                }
+            }
+        }
+
+    </script>
+
+<style type="text/css">
+    .ke-dialog {
+        top: 350px !important;
+    }
+</style>
+}

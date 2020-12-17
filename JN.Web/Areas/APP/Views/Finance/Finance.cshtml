@@ -1,0 +1,104 @@
+﻿
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    var Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    //总资产
+    decimal totalAssets = JN.Services.Manager.Users.WalletTotalCount(Umodel);
+}
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page">
+         @Html.Partial("/Areas/APP/Views/Finance/_Finance.cshtml")
+            <div class="main">
+                <style>
+                    .coin_logo {
+                        margin-right: 10px;
+                    }
+                </style>
+
+                <div class="main_title" style="background: none;margin-bottom: 0;"><div>@T("财务中心")</div></div>
+                <div class="pay_manage">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" class="total">
+                        <tbody>
+                            <tr>
+                                <td width="250">
+                                    @T("总资产折合")：<span class="green una">$@totalAssets.ToDouble()</span>
+                                </td>
+                                @*<td width="175">总资产折合：<span class="ufinance">$0</span></td>*@
+                                <td width="97" align="right"><input type="button" value="充值" class="btn btn_inverse btn-size " onclick="top.location = '/App/finance/rmbrecharge'"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                
+                    <div class="head">@T("资产明细")</div>
+                    <div class="finance" style="margin-top:0;">
+                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                            <tr class="hbg" style="height: 40px; border-bottom: solid 1px white; ">
+                                <th width="120">@T("币种")</th>
+                                <th></th>
+                                <th>@T("可用")</th>
+                                <th>@T("冻结")</th>
+                                <th>@T("总计")</th>
+                                <th colspan="4"></th>
+                            </tr>
+                            <tr class="line">
+                                <td>
+                                    <div class="coin_logo"><img src="/theme/app/images/trade/jinbi.png" width="40" height="40" /></div>
+                                    <div>@T(cacheSysParam.SingleAndInit(x => x.ID == 2001).Name)<br>RMB</div>
+                                </td>
+
+                                <td></td>
+                                <td class="isable">$@Umodel.Wallet2001.ToDouble()</td>
+                                <td class="fronze">$0</td>
+                                <td>$0</td>
+                                <td align="center"><a href="/App/finance/rmbrecharge" class="btn btn_inverse btn-size ">@T("充值")</a></td>
+                            </tr>
+
+                            <tr class="line">
+                                <td>
+                                    <div class="coin_logo"><img src="/theme/app/images/trade/jifen.png" width="40" height="40" /></div>
+                                    <div>@T(cacheSysParam.SingleAndInit(x => x.ID == 2002).Name)<br>BP</div>
+                                </td>
+
+                                <td></td>
+                                <td class="isable">$@Umodel.Wallet2002.ToDouble()</td>
+                                <td class="fronze">$0</td>
+            <td>$0</td>
+                                <td align="center"><a href="/App/finance/AccountDetail?kf=CoinName&kv=消费积分" class="btn btn_inverse btn-size ">@T("查看来源")</a></td>
+                            </tr>
+
+                            @{
+                                var curModelList = MvcCore.Unity.Get<JN.Data.Service.CurrencyService>().List(x => x.TranSwitch && !x.IsICO).ToList();
+                                if (curModelList.Count() > 0)
+                                {                                   
+                                    foreach (var item in curModelList)
+                                    {
+                                        <tr class="line">
+                                            <td>
+                                                <div class="coin_logo"><img src="@item.CurrencyLogo" style="border-radius:50%" width="40" height="40"  /></div>
+                                                <div>@item.CurrencyName<br>@item.EnSigns</div>
+                                            </td>
+                                            <td></td>
+                                            <td class="isable">
+                                                @JN.Services.Manager.Users.WalletCur((int)item.WalletCurID,Umodel).ToDouble()
+                                            </td>
+                                            <td class="fronze">@JN.Services.Manager.Users.WalletCurFro((int)item.WalletCurID, Umodel.ID).ToDouble()</td>
+                                            <td>@( @JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel).ToDouble() + @JN.Services.Manager.Users.WalletCurFro((int)item.WalletCurID, Umodel.ID).ToDouble())</td>
+                                            <td align="center"><a href="/Trade?market=@item.ID" class="btn btn_inverse btn-size ">@T("交易")</a></td>
+                                        </tr>
+                                    }
+                                }
+                            }
+
+                            
+                        </table>
+                    </div>
+                </div>
+                <script>
+                    _czc.push(["_trackEvent", '头部导航', '财务']);
+                </script>
+            </div>
+        </div>
+    </div>
+</div>

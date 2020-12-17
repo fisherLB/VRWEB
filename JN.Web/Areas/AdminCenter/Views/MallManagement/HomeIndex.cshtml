@@ -1,0 +1,126 @@
+﻿
+@model List<JN.Data.Shop_Floor>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+    var homeList = MvcCore.Unity.Get<JN.Data.Service.IShop_Home_GroupService>().List();
+}
+
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab"> 
+                @{
+                    if (homeList != null && homeList.Count() > 0)
+                    {
+                        foreach (var item in homeList)
+                        {
+                            <li class="@(action == "homeindex" && Request["type"] == item.Id.ToString() ? "active" : "")">
+                                <a href="@(Url.Action("homeindex", new { type = item.Id }))">
+                                    @item.Name
+                                </a>
+                            </li>
+                        }
+                    }
+        }               
+                @*@{
+                    int m = Enum.GetValues(typeof(JN.Data.Enum.FloorType)).GetLength(0);
+                    for (int i = 1; i <= m; i++)
+                    {
+                        <li class="@(action == "homeindex" && Request["type"] == i.ToString() ? "active" : "")">
+                            <a href="@(Url.Action("homeindex", new { type = i }))">
+                                @(typeof(JN.Data.Enum.FloorType).GetEnumDesc(i))
+                            </a>
+                        </li>
+                    }                    
+                }*@ 
+            </ul>           
+            <br/>
+            <div style="float:right; padding-right:20px;">
+                <input type="hidden" id="hidType" value="@Request["type"]" />
+                <a href="@Url.Action("_SelectProduct", new {type = Request["type"] })" class="btn btn-primary">添  加</a>
+            </div>
+            <br />
+            <br />
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <tr class="table02-title">
+                    <th>编号</th>
+                    <th>商品图片</th>
+                    <th>商品名称</th>                    
+                    <th>商铺名称</th>
+                    <th>创建时间</th>
+                    <th>标签</th>
+                    <th>显示</th>
+                    <th>操作</th>
+                </tr>
+                @if (Model.Count > 0)
+                {
+                    for (int i = 0; i < Model.Count; i++ )
+                    {
+                        <tr>
+                            <td class="center text-muted">
+                                @(i + 1)
+                            </td>  
+                            <td>
+                                <img src="@JN.Services.Tool.StringHelp.GetFirstStr(MvcCore.Unity.Get<JN.Data.Service.IShop_ProductService>().Single(Model[i].Pid).ImageUrl)" style="width:50px;" /> 
+                            </td>                              
+                            <td>
+                                @Model[i].ProductName
+                            </td>                            
+                            <td>
+                                @Model[i].ShopName
+                            </td>
+                            <td>
+                                @Model[i].CreateTime
+                            </td>
+                            <td>
+                                @Model[i].Tag
+                            </td>
+                            <td>
+                                <input type="checkbox" id="@Model[i].Id" onclick="IsUse(this)" @(Convert.ToBoolean(@Model[i].IsUse) == true ? "checked" : "") />
+                            </td>
+                            <td>
+                                <a href="###" data-value="@Model[i].Id" class=" del" data-rel="tooltip">删除</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </table>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <script type="text/javascript">
+            $(function () {
+                $(".del").on("click", function () {
+                    var id = $(this).attr("data-value");
+                    var type = $("#hidType").val();
+                    bootbox.confirm('您确定要删除吗？', function (result) {
+                        if (result) {
+                            location = '@(Url.Action("DelProduct"))?id=' + id + "&type=" + type;
+                        }
+                    })
+                });
+
+            });
+
+            function IsUse(obj) {
+                var id = $(obj).attr("id");
+                $.post("@Url.Action("IsUse")", { id: id }, function (data) {
+                    if (data.Status != 200) {
+                        alert("操作失败！");
+                    }
+                });
+            }
+    </script>
+}
+

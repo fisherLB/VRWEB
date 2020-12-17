@@ -1,0 +1,36 @@
+﻿@model JN.Data.Notice
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return mui-action-back">
+	    @*<a href="javascript:history.go(-1);"></a>*@
+	</div>
+	
+	<div class="logo">@T("公告详情")</div>
+</header>
+
+<section class="container">
+	<div class="article">
+		<h3 class="article-title">@Model.Title</h3>
+		
+		<p class="article-time">@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+		
+		<div class="article-content">
+            @MvcHtmlString.Create(Model.Content)
+			@*<p> 1、当天用户交易奖励GT：(个人交额/平台总交易额)*100,000*70%</p>
+			<p>2、当天经纪人奖励GT：(好友交易额之和/平台总交易额)*100,000*30% </p>
+			<p>例如: </p>
+			<p>平台当天总交易额为100,000(USDT),每个GT当天可收益0.1(USDT ) </p>
+			<p>其中个人交易额为100(USDT),则可获得的GT为( 100/100,000)*100,000*70%=70GT </p>
+			<p>A(经纪人)的好友交易额之和为100(USDT),则可获得的GT为(100/100,000)*100,000*30%=30GT </p>
+			<p><span class="cYellow">则A总共能获得70个GT，A当天获得收益为7(USDT)。</span></p>
+			<p><span class="cYellow">持有GT每天均可收益共享，若第二天每个GT可收益0.2(USDT)，第二天还可收益14(USDT) 。</span></p>
+
+		    <p> 收益共享发放时间为每天15:00，平台将陆续发放收益到用户账户。</p>
+			<p>交易奖励发放时间为每天17:00，平台将陆续发放奖励到用户账户。</p>*@
+
+		</div>
+	</div>
+</section>

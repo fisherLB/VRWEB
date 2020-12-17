@@ -1,0 +1,25 @@
+﻿
+@{
+    ViewBag.Title = "Details1";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+}
+
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+    <div class="logo text-l">@T("账单详情")</div>
+</header>
+<section class="container">
+    <div class="capital-top">
+        <p><img src="~/Theme/APP/images/Logo.png" width="20"/><span class="c00d2ff fs14 m-l10">FJB</span></p>
+        <p class="p-b"><span>38579.6</span><br>@T("交易成功")</p>
+    </div>
+    <ul class="table-view bg091931">
+        <li class="table-view-cell cb7bece">@T("交易说明")<span class="float-r c00d2ff">@T("买入斐济币")</span></li>
+        <li class="table-view-cell cb7bece">@T("付款方式")<span class="float-r c00d2ff">@T("中国银行")</span></li>
+        <li class="table-view-cell cb7bece">@T("创建时间")<span class="float-r c00d2ff">2018-06-06 20:25</span></li>
+        <li class="table-view-cell cb7bece">@T("订单号")<span class="float-r c00d2ff">2654765413942</span></li>
+    </ul>
+</section>

@@ -1,0 +1,108 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page">
+            @Html.Partial("/Areas/APP/Views/Finance/_Finance.cshtml")
+            <div class="main">
+                <div class="main">
+                    <div class="main_title">
+                      @T("发送邮件")
+                    </div>
+                    <div class="bind_mobile" style="margin-top: 0;">
+                        <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post">
+                            <table width="687" border="0" cellpadding="0" cellspacing="0">
+                                <tbody>                                  
+                                    <tr>
+                                        <td align="right">@T("收件人") ：</td>
+                                        <td>
+                                            <input type="text" name="recipient" class="text" readonly value="@ViewBag.recipient" />                                  
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">@T("邮件类型") ：</td>
+                                        <td>
+                                            <select name="messagetype" class="select">
+                                                @{ var paramlist = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.PID == 5100).OrderBy(x => x.Sort).ToList();
+                                                 if (paramlist.Count > 0)
+                                                 {
+                                                     foreach (var param in paramlist)
+                                                     {
+                                                        <option value="@T(param.Name)">@T(param.Name)</option>
+                                                     }
+                                                 }
+                                                }
+                                            </select>
+
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">@T("邮件主题") ：</td>
+                                        <td>
+                                            <input type="text" class="text" name="subject" value="@ViewBag.subject" />                                          
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">@T("邮件内容") ：</td>
+                                        <td>
+                                            <textarea name="content" class="content" rows="10" style="width:80%;">@ViewBag.content</textarea>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">@T("附件")：</td>
+                                        <td>                                            
+                                            <div id="MainPic">
+                                                <img style="width: 180px; height:180px" src="/theme/app/images/nopictures.jpg" id="imgId"/>
+                                            </div>                                    
+                                            <input type="button" id="btnUpMainPic" value="@T("添加图片+")" class="" />
+                                            @T("请上传您的附件")
+                                            <input type="hidden" name="imgurl" id="hidMainimgSrc" value="" />
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <td align="right">&nbsp;</td>
+                                        <td><button class="btn send" type="submit"> @T("发送")</button> &nbsp; &nbsp; &nbsp;
+                                            <button class="btn reset" type="reset"> @T("重置") </button>                                        
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </form>
+                    </div>
+                </div>
+                <script>IS_LOGIN = 1;</script>
+              
+            </div>
+        </div>
+    </div>
+</div> 
+  <!--上传图片-->
+<link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+<link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+
+<script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+<script src="~/Plugin/kindeditor-4.1.9/lang/en.js"></script>
+<script type="text/javascript">
+    //上传附件
+    KindEditor.ready(function (K) {
+        var editor = K.editor({
+            uploadJson: '@Url.Action("UpMainPic")?dir=SysSetImg&size=200',
+            allowFileManager: true
+        });
+        K('#btnUpMainPic').click(function () {
+            editor.loadPlugin('image', function () {
+                editor.plugin.imageDialog({
+                    showRemote: false,
+                    imageUrl: K('#UrlMainPic').val(),
+                    clickFn: function (url, title, width, height, border, align) {
+                        K('#imgId').attr("src", url);
+                        K('#hidMainimgSrc').val(url);
+                        editor.hideDialog();
+                    }
+                });
+            });
+        });
+    });
+</script> 

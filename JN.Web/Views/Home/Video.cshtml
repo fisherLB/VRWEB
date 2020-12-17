@@ -1,0 +1,40 @@
+﻿
+@{
+    ViewBag.Title = "Video";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+}
+
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<section class="video-container">
+    <video playsinline="true" webkit-playsinline="true" autoplay="autoplay" id="player">
+        <source src="~/Theme/APP/img/ship.mp4" type="video/mp4" />
+    </video>
+</section>
+
+<script language="javascript" type="text/javascript">
+
+    myVideo = document.getElementById("player");
+
+    myVideo.addEventListener("ended", function () {
+        location.href = "/App/Login/Index"
+        //alert("视频加载完毕");
+    });
+    $(function () {
+        myVideo.controls = false;
+    })
+
+    //setTimeout(function () { this.location.href = "/App/Login/Index" }, 6100);
+
+    
+</script>
+
+
+
+
+
+
+
+
+
+
+

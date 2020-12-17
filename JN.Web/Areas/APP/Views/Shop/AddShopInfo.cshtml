@@ -1,0 +1,225 @@
+﻿@model JN.Data.Shop_Info
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+
+    var curList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().ListCache("coinList").Where(x => x.LineSwitch && !x.IsICO).OrderByDescending(x => x.ID).Take(2).ToList();
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T(ViewBag.Title)</div>
+</header>
+
+<section class="container">
+    <div class="setting-form">
+        <div class="form-widget">
+            <form id="form" name="form" method="post">
+                <div class="form-box">
+                    <div class="form-group whether">
+                        @*<label>@T("是否为线下店铺")</label>*@
+                        @if (Model.ID > 0)
+                        {
+                            <input type="radio" name="IsOfflineShop" value="True" @(Model.IsOfflineShop == true ? "checked" : "" ) disabled>@T("线下店铺")
+                            <input type="radio" name="IsOfflineShop" value="False"  @(Model.IsOfflineShop != true ? "checked" : "" ) disabled>@T("线上店铺")
+                        }
+                        else
+                        {
+                            <input type="radio" name="IsOfflineShop" value="True" >@T("线下店铺")
+                            <input type="radio" name="IsOfflineShop" value="False" checked>@T("线上店铺")
+                        }
+
+                    </div>
+
+
+                    <div class="form-group">
+                        <label>@T("店铺名称")</label>
+                        <input class="form-control" placeholder="@T("请输入店铺名称")" name="ShopName" value="@Model.ShopName">
+                    </div>
+                    @if (Model.ID > 0)
+                    {
+                        <div class="form-group">
+                            <label>@T("店铺状态")</label>
+                            <input class="form-control" value="@(typeof(JN.Data.Enum.ShopInfoStatus).GetEnumDesc(Model.Status))" readonly>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label>@T("店铺简介")</label>
+                        <textarea class="form-control" rows="2" placeholder="@T("请输入店铺简介")" name="ShopIntro" value="@Model.ShopIntro"></textarea>
+                        @*<input class="form-control" placeholder="@T("请输入店铺简介")" name="ShopIntro" value="@Model.ShopIntro">*@
+                    </div>
+                    <div class="form-group">
+                        <label>@T("店铺地址")</label>
+                        <input class="form-control" placeholder="@T("请输入店铺地址")" name="Address" value="@Model.Address">
+                    </div>
+                    <div class="form-group">
+                        <label>@T("联系电话")</label>
+                        <input class="form-control" placeholder="@T("请输入联系电话")" name="Tel" value="@Model.Tel">
+                    </div>
+                    <div class="form-group">
+                        <label>@T("客服")</label>
+                        <input class="form-control" placeholder="@T("请输入联系客服")" name="ShopQQ" value="@Model.ShopQQ">
+                    </div>
+                </div>
+
+                <div class="upload-photo">
+                    <h3>@T("请上传营业资质")</h3>
+                    <ul id="MainPic">
+                        @{
+                            int ImgCount = 0;
+                            if (Model.ShopInfoImg == null || Model.ShopInfoImg.Length == 0)
+                            {
+
+                            }
+                            else
+                            {
+                                string[] images = Model.ShopInfoImg.Split(';');
+                                string imgid = "";
+                                for (int i = 0; i < images.Length; i++)
+                                {
+                                    if (images[i].Length > 0)
+                                    {
+                                        ImgCount++;
+                                        imgid = "tmpImg" + i;
+                                        <li id="@imgid">
+                                            <div class="upload-photo-box">
+                                                <a href="###" class="delete-photo" onclick="funDelImg(@i,this,'@images[i]')"></a>
+                                                <div class="loaded-photo-thumbnail">
+                                                    <img src="@images[i]">
+                                                </div>
+                                            </div>
+                                        </li>
+                                    }
+                                }
+                            }
+                        }
+                    </ul>
+                    <ul>
+                        <li>
+                            <div class="upload-photo-box">
+                                <div class="add-photo-btn">
+                                    <input type="button" id="btnUpManiPic" accept="image/*" />
+                                    <input type="hidden" name="ShopInfoImg" id="hidMainimgSrc" value="@Model.ShopInfoImg" />
+                                    <input type="hidden" id="hidImgCount" value="@ImgCount" />
+                                </div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <input type="hidden" name="ID" value="@Model.ID">
+                @if (Model.ID <= 0 || (Model.ID > 0 && Model.Status == (int)JN.Data.Enum.ShopInfoStatus.Refuse))
+                {
+                    <div class="form-submit">
+                        <button type="button" class="form-submit-btn" id="Shop_Infosubmit">@T("提交")</button>
+                    </div>
+                }
+
+
+
+            </form>
+        </div>
+    </div>
+</section>
+<link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+<link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+
+<script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+<script src="~/Plugin/kindeditor-4.1.9/lang/zh_CN.js"></script>
+<script>
+    //上传主图
+    KindEditor.ready(function (K) {
+        var editor = K.editor({
+            uploadJson: '/APP/Shop/UpMainPic?sid=' + "ShopInfo",
+            allowFileManager: true
+        });
+        K('#btnUpManiPic').click(function () {
+            editor.loadPlugin('image', function () {
+                editor.plugin.imageDialog({
+                    showRemote: false,
+                    imageUrl: K('#UrlMainPic').val(),
+                    clickFn: function (url, title, width, height, border, align) {
+                        if (K('#hidImgCount').val() == "0") {
+                            K("#MainPic").html("");
+                        }
+                        if (K('#hidImgCount').val() == "6") {
+                            layer.msg("@T("最多可上传6张图片")", { icon: 2 });
+                            editor.hideDialog();
+                            return false;
+                        }
+                        var newImageHtml = "<li id=\"tmpImg" + parseInt(K('#hidImgCount').val()) + "\"> <div class=\"upload-photo-box\"><a href=\"###\" class=\"delete-photo\" onclick=\"funDelImg(" + parseInt(K('#hidImgCount').val()) + ",this,'" + url + "')\"></a><div class=\"loaded-photo-thumbnail\"><img src=\"" + url + "\"></div></div></li>"
+                        //var newImageHtml = "<img id=\"tmpImg" + parseInt(K('#hidImgCount').val()) + "\" style=\"width: 180px; height: 180px\" src=\"" + url + "\" />";
+                        var delHtml = "<input type=\"image\" onclick=\"funDelImg(" + parseInt(K('#hidImgCount').val()) + ",this,'" + url + "')\" src=\"/Theme/mall/red_theme/images/a_close.png\"  title=\"\" />";
+                        K("#MainPic").append(newImageHtml);
+                        //K("#MainPic").append(delHtml);
+
+                        K('#hidMainimgSrc').val(K('#hidMainimgSrc').val() + ";" + url);
+                        var count = parseInt(K('#hidImgCount').val()) + 1;
+                        K('#hidImgCount').val(count);
+                        editor.hideDialog();
+                    }
+                });
+            });
+        });
+    });
+
+    //显示主图
+    function funDelImg(index, obj, url) {
+        //删除点击的图片
+        var objName = "#tmpImg" + index;
+        var MainimgSrc = $('#hidMainimgSrc').val();
+        MainimgSrc = MainimgSrc.replace(url, "");
+        $('#hidMainimgSrc').val(MainimgSrc);
+        //修改当前图片的数量
+        var count = parseInt($('#hidImgCount').val()) - 1;
+        $('#hidImgCount').val(count);
+
+        //当删除所有图片时重新显示默认图片
+        //if (count == 0) {
+        //    $('#hidMainimgSrc').val("");
+        //    var defImg = " <img style=\"width: 180px; height: 180px\" src=\"/Theme/mall/red_theme/images/goodslogo.jpg\" />";
+        //    $('#MainPic').append(defImg);
+        //}
+
+        //删除当前图片和x图片
+        $(objName).remove();
+        //$(obj).remove();
+    }
+</script>
+
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    //提交
+
+    $("#Shop_Infosubmit").click(function () {
+        $.post("@Url.Action("AddShopInfo", "shop")", $("#form").serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("提交成功")！", { icon: 1 }, function () {
+                    location.href = location.href;
+                });
+
+            } else {
+                layer.msg("@T("提交失败")：" + data.Message, { icon: 2 });
+            }
+        });
+    });
+</script>
+<style>
+    .ke-dialog-default {
+        width: 100% !important;
+    }
+</style>

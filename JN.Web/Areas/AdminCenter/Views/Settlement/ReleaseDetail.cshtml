@@ -1,0 +1,176 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.ReleaseDetail>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="@(action == "releaselist" ? "active" : "")">
+                    <a href="@(Url.Action("releaselist"))">
+                        释放总期
+                    </a>
+                </li>
+                <li class="@(action == "releasedetail" ? "active" : "")">
+                    <a href="@(Url.Action("releasedetail"))">
+                        释放详情
+                    </a>
+                </li>  
+            </ul>
+
+            <div class="filter-bar margin-bottom-none">
+                <form method="get">
+
+                    <!-- Filter -->
+                    <div>
+                        <select name="datefiled" style="width: 80px;">
+                            <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>创建时间</option>
+                            <option value="EndTime" @(Request["datefiled"] == "EndTime" ? "selected" : "")>过期时间</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="numberfiled" style="width: 80px;">
+                            <option value="Money" @(Request["numberfiled"] == "Money" ? "selected" : "")>金额</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberform" class="input-mini" style="width: 30px;" value="@Request["numberform"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberto" class="input-mini" style="width: 30px;" value="@Request["numberto"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="keyfiled" style="width: 80px;">
+                            <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>用户名</option>
+                            <option value="Period" @(Request["keyfiled"] == "Period" ? "selected" : "")>期数</option>                
+                        </select>
+                    </div>
+                    <div>
+                        <div class="input-append">
+                            <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                            <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <input type="hidden" name="period" value="@Request["period"]" />              
+                        <input type="hidden" name="IsExport" value="0" />
+                        <input type="submit" onclick="$('input[name=\'IsExport\']').val(0)" value="查询" />
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- // Filter END -->
+
+                </form>
+            </div>
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover no-margin-bottom">
+                <thead>
+                    <tr>
+                        <th class="center">
+                        </th>
+                        <th>期数</th>
+                        <th>用户名</th>
+                        <th>币种</th>
+                        <th>金额</th>
+                        <th>是否领取</th>
+                        <th>
+                            <i class="icon-time bigger-110 hidden-480"></i>
+                            释放时间
+                        </th>
+                        <th>
+                            <i class="icon-time bigger-110 hidden-480"></i>
+                            过期时间
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count > 0)
+                                {
+                                    DateTime nowTime = DateTime.Now;
+                                    for (int i = 0; i < Model.Count; i++)
+                                    {
+
+                            <tr class="@((Model[i].IsSign == false && Model[i].EndTime < nowTime) ? "cancel" : "")">
+                                <td class="center text-muted">
+                                    @(i + 1)
+                                </td>
+                                <td>
+                                    @Model[i].Period
+                                </td>
+                                <td>
+                                    @(Model[i].UserName)
+                                </td>
+                                <td>
+                                    @Model[i].CurName
+                                </td>
+                                <td>
+                                    @Model[i].Money
+                                </td>
+                                <td>
+                                    @(Model[i].IsSign == true ? "已领取": Model[i].EndTime < nowTime ? "已过期" : "未领取")
+                                </td>
+                                <td class="hidden-480">@Model[i].CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                                <td class="hidden-480">@Model[i].EndTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                            </tr>
+                                }
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Options -->
+    <div class="separator top form-inline small">
+        <!-- Pagination -->
+        @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+
+        <div class="clearfix"></div>
+        <!-- // Pagination END -->
+
+    </div><!-- /row -->
+</div><!-- /.page-content -->
+
+@section scripts{}

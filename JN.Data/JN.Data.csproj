@@ -1,0 +1,1008 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{16170F84-4678-458C-88D2-4657FA7B4540}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>JN.Data</RootNamespace>
+    <AssemblyName>JN.Data</AssemblyName>
+    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Antlr3.Runtime, Version=3.4.1.9004, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Aspose.Cells, Version=5.3.1.0, Culture=neutral, PublicKeyToken=9ec0ff091d04b091, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcCore.3.1.1\lib\net452\Aspose.Cells.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ChnCharInfo, Version=1.0.0.0, Culture=neutral, PublicKeyToken=18f031bd02e5e291, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcCore.3.1.1\lib\net452\ChnCharInfo.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Enyim.Caching, Version=2.16.0.0, Culture=neutral, PublicKeyToken=cec98615db04012e, processorArchitecture=MSIL">
+      <HintPath>..\packages\EnyimMemcached.2.16.0\lib\net35\Enyim.Caching.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.ServiceLocation, Version=1.3.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\CommonServiceLocator.1.3\lib\portable-net4+sl5+netcore45+wpa81+wp8\Microsoft.Practices.ServiceLocation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.Configuration.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Practices.Unity.RegistrationByConvention, Version=4.0.0.0, Culture=neutral, PublicKeyToken=6d32ff45e0ccc69f, processorArchitecture=MSIL">
+      <HintPath>..\packages\Unity.4.0.1\lib\net45\Microsoft.Practices.Unity.RegistrationByConvention.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.Web.Infrastructure, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Infrastructure.1.0.0.0\lib\net40\Microsoft.Web.Infrastructure.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MvcCore, Version=3.0.3.30, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcCore.3.1.1\lib\net452\MvcCore.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.configuration" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Helpers, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.Helpers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Http.WebHost, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.WebHost.5.2.3\lib\net45\System.Web.Http.WebHost.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Optimization, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Web.Optimization.1.1.3\lib\net40\System.Web.Optimization.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Razor.3.2.3\lib\net45\System.Web.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Deployment, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Deployment.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Web.WebPages.Razor, Version=3.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="ThoughtWorks.QRCode, Version=1.0.3990.25764, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MvcCore.3.1.1\lib\net452\ThoughtWorks.QRCode.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="WebGrease, Version=1.5.2.14234, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\WebGrease.1.5.2\lib\WebGrease.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Attribute\DecimalPrecisionAttribute.cs" />
+    <Compile Include="Context\DbContext.cs" />
+    <Compile Include="Enum\ActionType.cs" />
+    <Compile Include="Enum\AdminModule.cs" />
+    <Compile Include="Enum\AdminRights.cs" />
+    <Compile Include="Enum\AdvertiseStatus.cs" />
+    <Compile Include="Enum\CPUStatus.cs" />
+    <Compile Include="Enum\CurrencyNetworkType.cs" />
+    <Compile Include="Enum\HelpStatus.cs" />
+    <Compile Include="Enum\LoginInfoType.cs" />
+    <Compile Include="Enum\AdvertiseOrderStatus.cs" />
+    <Compile Include="Enum\Matchingstatus.cs" />
+    <Compile Include="Enum\MemberStatus.cs" />
+    <Compile Include="Enum\OrderStatus.cs" />
+    <Compile Include="Enum\OtherTransfersStatus.cs" />
+    <Compile Include="Enum\OtherTransfersType.cs" />
+    <Compile Include="Enum\PayStatus.cs" />
+    <Compile Include="Enum\PreOrderStatus.cs" />
+    <Compile Include="Enum\PurchaseStatus.cs" />
+    <Compile Include="Enum\ShopInfoStatus.cs" />
+    <Compile Include="Enum\ShopOrderStatus.cs" />
+    <Compile Include="Enum\USDStatus.cs" />
+    <Compile Include="Enum\TakeCaseStatus.cs" />
+    <Compile Include="Enum\RechargeSatus.cs" />
+    <Compile Include="Enum\SubscribeStatus.cs" />
+    <Compile Include="Enum\TradeDirection.cs" />
+    <Compile Include="Enum\TTCStatus.cs" />
+    <Compile Include="Enum\IcoState.cs" />
+    <Compile Include="Enum\UserLevel.cs" />
+    <Compile Include="Extensions\AcceptHelp.cs" />
+    <Compile Include="Extensions\APIKlineModel.cs" />
+    <Compile Include="Extensions\DEncryptHelper.cs" />
+    <Compile Include="Extensions\Matching.cs" />
+    <Compile Include="Extensions\ResponseBaseEOS.cs" />
+    <Compile Include="Extensions\ResponseBaseEOSPark.cs" />
+    <Compile Include="Extensions\ResponseBaseXRP.cs" />
+    <Compile Include="Extensions\ResponseContractTransactions.cs" />
+    <Compile Include="Extensions\ResponseContractTransactionsFromEtherscan.cs" />
+    <Compile Include="Extensions\ResponseContractTransactionsFromLocal.cs" />
+    <Compile Include="Extensions\ResponseContractTransactionsNew.cs" />
+    <Compile Include="Extensions\ResponseContractTransfer.cs" />
+    <Compile Include="Extensions\ResponseListTransactions.cs" />
+    <Compile Include="Extensions\ResponseListUSDTTransactions.cs" />
+    <Compile Include="Extensions\ResponseNEOTransactions.cs" />
+    <Compile Include="Extensions\ResponseTransactions.cs" />
+    <Compile Include="Extensions\ResponseXRPTransactions.cs" />
+    <Compile Include="Extensions\ResponseXRPTransactionsForTX.cs" />
+    <Compile Include="Extensions\Result.cs" />
+    <Compile Include="Extensions\SupplyHelp.cs" />
+    <Compile Include="Extensions\DbBackFile.cs" />
+    <Compile Include="Extensions\TreeNode.cs" />
+    <Compile Include="Extensions\View_Statistics.cs" />
+    <Compile Include="OutTable\RaCoin.cs" />
+    <Compile Include="OutTable\Transfer.cs" />
+    <Compile Include="OutTable\Advertise.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLDataHelper.cs" />
+    <Compile Include="TT\Card.cs">
+      <DependentUpon>Card.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\VRUsers.cs">
+      <DependentUpon>VRUsers.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\AcceptHelp.cs">
+      <DependentUpon>AcceptHelp.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\TeamAchievement.cs">
+      <DependentUpon>TeamAchievement.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\AdvertiseChartDay.cs">
+      <DependentUpon>AdvertiseChartDay.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Chating.cs">
+      <DependentUpon>Chating.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\AdvertiseOrder.cs">
+      <DependentUpon>AdvertiseOrder.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Advertise.cs">
+      <DependentUpon>Advertise.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\LeaveWord.cs">
+      <DependentUpon>LeaveWord.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Machine.cs">
+      <DependentUpon>Machine.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\MachineOrder.cs">
+      <DependentUpon>MachineOrder.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Matching.cs">
+      <DependentUpon>Matching.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ExchangeCurrency.cs">
+      <DependentUpon>ExchangeCurrency.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ExchangeDetail.cs">
+      <DependentUpon>ExchangeDetail.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ReleaseDetail.cs">
+      <DependentUpon>ReleaseDetail.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Release.cs">
+      <DependentUpon>Release.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\OtherTransfer.cs">
+      <DependentUpon>OtherTransfer.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ShopSysSetting.cs">
+      <DependentUpon>ShopSysSetting.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Favorites.cs">
+      <DependentUpon>Shop_Favorites.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Cart.cs">
+      <DependentUpon>Shop_Cart.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_ReceiptAddress.cs">
+      <DependentUpon>Shop_ReceiptAddress.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Tmp_Pro_Img.cs">
+      <DependentUpon>Shop_Tmp_Pro_Img.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Product_SKU.cs">
+      <DependentUpon>Shop_Product_SKU.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Home_Group.cs">
+      <DependentUpon>Shop_Home_Group.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Floor.cs">
+      <DependentUpon>Shop_Floor.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Comments.cs">
+      <DependentUpon>Shop_Comments.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_News.cs">
+      <DependentUpon>Shop_News.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_SPEC.cs">
+      <DependentUpon>Shop_SPEC.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Product_Category.cs">
+      <DependentUpon>Shop_Product_Category.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Product.cs">
+      <DependentUpon>Shop_Product.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Order_Details.cs">
+      <DependentUpon>Shop_Order_Details.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Order.cs">
+      <DependentUpon>Shop_Order.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Shop_Info.cs">
+      <DependentUpon>Shop_Info.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\SupplyHelp.cs">
+      <DependentUpon>SupplyHelp.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\UserBankCard.cs">
+      <DependentUpon>UserBankCard.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\LuckDrawSumLog.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>LuckDrawSumLog.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TT\PriceTracking15Min.cs">
+      <DependentUpon>PriceTracking15Min.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\PriceTracking300Min.cs">
+      <DependentUpon>PriceTracking300Min.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\PriceTracking60Min.cs">
+      <DependentUpon>PriceTracking60Min.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\PriceTracking5Min.cs">
+      <DependentUpon>PriceTracking5Min.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\PriceTracking30Min.cs">
+      <DependentUpon>PriceTracking30Min.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\PriceTracking1Min.cs">
+      <DependentUpon>PriceTracking1Min.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\PriceTracking1Day.cs">
+      <DependentUpon>PriceTracking1Day.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\PriceTracking.cs">
+      <DependentUpon>PriceTracking.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ArticleClass.cs">
+      <DependentUpon>ArticleClass.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Article.cs">
+      <DependentUpon>Article.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Inverstment.cs">
+      <DependentUpon>Inverstment.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Currency.cs">
+      <DependentUpon>Currency.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\SMSLog.cs">
+      <DependentUpon>SMSLog.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\TimeDeposit.cs">
+      <DependentUpon>TimeDeposit.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\RaCoin.cs">
+      <DependentUpon>RaCoin.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\WarningLog.cs">
+      <DependentUpon>WarningLog.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\AdminUser.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>AdminUser.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TT\PINCode.cs">
+      <DependentUpon>PINCode.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Language.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Language.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TT\StockTrade.cs">
+      <DependentUpon>StockTrade.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Transfer.cs">
+      <DependentUpon>Transfer.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ShopProduct.cs">
+      <DependentUpon>ShopProduct.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ShopOrderDetail.cs">
+      <DependentUpon>ShopOrderDetail.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ShopOrder.cs">
+      <DependentUpon>ShopOrder.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ShopInfo.cs">
+      <DependentUpon>ShopInfo.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\StockEntrustsTrade.cs">
+      <DependentUpon>StockEntrustsTrade.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\StockChartHour.cs">
+      <DependentUpon>StockChartHour.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\StockChartDay.cs">
+      <DependentUpon>StockChartDay.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\AccountRelation.cs">
+      <DependentUpon>AccountRelation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\ActLog.cs">
+      <DependentUpon>ActLog.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\AdminAuthority.cs">
+      <DependentUpon>AdminAuthority.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\AdminRole.cs">
+      <DependentUpon>AdminRole.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\BonusDetail.cs">
+      <DependentUpon>BonusDetail.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Message.cs">
+      <DependentUpon>Message.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Remittance.cs">
+      <DependentUpon>Remittance.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Notice.cs">
+      <DependentUpon>Notice.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\Settlement.cs">
+      <DependentUpon>Settlement.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\TakeCash.cs">
+      <DependentUpon>TakeCash.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\SysLog.cs">
+      <DependentUpon>SysLog.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\SysParam.cs">
+      <DependentUpon>SysParam.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\SysSetting.cs">
+      <DependentUpon>SysSetting.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\TimingPlan.cs">
+      <DependentUpon>TimingPlan.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\User.cs">
+      <DependentUpon>User.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\UserVerify.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>UserVerify.tt</DependentUpon>
+    </Compile>
+    <Compile Include="TT\Navigation.cs">
+      <DependentUpon>Navigation.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="TT\WalletLog.cs">
+      <DependentUpon>WalletLog.tt</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TT\Card.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Card.cs</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+    <None Include="HBuilder\wp17112702\.project" />
+    <None Include="HBuilder\wp17112702\manifest.json" />
+    <None Include="HBuilder\wp17112702\unpackage\.confirmed_dependencies" />
+    <None Include="HBuilder\wp17112702\unpackage\.dependencies" />
+    <None Include="HBuilder\wp17112702\unpackage\release\coinglobe.apk" />
+    <None Include="HBuilder\wp17112702\unpackage\release\coinglobe.ipa" />
+    <None Include="packages.config" />
+    <None Include="TT\AcceptHelp.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AcceptHelp.cs</LastGenOutput>
+    </None>
+    <Content Include="DBScripts\wp18070301.sql" />
+    <None Include="TT\TeamAchievement.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TeamAchievement.cs</LastGenOutput>
+    </None>
+    <None Include="TT\VRUsers.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>VRUsers.cs</LastGenOutput>
+    </None>
+    <Content Include="TT\LeaveWord.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LeaveWord.cs</LastGenOutput>
+    </Content>
+    <None Include="TT\AdvertiseChartDay.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AdvertiseChartDay.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Matching.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Matching.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ShopSysSetting.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ShopSysSetting.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Favorites.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Favorites.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Cart.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Cart.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_ReceiptAddress.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_ReceiptAddress.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Tmp_Pro_Img.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Tmp_Pro_Img.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Product_SKU.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Product_SKU.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Home_Group.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Home_Group.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Floor.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Floor.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Comments.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Comments.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_News.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_News.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_SPEC.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_SPEC.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Product_Category.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Product_Category.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Product.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Product.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Order_Details.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Order_Details.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Order.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Order.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Shop_Info.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Shop_Info.cs</LastGenOutput>
+    </None>
+    <None Include="TT\SupplyHelp.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SupplyHelp.cs</LastGenOutput>
+    </None>
+    <None Include="TT\WarningLog.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>WarningLog.cs</LastGenOutput>
+    </None>
+    <None Include="TT\SMSLog.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SMSLog.cs</LastGenOutput>
+    </None>
+    <Content Include="HBuilder\112702logo.png" />
+    <Content Include="HBuilder\112702启动图.png" />
+    <Content Include="HBuilder\wp17112702\css\demos.css" />
+    <Content Include="HBuilder\wp17112702\img\star.png" />
+    <Content Include="HBuilder\wp17112702\img\wh-bg.png" />
+    <Content Include="HBuilder\wp17112702\img\wh_bg.jpg" />
+    <Content Include="HBuilder\wp17112702\index.html" />
+    <Content Include="HBuilder\wp17112702\js\mui.min.js" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\100x100.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\114x114.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\120x120.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\144x144.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\152x152.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\180x180.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\192x192.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\256x256.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\29x29.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\40x40.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\48x48.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\50x50.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\57x57.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\58x58.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\72x72.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\76x76.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\80x80.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\87x87.png" />
+    <Content Include="HBuilder\wp17112702\unpackage\res\icons\96x96.png" />
+    <Content Include="HBuilder\wp17112702\wait.html" />
+    <None Include="TT\ArticleClass.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ArticleClass.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Inverstment.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Inverstment.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking.cs</LastGenOutput>
+    </None>
+    <None Include="TT\UserBankCard.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UserBankCard.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Advertise.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Advertise.cs</LastGenOutput>
+    </None>
+    <None Include="TT\AdvertiseOrder.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AdvertiseOrder.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Chating.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Chating.cs</LastGenOutput>
+    </None>
+    <Content Include="TT\Language.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Language.cs</LastGenOutput>
+    </Content>
+    <None Include="TT\Article.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Article.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Currency.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Currency.cs</LastGenOutput>
+    </None>
+    <Content Include="TT\LuckDrawSumLog.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>LuckDrawSumLog.cs</LastGenOutput>
+    </Content>
+    <None Include="TT\Release.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Release.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking1Day.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking1Day.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking15Min.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking15Min.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking5Min.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking5Min.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking30Min.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking30Min.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking1Min.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking1Min.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking60Min.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking60Min.cs</LastGenOutput>
+    </None>
+    <None Include="TT\PriceTracking300Min.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PriceTracking300Min.cs</LastGenOutput>
+    </None>
+    <None Include="TT\OtherTransfer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>OtherTransfer.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ReleaseDetail.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReleaseDetail.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ExchangeDetail.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExchangeDetail.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ExchangeCurrency.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExchangeCurrency.cs</LastGenOutput>
+    </None>
+    <None Include="TT\MachineOrder.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MachineOrder.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Machine.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Machine.cs</LastGenOutput>
+    </None>
+    <Content Include="TT\TimeDeposit.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TimeDeposit.cs</LastGenOutput>
+    </Content>
+    <None Include="TT\RaCoin.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>RaCoin.cs</LastGenOutput>
+    </None>
+    <Content Include="TT\UserVerify.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>UserVerify.cs</LastGenOutput>
+    </Content>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="TT\PINCode.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PINCode.cs</LastGenOutput>
+    </None>
+    <None Include="TT\StockTrade.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StockTrade.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Transfer.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Transfer.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ShopProduct.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ShopProduct.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ShopOrderDetail.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ShopOrderDetail.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ShopOrder.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ShopOrder.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ShopInfo.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ShopInfo.cs</LastGenOutput>
+    </None>
+    <None Include="TT\StockEntrustsTrade.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StockEntrustsTrade.cs</LastGenOutput>
+    </None>
+    <None Include="TT\StockChartHour.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StockChartHour.cs</LastGenOutput>
+    </None>
+    <None Include="TT\StockChartDay.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StockChartDay.cs</LastGenOutput>
+    </None>
+    <None Include="TT\AccountRelation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AccountRelation.cs</LastGenOutput>
+    </None>
+    <None Include="TT\ActLog.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ActLog.cs</LastGenOutput>
+    </None>
+    <None Include="TT\AdminAuthority.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AdminAuthority.cs</LastGenOutput>
+    </None>
+    <None Include="TT\AdminRole.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AdminRole.cs</LastGenOutput>
+    </None>
+    <None Include="TT\AdminUser.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AdminUser.cs</LastGenOutput>
+    </None>
+    <None Include="TT\BonusDetail.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>BonusDetail.cs</LastGenOutput>
+    </None>
+    <None Include="TT\DbHelper.ttinclude" />
+    <None Include="TT\Message.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Message.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Remittance.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Remittance.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Notice.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Notice.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Settlement.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Settlement.cs</LastGenOutput>
+    </None>
+    <None Include="TT\TakeCash.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TakeCash.cs</LastGenOutput>
+    </None>
+    <None Include="TT\SysLog.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SysLog.cs</LastGenOutput>
+    </None>
+    <None Include="TT\SysParam.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SysParam.cs</LastGenOutput>
+    </None>
+    <None Include="TT\SysSetting.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SysSetting.cs</LastGenOutput>
+    </None>
+    <None Include="TT\TimingPlan.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TimingPlan.cs</LastGenOutput>
+    </None>
+    <None Include="TT\User.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>User.cs</LastGenOutput>
+    </None>
+    <None Include="TT\Navigation.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Navigation.cs</LastGenOutput>
+    </None>
+    <None Include="TT\WalletLog.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>WalletLog.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(SolutionDir)\.nuget\NuGet.targets" Condition="Exists('$(SolutionDir)\.nuget\NuGet.targets')" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

@@ -1,0 +1,132 @@
+﻿
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000);
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return mui-action-back">
+	    @*<a href="javascript:history.go(-1);"></a>*@
+	</div>
+	
+	<div class="logo">@T("修改手机号码")</div>
+</header>
+
+<section class="container">
+	<div class="setting-form">
+		<div class="form-widget">
+            <form action="" method="post" id="step1">
+                <div class="form-box">
+                    <div class="form-group">
+                            <select class="form-control" name="countrycode" id="country_code">
+                                <option value="+86" selected>@T("+86 中国")</option>
+                                <option value="+1">@T("+1 美国")</option>
+                                <option value="+886">@T("+886 台湾")</option>
+                                <option value="+852">@T("+852 香港")</option>
+                                <option value="+81">@T("+81 日本")</option>
+                                <option value="+84">@T("+84 越南")</option>
+                                <option value="+61">@T("+61 澳大利亚")</option>
+                                <option value="+65">@T("+65 新加坡")</option>
+                                <option value="+62">@T("+62 印度尼西亚")</option>
+                                <option value="+60">@T("+60 马来西亚")</option>
+                                <option value="+66">@T("+66 泰国")</option>
+                            </select>
+                    </div>
+                    <div class="form-group">
+                        <label>@T("手机号码")</label>
+                        <input class="form-control" placeholder="@T("请输入手机号码")" value="@Umodel.Mobile" id="mobile" name="mobile">
+                    </div>
+                    @if (cacheSysParam.Single(x => x.ID == 3505).Value.ToInt() >= 1)
+                    {
+                        <div class="form-group">
+                            <label>@T("验证码")</label>
+                            <input class="form-control" maxlength="6" type="number" name="smscode" placeholder="@T("请输入验证码")">
+                            <button class="right-btn" id="btnSendCode" type="button" onclick="SendMobile(this)">@T("发送验证码")</button>
+                        </div>
+                    }
+                    <div class="form-group">
+                        <label>@T("安全口令")</label>
+                        <input class="form-control" placeholder="@T("请输入安全口令")" type="password" name="securityPassword">
+                    </div>
+                </div>
+
+                <div class="form-submit">
+                    <button type="button" class="form-submit-btn" onclick="ChangeMobile()" id="btnEdit">@T("确定")</button>
+                </div>
+            </form>
+		</div>
+	</div>
+</section>
+<script>
+    function ChangeMobile() {
+        $('#btnEdit').attr("disabled", "disabled");
+        $.post('/App/user/SettingMobile/', $('#step1').serialize(), function (d) {
+            if (d.Status == 200) {
+                layer.msg("@T("操作成功")", { icon: 1 },function(){
+                    window.location.href = "/App/user/setting";
+                })               
+            } else {
+                layer.msg(d.Message, { icon: 2 });
+                $('#btnEdit').removeAttr("disabled");
+            }
+        }, 'json');
+    }
+    //验证手机
+    function SendMobile(thisval) {
+        $('#btnSendCode').attr("disabled", "disabled");
+        var mobile = $("input[name='mobile']").val();
+        var country_code = $("#country_code").val();
+        // var code = $("#code").val();
+        @*var myreg = /^0?(13|14|15|16|17|18|19)[0-9]{9}$/;
+        if (!myreg.test(mobile)) {
+            layer.msg('@T("请输入有效的手机号码")', { icon: 2 });
+            $("input[name='mobile']").focus();
+            $('#btnSendCode').removeAttr("disabled");
+            return false;
+        }*@
+        if (mobile != "") {
+            layer.msg('@T("正在发送短信，请稍后")...');
+            $.post("@Url.Action("SendRegMobileMsm", "reg")", { myphone: mobile, country_code: country_code }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg('@T("短信已发送")', { icon: 1 });
+                    time(thisval);
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                    $('#btnSendCode').removeAttr("disabled");
+                }
+            });
+    } else {
+            layer.msg('@T("手机不能为空")', { icon: 2 });
+    $('#btnSendCode').removeAttr("disabled");
+    $("input[name='mobile']").focus();
+    return false;
+    }
+    }
+
+    var wait = 60;
+    function time(o) {
+        if (wait == 0) {
+            o.removeAttribute("disabled");
+            o.innerHTML = "@T("重新获取")";
+            wait = 60;
+        } else {
+            o.setAttribute("disabled", true);
+            o.innerHTML = "@T("重发")" + "(" + wait + ")";
+            wait--;
+            setTimeout(function () {
+                time(o)
+            },
+            1000);
+        }
+    }
+</script>

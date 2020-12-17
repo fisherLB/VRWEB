@@ -1,0 +1,133 @@
+﻿@model JN.Data.Shop_Order_Details
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    JN.Data.Shop_Order proModel = MvcCore.Unity.Get<JN.Data.Service.Shop_OrderService>().Single(x => x.OrderNumber == Model.OrderNumber);
+    JN.Data.Shop_Info InfoModel = MvcCore.Unity.Get<JN.Data.Service.Shop_InfoService>().SingleAndInit(x => x.ID == (Model.ShopId ?? 0));
+}
+<link href="/Theme/APP/css/shop.css" rel="stylesheet">
+<link href="/Theme/APP/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T("订单详情")</div>
+</header>
+
+<section class="container">
+    <div class="order-details-status">
+        <h1>@typeof(JN.Data.Enum.ShopOrderStatus).GetEnumDesc(Model.Status)</h1>
+@if (Model.Status == (int)JN.Data.Enum.ShopOrderStatus.Transaction && InfoModel.UID != Umodel.ID)
+{
+    <a href="###" onclick="funGerProduct(@Model.DetailsId)">@T("确认收货")</a>
+}
+   @if (Model.Status == (int)JN.Data.Enum.ShopOrderStatus.Sales && InfoModel.UID == Umodel.ID)
+{
+    <a href="###" onclick="DeliverGoods('@Model.OrderNumber')">@T("确认发货")</a>
+}    
+    </div>
+    <div class="setting-menu" style="margin-bottom: 0.4rem;">
+        <a class="setting-menu-2 add_del" style="padding: .3rem .6rem .3rem 1.2rem;">
+            <em class="add_icon"></em>
+            <h3 class="add_icon_t" style="padding-right: 0;">@T("收货人"):@proModel.Addressee<br /><p class="address_t">@T("收货地址"): @proModel.Address</p></h3>
+            <span style="line-height: 0.6rem; right: 0.7rem;">@proModel.Phone</span>
+        </a>
+    </div>
+
+    <div class="order">
+        <div class="order-title">
+            <a href="" class="order-shop fl">@Model.ShopName</a>
+        </div>
+
+        <a href="" class="order-info">
+            <div class="order-item">
+                <img src="@JN.Services.Tool.StringHelp.GetFirstStr(Model.Img)" />
+
+                <h1> @Model.GoodsName</h1>
+                <div class="order-price">
+                    <h3>¥ @Model.OneFee</h3>
+                    <span>×@Model.ByCount</span>
+                </div>
+            </div>
+        </a>
+        <div class="order-summary">
+            <span>@T("实付"):</span>
+            <b>¥@Model.TotalFee</b>
+            <span>(@T("免运费"))</span>
+        </div>
+    </div>
+
+    <div class="order-details-info">
+        <ul>
+            <li>
+                <label>@T("订单编号")：</label>
+                <span>@Model.OrderNumber</span>
+            </li>
+
+            <li>
+                <label>@T("支付方式")：</label>
+                <span>@T("余额购买")</span>
+            </li>
+
+            <li>
+                <label>@T("下单时间")：</label>
+                <span>@Model.CreateTime</span>
+            </li>
+            @if (Model.Status >= (int)JN.Data.Enum.ShopOrderStatus.Transaction)
+            {
+                 <li>
+                <label>@T("快递信息")：</label>
+                <span>@Model.Remark</span>
+            </li>
+            }
+        </ul>
+    </div>
+</section>	
+<script>
+    //确认收货
+    function funGerProduct(DetailsId) {
+        $.ajax({
+            type: 'post',
+            url: '/APP/Shop/GerProduct',
+            data: { DetailsId: DetailsId },
+            cache: false,
+            dataType: 'json',
+            success: function (data) {
+                if (data.result == 200) //服务器返回false，就将validatePassword2的值改为pwd2Error，这是异步，需要考虑返回时间
+                {
+                    window.location = "/APP/Shop/MyOrderDetail?id=" + @Model.DetailsId;
+                } else {
+                    layer.msg("@T("操作失败")：" + data.Message);
+                }
+            },
+            error: function () {
+                layer.msg("@T("操作失败")：" + data.Message);
+            }
+        });
+    };
+    //确认收货
+    function DeliverGoods(OrderNumber) {
+        layer.prompt({ title: '@T("请输入物流信息（格式为物流公司 + 物流单号）")', formType: 3 }, function (val, index) {
+            $.post('@Url.Action("DeliverGoods", "shop")', { OrderNumber: OrderNumber, Remark: val }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("发货成功")！");
+                    setTimeout(function () {  //使用  setTimeout（）方法设定定时2000毫秒
+                        window.location.reload();//页面刷新
+                    }, 2000);
+                } else {
+                    layer.msg("@T("操作失败")：" + data.Message);
+                }
+            });
+        });
+    };
+</script>

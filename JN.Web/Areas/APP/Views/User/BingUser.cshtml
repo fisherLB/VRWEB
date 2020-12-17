@@ -1,0 +1,103 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+
+}
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax提交表单-->
+
+<link href="~/theme/app/css/common_b0a143bbc2.css" rel="stylesheet" />
+<link href="~/theme/app/css/setting_0f1c0ad40a.css" rel="stylesheet" />
+<div class="container clear-float main">
+    @Html.Partial("/Areas/APP/Views/Home/_Security.cshtml")
+    <div class="fr">
+        <div class="setting-title">@T("账户绑定")</div>
+        <div class="setting-panel">
+            <form id="form" class="form-cont">
+                <div class="form-text">
+                    @T("绑定状态：") <span> @T(Umodel.BindStatus ? "已绑定:【" + Umodel.BindUserName + "】" : "无")</span>
+
+                </div>
+                <div class="input-cont">
+                    <div class="input-cont">
+                        <span class="icon form-password"></span>
+                        <input class="input" name="UserName" placeholder="@T("请输入绑定账号")">
+                        <div class="form-tips"></div>
+                        <div class="error-msg"></div>
+                    </div>
+                    @if (cacheSysParam.SingleAndInit(x => x.ID == 3509).Value.ToInt() == 1)
+                    {
+                        <div class="input-cont">
+                            <span class="icon form-token"></span>
+                            <input class="input" type="text" name="mobilecode" placeholder="@T("请输入验证码")">
+                            <button class="link get-token" id="yzm" type="button" style="background: #fff;border: 0;">
+                                @T("发送验证码")
+                            </button>
+                            <div class="form-tips"></div>
+                        </div>
+                    }
+
+                    <div class="input-cont">
+                        <span class="icon form-password"></span>
+                        <input class="input" type="password" value="" name="Password" placeholder="@T("请输入绑定账号密码")">
+                        <div class="form-tips"></div>
+                        <div class="error-msg"></div>
+                    </div>
+                    <a id="btnSubmit" class="btn submit">@T("确定提交")</a>
+                </div>
+            </form>
+            <script>
+                $("#btnSubmit").click(function () {
+                    $.post('@Url.Action("BingUser")', $('#form').serialize(), function (d) {
+                        if (d.Status != 200) {
+                            layer.msg(d.Message, { icon: 2 });
+                        } else {
+                            layer.msg(d.Message, { icon: 1 }, function () {;
+                                location.href = "/App/user/BingUserCancel";
+                            })
+                        }
+                    }, 'json');
+
+                });
+                //验证手机
+                function codephone(thisval) {
+                    layer.msg('@T("正在发送短信，请稍后...")');
+                    $.post("/app/user/SendBindUserMobileMsm", {}, function (data) {
+                        if (data.Status == 200) {
+                            layer.msg('@T("短信已发送")', { icon: 1 });
+                            time(thisval);
+                        } else {
+
+                            layer.msg(data.Message, { icon: 2 });
+                        }
+                    });
+                }
+
+                var yzmbtn = document.getElementById("yzm");
+                if (yzmbtn != null) {
+                    var wait = 60;
+                    document.getElementById("yzm").disabled = false;
+                    function time(o) {
+                        if (wait == 0) {
+                            o.removeAttribute("disabled");
+                            o.innerHTML = "@T("重新获取验证码")";
+                            wait = 60;
+                        } else {
+                            o.setAttribute("disabled", true);
+                            o.innerHTML = "@T("重新发送") (" + wait + ")";
+                            wait--;
+                            setTimeout(function () {
+                                time(o)
+                            },
+                            1000)
+                        }
+                    }
+                    document.getElementById("yzm").onclick = function () {
+                        codephone(this);
+                    }
+                }
+            </script>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,106 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000);
+}
+<link href="/Theme/App/css/login.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T("找回密码")</div>
+</header>
+
+<section class="container">
+    <div class="register">
+        <div class="form-widget">
+            <form method="get" id="form-resetpw">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("手机号")</label>
+
+                        <div class="form-control">
+                            <input name="mobile" type="tel" id="mobile" placeholder="@T("请输入手机号码")">
+                        </div>
+                    </div>
+                    @if (cacheSysParam.Single(x => x.ID == 3504).Value.ToInt() >= 1)
+                    {
+                        <div class="form-group">
+                            <label class="form-label">@T("验证码")</label>
+
+                            <div class="form-control form-getcode">
+                                <input maxlength="6" type="number" name="smscode" placeholder="@T("请输入验证码")">
+                                <button id="btnSendCode" type="button" onclick="SendMobile(this)">@T("发送验证码")</button>
+                            </div>
+                        </div>
+                    }        
+                </div>
+
+                <div class="form-submit">
+                    <button type="button" class="form-submit-btn" onclick="restpw()" id="btnEdit">@T("下一步")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    function restpw() {
+        $('#btnEdit').attr("disabled", "disabled");
+        $.post('/App/login/getpwd', $('#form-resetpw').serialize(), function (d) {
+            if (d.Status == 200) {
+                location.href = d.Message;
+            } else {
+                layer.msg(d.Message, { icon: 2 })
+                $('#btnEdit').removeAttr("disabled");
+            }
+        }, 'json')
+    }
+
+    //验证手机
+    function SendMobile(thisval) {
+        $('#btnSendCode').attr("disabled", "disabled");
+        var mobile = $("input[name='mobile']").val();
+        // var code = $("#code").val();
+        @*var myreg = /^0?(13|14|15|16|17|18|19)[0-9]{9}$/;
+        if (!myreg.test(mobile)) {
+            layer.msg('@T("请输入有效的手机号码")', { icon: 2 });
+            $("input[name='mobile']").focus();
+            $('#btnSendCode').removeAttr("disabled");
+            return false;
+        }*@
+        if (mobile != "") {
+            layer.msg('@T("正在发送短信，请稍后")...');
+            $.post("@Url.Action("SendMobileGetPassword", "login")", { mobile: mobile }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg('@T("短信已发送")', { icon: 1 });
+                    time(thisval);
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                    $('#btnSendCode').removeAttr("disabled");
+                }
+            });
+    } else {
+            layer.msg('@T("手机不能为空")', { icon: 2 });
+    $('#btnSendCode').removeAttr("disabled");
+    $("input[name='mobile']").focus();
+    return false;
+    }
+    }
+
+    var wait = 60;
+    function time(o) {
+        if (wait == 0) {
+            o.removeAttribute("disabled");
+            o.innerHTML = "@T("重新获取")";
+            wait = 60;
+        } else {
+            o.setAttribute("disabled", true);
+            o.innerHTML = "@T("重发")" + "(" + wait + ")";
+            wait--;
+            setTimeout(function () {
+                time(o)
+            },
+            1000);
+        }
+    }
+</script>

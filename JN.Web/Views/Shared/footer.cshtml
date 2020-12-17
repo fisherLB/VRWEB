@@ -1,0 +1,7 @@
+﻿
+@{   var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);}
+<div class="footer ">
+    <div class="container">
+        <span class="ta-c company-info"> @sysSet.CopyInfo </span>
+    </div>
+</div>

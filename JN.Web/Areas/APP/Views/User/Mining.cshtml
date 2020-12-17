@@ -1,0 +1,34 @@
+﻿
+@{
+    ViewBag.Title = "Mining";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    int moID = Request["moID"].ToInt();
+}
+
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">@T("矿机详情")</div>
+</header>
+
+<!--main-->
+<section class="container">
+    <div class="mining-main mining1">
+        <div class="qipao-group">
+            <div class="miner-box bg-none">
+                <img src="~/Theme/APP/img/miner-g.png" />
+                <ul>
+                    <li>@T("矿机型号")<span>G1</span></li>
+                    <li>@T("编号")<span>2164654345</span></li>
+                    <li>@T("日期")<span>2018/08/18 21:45:20</span></li>
+                </ul>
+                <a class="start-mining" href="~/APP/User/Mining2?moID=@moID">@T("开始采矿")</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+

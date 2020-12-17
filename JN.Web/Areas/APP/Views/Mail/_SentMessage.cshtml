@@ -1,0 +1,88 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Message>
+          
+                    <!--数据开始-->
+                  <table id="sample-table-1" width="100%" border="0" cellpadding="0" cellspacing="0" class="table_list">
+    <thead>
+        <tr>
+            <th class="center">
+            </th>
+            <th>@T("收件人")</th>
+            <th>@T("邮件类型")</th>
+            <th>@T("邮件标题")</th>
+            <th>
+                <i class="icon-time bigger-110 hidden-480"></i>
+                @T("发送时间")
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+     @if (Model.Count > 0)
+     {
+         int index = 0;
+         for (int i = 0; i < Model.Count; i++)
+         {
+             index++;
+            <tr>
+                <td align="center">
+                    @index
+                </td>
+                <td>
+                    @Model[i].ToUserName
+                </td>
+                <td>
+                    @Model[i].MessageType
+                </td>
+
+                <td>
+                    @if (Model[i].IsReply)
+                    {
+                        <span class="message-flags">
+                            <i class="icon-reply light-grey"></i>
+                        </span>
+                    }
+                    @if (Model[i].IsForward)
+                    {
+                        <span class="message-flags">
+                            <i class="icon-mail-forward light-grey"></i>
+                        </span>
+                    }
+
+                    <a href="/App/Mail/SubMailContent/@Model[i].ID">@Model[i].Title</a>
+
+
+                </td>
+                <td>
+                    <span class="time">@Model[i].CreateTime</span>
+                </td>
+            </tr>
+         }
+     }
+     else
+     {
+           <tr>
+            <td colspan="5" class="no-data-tips"><span>@T("没有更多数据了~~")</span> </td>
+        </tr>
+        }
+    </tbody>
+
+</table>
+
+                    <!--分页-->
+        
+
+<div class="row">
+    <div class="col-xs-8" style="margin: 0px 0 0 20px;">
+        @Ajax.Pager(Model, new Webdiyer.WebControls.Mvc.PagerOptions
+   {
+       PageIndexParameterName = "Page",
+       FirstPageText = "首页",
+       LastPageText = "尾页",
+       NextPageText = "下一页",
+       PrevPageText = "上一页"
+      , CurrentPagerItemTemplate = "<span class=\"current\">{0}</span>", DisabledPagerItemTemplate = "<span class=\"disabled\">{0}</span>", Id = "badoopager" 
+   },
+                                                                              new MvcAjaxOptions { UpdateTargetId = "_SentMessage", HttpMethod = "Post" })
+      
+    </div>
+</div>

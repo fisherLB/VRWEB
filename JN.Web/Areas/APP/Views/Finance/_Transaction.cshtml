@@ -1,0 +1,71 @@
+﻿
+@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.StockTrade>
+@{
+    JN.Data.User Umodel = JN.Services.UserLoginHelper.CurrentUser();
+}
+
+                    <table class="table_list" id="sample-table-1" width="100%" border="0" cellpadding="0" cellspacing="0">
+    <thead>
+        <tr>
+            <th id="transaction-grid_c0">@T("交易地址")</th>
+            <th id="transaction-grid_c1">@T("交易时间")</th>
+            <th id="transaction-grid_c2">@T("交易类型")</th>
+            <th id="transaction-grid_c3">@T("价格")</th>
+            <th id="transaction-grid_c4">@T("数量")</th>
+            <th id="transaction-grid_c5">@T("总金额")</th>
+            <th id="transaction-grid_c6">@T("手续费")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+            for (int i = 0; i < Model.Count; i++)
+            {
+                var item = Model[i];
+                <tr>
+                    <td>@item.TradeNo</td>
+                    <td>@item.CreateTime</td>
+                    <td class="@(item.BuyUID == Umodel.ID ? "buy" : "sell")">@T(item.BuyUID == Umodel.ID ? "买入" : "卖出")</td>
+                    <td>@item.Price.ToString("F3")</td>
+                    <td>@(item.Quantiry.ToString("F3"))</td>
+                    <td>@item.TotaAmount.ToString("F3")</td>
+                    <td>@(item.BuyUID == Umodel.ID ? item.BuyPoundage.ToString("F3") : item.SellPoundage.ToString("F3"))</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="8" class="no-data-tips"><span>@T("没有更多数据了~~")</span> </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+
+
+
+                  
+
+
+
+<div class="row">
+    <div class="col-xs-8" style="margin: 0px 0 0 20px;">
+        @Ajax.Pager(Model, new Webdiyer.WebControls.Mvc.PagerOptions
+   {
+       PageIndexParameterName = "Page",
+       FirstPageText = "首页",
+       LastPageText = "尾页",
+       NextPageText = "下一页",
+       PrevPageText = "上一页"
+      ,
+       CurrentPagerItemTemplate = "<span class=\"current\">{0}</span>",
+       DisabledPagerItemTemplate = "<span class=\"disabled\">{0}</span>",
+       Id = "badoopager"
+   },
+                                                                                       new MvcAjaxOptions { UpdateTargetId = "_Transaction", HttpMethod = "Post" })
+
+    </div>
+</div>

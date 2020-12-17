@@ -1,0 +1,300 @@
+﻿@model JN.Data.Machine
+@{
+                /**/
+
+                string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+                Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+                //var KJClass = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch).OrderBy(x => x.ID).ToList();
+                //JN.Data.Currency Default= KJClass.FirstOrDefault();
+}
+<!-- Content -->
+<div id="content">
+
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <div class="control-group">
+                    <label class="control-label"></label>
+
+
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="username">矿机名称</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="MachineName" value="@Model.MachineName" class="form-control" style="width:350px" />
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="control-group">
+                        <label class="control-label" for="username">矿机分类</label>
+
+                        <select class="form-control" onchange="change()" id="userlevel" name="userlevel">
+                            @{
+                                foreach (var item in KJClass)
+                                {
+                                    <option value="@(item.ID-1000)" data-value="@item.ID">@item.CurrencyName</option>
+                                }
+                            }
+                        </select>
+                        <input type="hidden" name="ClassId" id="ClassId" value="@Default.ID" />
+                        <div class="controls">
+                            <div class="clearfix">
+                                @Html.DropDownList("ClassID", new SelectList(MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch).OrderBy(x => x.ID).ToList(), "ID", "CurrencyName", Model.ClassId))
+                            </div>
+                        </div>
+                    </div>*@
+
+                @*<div class="control-group">
+                        <label class="control-label" for="realname">矿机图片(JPG/PNG/GIF)</label>
+
+                        <div class="controls">
+                            <div class="clearfix">
+                                <img src="@Model.ImageUrl" id="productimg" height="80" style="height:60px;" />
+                                <input type="file" name="imgurl" class="form-control" />
+                            </div>
+                        </div>
+                    </div>*@
+
+
+                <div class="control-group">
+                    <label class="control-label" for="email">价格</label>
+
+                    <div class="controls">
+                        <div class="input-group">
+                            <input type="text" name="RealPrice" style="width:350px" value="@Model.RealPrice" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="control-group">
+                        <label class="control-label" for="email">封顶收益</label>
+
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="TopBonus" style="width:350px" value="@Model.TopBonus" class="form-control" />
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="control-group">
+                    <label class="control-label" for="email">每天收益</label>
+                    <div class="controls">
+                        <div class="input-group">
+                            <input type="text" name="TimesType" style="width:350px" value="@Model.TimesType" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="email">收益时长(天)</label>
+
+                    <div class="controls">
+                        <div class="input-group">
+                            <input type="text" name="Duration" style="width:350px" value="@Model.Duration" class="form-control" />
+                        </div>
+                    </div>
+                </div>
+
+                @*<div class="control-group">
+                        <label class="control-label" for="email">业绩</label>
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="Performance" style="width:350px" value="@Model.Performance" placeholder="请填小数" class="form-control" />
+                            </div>
+                        </div>
+                    </div>*@
+
+                @*<div class="control-group">
+                        <label class="control-label" for="email">G1购买上限</label>
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="BuyTop1001" style="width:350px" value="@Model.BuyTop1001" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">G2购买上限</label>
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="BuyTop1002" style="width:350px" value="@Model.BuyTop1002" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">G3购买上限</label>
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="BuyTop1003" style="width:350px" value="@Model.BuyTop1003" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">G4购买上限</label>
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="BuyTop1004" style="width:350px" value="@Model.BuyTop1004" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">G5购买上限</label>
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="BuyTop1005" style="width:350px" value="@Model.BuyTop1005" class="form-control" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="control-group">
+                        <label class="control-label" for="email">G6购买上限</label>
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="BuyTop1006" style="width:350px" value="@Model.BuyTop1006" class="form-control" />
+                            </div>
+                        </div>
+                    </div>*@
+
+                @*<div class="control-group">
+                        <label class="control-label" for="email">转换PCO比例</label>
+
+                        <div class="controls">
+                            <div class="input-group">
+                                <input type="text" name="Conversion" style="width:350px" value="@Model.Conversion" placeholder="" class="form-control" />
+                            </div>
+                        </div>
+                    </div>*@
+
+
+                @*<div class="control-group">
+                        <label class="control-label" for="idcard">库存</label>
+
+                        <div class="controls">
+                            <div class="clearfix">
+                                <input type="text" name="Stock" value="@Model.Stock" class="form-control" style="width:350px" />
+                            </div>
+                        </div>
+                    </div>*@
+
+                <div class="hr hr-dotted"></div>
+
+                <div class="control-group">
+                    <label class="control-label" for="bankcard">矿机介绍</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <textarea id="doccontent" name="content" class="wysihtml5 span9" rows="15">@Model.Content</textarea>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr hr-dotted"></div>
+                <div class="control-group">
+                    <label class="control-label">&nbsp;</label>
+                    <div class="controls">
+                        <button class="btn btn-primary" type="submit">
+                            保存
+                        </button>
+
+                        <a href="javascript:history.go(-1);" class="btn btn-grey">
+                            <i class="icon-arrow-left"></i>
+                            返 回
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <!-- page specific plugin styles -->
+    <script type="text/javascript" src="~/Plugin/xhEditor/xheditor.js"></script>
+    <script type="text/javascript" src="~/Plugin/xhEditor/xheditor_lang/zh-cn.js"></script>
+    <script type="text/javascript">
+        $(function () {
+            GetCategoty();
+            pageInit();
+
+        });
+    function pageInit() {
+        $.extend(XHEDITOR.settings, { shortcuts: { 'ctrl+enter': submitForm } });
+        $('#doccontent').xheditor({ upLinkUrl: "/PicUpload/Upload?ASPSESSID=" + "@Session.SessionID", upLinkExt: "zip,rar,txt", upImgUrl: "/PicUpload/Upload?ASPSESSID==" + "@Session.SessionID", upImgExt: "jpg,jpeg,gif,png", onUpload: insertUpload });
+    }
+    function insertUpload(arrMsg) {
+    }
+    function submitForm() { $('#validation-form').submit(); }
+
+    function GetCategoty() {
+        // alert("aaa");
+        $.post("@Url.Action("GetCategory", "Shop")", { pId: 0 }, function (data) {
+
+        $("#selOne").append("<option value='0'>全部</option>");
+        $.each(data, function (k, n) {
+            $("#selOne").append("<option value='" + n.id + "'>" + n.name + "</option>");
+        });
+    });
+    }
+    //绑定下级分类下拉框
+    function GetChildCategotyselThree(obj) {
+        pId = $(obj).val();
+
+        $.post("@Url.Action("GetCategory", "Shop")", { pId: pId }, function (data) {
+
+        $(obj).nextAll("select").empty();
+            //$("#selThree").append("<option value='0'>全部</option>");
+
+        $.each(data, function (k, n) {
+            $("#selThree").append("<option value='" + n.id + "'>" + n.name + "</option>");
+            //$(obj).next("select").append("<option value='" + n.id + "'>" + n.name + "</option>");
+        });
+    });
+    }
+
+
+    //绑定下级分类下拉框
+    function GetChildCategotyselTwo(obj) {
+        pId = $(obj).val();
+
+        $.post("@Url.Action("GetCategory", "Shop")", { pId: pId }, function (data) {
+
+        $(obj).nextAll("select").empty();
+            //alert($(obj).next("select"));
+            // $("#selTwo").append("<option value='0'>全部</option>");
+        $.each(data, function (k, n) {
+            $("#selTwo").append("<option value='" + n.id + "'>" + n.name + "</option>");
+            //$(obj).next("select").append("<option value='" + n.id + "'>" + n.name + "</option>");
+            if (k == 0) {
+                var categoryId = n.id;
+                $.post("@Url.Action("GetCategory", "Shop")", { pId: categoryId }, function (data) {
+
+                    $("#selThree").nextAll("select").empty();
+                    //$("#selThree").append("<option value='0'>全部</option>");
+
+                    $.each(data, function (k, n) {
+                        $("#selThree").append("<option value='" + n.id + "'>" + n.name + "</option>");
+                        //$(obj).next("select").append("<option value='" + n.id + "'>" + n.name + "</option>");
+                    });
+                });
+            }
+        });
+    });
+    }
+
+    </script>
+}

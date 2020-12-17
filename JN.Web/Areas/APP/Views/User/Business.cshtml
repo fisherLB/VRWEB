@@ -1,0 +1,59 @@
+﻿
+@{
+    ViewBag.Title = "Business";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    decimal ReShowBuyTradeNum = (ViewBag.ReShowBuyTradeNum ?? 0);
+    decimal ReShowSellTradeNum = (ViewBag.ReShowSellTradeNum ?? 0);
+
+    JN.Data.TeamAchievement teamAchievement = ViewBag.teamAchievement;
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">@T("业绩")</div>
+</header>
+<div class="container">
+    <div class="clr-small"></div>
+    <div class="personal-m1">
+        <ul class="business-ul">
+            <li><a href="#">@T("交易统计")</a></li>
+            <li><a href="#">@T("个人买入")<span>@((Umodel.ShowBuyTradeNum ?? 0).ToString("F2"))</span></a></li>
+            <li><a href="#">@T("伞下买入")<span>@ReShowBuyTradeNum.ToString("F2")</span></a></li>
+            <li><a href="#">@T("个人卖出")<span>@((Umodel.ShowSellTradeNum ?? 0).ToString("F2"))</span></a></li>
+            <li><a href="#">@T("伞下卖出")<span>@ReShowSellTradeNum.ToString("F2")</span></a></li>
+        </ul>
+    </div>
+
+    <div class="clr-small"></div>
+    <div class="personal-m1">
+        <ul class="business-ul">
+            <li><a href="#">@T("矿机当月业绩统计")</a></li>
+            <li><a href="#">@T("个人业绩")<span>@(teamAchievement.Investment.ToString("F2"))</span></a></li>
+            <li><a href="#">@T("团队业绩")<span>@teamAchievement.TeamInvestment.ToString("F2")</span></a></li>
+        </ul>
+    </div>
+
+    <div class="clr-small"></div>
+    <div class="personal-m1">
+        <ul class="business-ul">
+            <li><a href="#">@T("矿机总业绩统计")</a></li>
+            <li><a href="#">@T("个人业绩")<span>@(Umodel.Investment.ToString("F2"))</span></a></li>
+            <li><a href="#">@T("团队业绩")<span>@Umodel.TeamInvestment.ToString("F2")</span></a></li>
+        </ul>
+    </div>
+</div>
+
+

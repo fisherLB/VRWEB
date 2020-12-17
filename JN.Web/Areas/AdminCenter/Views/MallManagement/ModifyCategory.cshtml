@@ -1,0 +1,137 @@
+﻿@model JN.Data.Shop_Product_Category
+@{
+
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+    var list = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List(x => x.ParentId == 0);
+}
+
+<div id="content" style="text-align: left">
+
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+
+    @if (Model != null)
+    {
+        <div>
+            @using (Ajax.BeginForm("ModifyCategory", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "AfterEdit" }, new { id = "frmSet" }))
+            {
+                <table class="niunantab" style="margin-left:70px;">
+                    <tr>
+                        <td>所有分类</td>
+                        <td>
+                            <select name="cateid">
+                                <option value="0">顶级分类</option>
+                                @{
+                                    if (list != null && list.Any())
+                                    {
+                                        foreach (var cate in list.ToList())
+                                        {
+                                            var childList = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List(x => x.ParentId == cate.Id);//上级分类下的子类
+                                            <option value="@cate.Id" @(Model != null && Model.ParentId == cate.Id ? "selected" : "")>@cate.Name</option>
+                                            if (childList != null && childList.Count() > 0)
+                                            {
+                                                foreach(var childcate in childList.ToList())
+                                                {
+                                                    var childList2 = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List(x => x.ParentId == childcate.Id);
+                                                    <option value="@childcate.Id" @(Model != null && Model.ParentId == childcate.Id ? "selected" : "")>&nbsp;﹄@childcate.Name</option>
+                                                    if(childList2 != null && childList2.Count() > 0)
+                                                    {
+                                                        foreach (var childcate2 in childList2.ToList())
+                                                        {
+                                                            <option value="@childcate2.Id" @(Model != null && Model.ParentId == childcate2.Id ? "selected" : "")>&nbsp;&nbsp;&nbsp;﹄@childcate2.Name</option>
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>分类名称</td>
+                        <td><input type="text" name="name" value="@Model.Name" /></td>
+                        <td><input type="hidden" name="id" value="@Model.Id" /></td>
+                    </tr>
+                    @*<tr>
+                        <td>分类颜色</td>
+                        <td><input type="text" name="color" value="@Model.Color" /></td>
+                    </tr>*@
+                    <tr>
+                        <td>分类排序</td>
+                        <td><input type="text" name="sort" value="@Model.Sort" onkeyup=""/></td>
+                        <td><p>1、由于商城分类只有10行，所以需要显示的分类排序数字不要大于10</p>
+                            <p>2、相同排序的顶层分类会并排显示在商城的分类菜单中</p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>分类图片：</td>
+                        <td>
+                            <img style="width: 180px; height: 180px" id="MainPic" src="@Model.CateImg" />
+                            <input type="button" id="btnUpManiPic" value="选择图片" class="" />
+                            <input type="hidden" name="cateImg" id="hidMainimgSrc" value="" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><input name="Submit" type="submit" class="btn" value="完  成" /></td>
+                    </tr>
+                </table>
+            }
+        </div>
+    }
+</div>
+@section scripts{
+    <link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+
+    <script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+    <script src="~/Plugin/kindeditor-4.1.9/lang/zh_CN.js"></script>
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+    <script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script>
+        //上传
+        KindEditor.ready(function (K) {
+            var editor = K.editor({
+                uploadJson: '@(Url.Action("CateUpMainPic", "MallManagement"))?ASPSESSID=' + "@Session.SessionID",
+                allowFileManager: true
+            });
+            K('#btnUpManiPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#MainPic').attr("src", url);
+                            K('#hidMainimgSrc').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+        });
+
+        //显示主图
+        //function ShowPic(data) {
+        //    var url = data.SaveName;
+        //    $("#imgSrc").val(url);
+        //}
+        //提交后返回结果
+        function AfterEdit(data) {
+            if (data.Status == 200) {
+                alert("编辑成功！");
+                location.href = "@(Url.Action("ProductCategory", "MallManagement"))";
+            }
+            else {
+                alert("保存失败！错误信息：" + data.Message);
+            }
+        }
+    </script>
+}
+
+

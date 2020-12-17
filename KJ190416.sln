@@ -1,0 +1,78 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.28307.106
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JN.Web", "JN.Web\JN.Web.csproj", "{B0D4B710-C220-44F9-98EC-82B0D76046B5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JN.Data", "JN.Data\JN.Data.csproj", "{16170F84-4678-458C-88D2-4657FA7B4540}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JN.Services", "JN.Services\JN.Services.csproj", "{3F44CBAE-B2E8-4335-A527-4BFC09D69D18}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JN.WindowsService", "JN.WindowsService\JN.WindowsService.csproj", "{30F73D6E-A643-4531-8BB3-7859A1F8C1C4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "JN.APICore", "JN.APICore\JN.APICore.csproj", "{43D59063-351F-485C-8678-1107B1EDAC7B}"
+EndProject
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "HBuilder", "HBuilder\", "{903BA5F2-80CB-4941-8D73-6B913D1864C8}"
+	ProjectSection(WebsiteProperties) = preProject
+		TargetFrameworkMoniker = ".NETFramework,Version%3Dv4.0"
+		Debug.AspNetCompiler.VirtualPath = "/localhost_10276"
+		Debug.AspNetCompiler.PhysicalPath = "HBuilder\"
+		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_10276\"
+		Debug.AspNetCompiler.Updateable = "true"
+		Debug.AspNetCompiler.ForceOverwrite = "true"
+		Debug.AspNetCompiler.FixedNames = "false"
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.VirtualPath = "/localhost_10276"
+		Release.AspNetCompiler.PhysicalPath = "HBuilder\"
+		Release.AspNetCompiler.TargetPath = "PrecompiledWeb\localhost_10276\"
+		Release.AspNetCompiler.Updateable = "true"
+		Release.AspNetCompiler.ForceOverwrite = "true"
+		Release.AspNetCompiler.FixedNames = "false"
+		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "10276"
+		SlnRelativePath = "HBuilder\"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B0D4B710-C220-44F9-98EC-82B0D76046B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0D4B710-C220-44F9-98EC-82B0D76046B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0D4B710-C220-44F9-98EC-82B0D76046B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0D4B710-C220-44F9-98EC-82B0D76046B5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16170F84-4678-458C-88D2-4657FA7B4540}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16170F84-4678-458C-88D2-4657FA7B4540}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16170F84-4678-458C-88D2-4657FA7B4540}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16170F84-4678-458C-88D2-4657FA7B4540}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3F44CBAE-B2E8-4335-A527-4BFC09D69D18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3F44CBAE-B2E8-4335-A527-4BFC09D69D18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3F44CBAE-B2E8-4335-A527-4BFC09D69D18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3F44CBAE-B2E8-4335-A527-4BFC09D69D18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{30F73D6E-A643-4531-8BB3-7859A1F8C1C4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{30F73D6E-A643-4531-8BB3-7859A1F8C1C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{30F73D6E-A643-4531-8BB3-7859A1F8C1C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{30F73D6E-A643-4531-8BB3-7859A1F8C1C4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{43D59063-351F-485C-8678-1107B1EDAC7B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{43D59063-351F-485C-8678-1107B1EDAC7B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{43D59063-351F-485C-8678-1107B1EDAC7B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{43D59063-351F-485C-8678-1107B1EDAC7B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{903BA5F2-80CB-4941-8D73-6B913D1864C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{903BA5F2-80CB-4941-8D73-6B913D1864C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{903BA5F2-80CB-4941-8D73-6B913D1864C8}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{903BA5F2-80CB-4941-8D73-6B913D1864C8}.Release|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {F7E73205-1EA2-4A3F-B651-3054D75EC0CD}
+	EndGlobalSection
+	GlobalSection(SubversionScc) = preSolution
+		Svn-Managed = False
+		Manager = AnkhSVN - Subversion Support for Visual Studio
+	EndGlobalSection
+EndGlobal

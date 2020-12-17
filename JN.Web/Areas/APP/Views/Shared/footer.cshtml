@@ -1,0 +1,25 @@
+﻿
+
+@*<footer class="aui-footer-default aui-footer-fixed">
+    <a href="~/APP/Home/Index" class="@(curl.Contains("/app/home/index") ? "current" : "")">
+        <span class="icon icon-1"></span>
+        <span class="aui-footer-item-text">@T("资金")</span>
+    </a>
+    <a href="@Url.Action("NewAdvertise","Trade")" class="@(curl.Contains("/app/trade/newadvertise") ? "current" : "")">
+        <span class="icon icon-2"></span>
+        <span class="aui-footer-item-text"> @T("市场")</span>
+    </a>
+    <a href="/APP/Shop/Index" class="@(curl.Contains("/app/shop/index") ? "current" : "")">
+        <span class="icon icon-3"></span>
+        <span class="aui-footer-item-text"> @T("商城")</span>
+    </a>
+  
+    <a href="@Url.Action("index","home")" class="@(curl.Contains("/app/home") ? "current" : "")">
+        <span class="icon icon-4"></span>
+        <span class="aui-footer-item-text">@T("交易")</span>
+    </a>
+    <a href="@Url.Action("index","home")" class="@(curl.Contains("/app/home") ? "current" : "")">
+        <span class="icon icon-5"></span>
+        <span class="aui-footer-item-text">@T("个人")</span>
+    </a>
+</footer>*@

@@ -1,0 +1,73 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Transfer>
+
+<!--数据开始-->
+<table width="100%" style="table-layout:fixed;" border="0" cellpadding="0" cellspacing="0" class="table order ACTIVE">
+    <thead>
+        <tr>
+            <th align="center"></th>
+            <th width="19%" align="center">@T("转账用户")</th>
+            <th width="14%" align="center">@T("转账金额")</th>
+            <th width="14%" align="center">@T("手续费")</th>
+            <th style="text-align:center;">@T("实际金额")</th>    
+            <th style="text-align:center;">@T("日期")</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model.Count > 0)
+        {
+
+            for (int i = 0; i < Model.Count; i++)
+            {
+                <tr>
+                    <td>
+                        @(i+1)
+                    </td>
+                    <td>
+                        @(Model[i].ToUserName)
+                    </td>
+                    <td>
+                        @Model[i].TransferMoney.ToString("F5")
+                    </td>
+                    <td>
+                        @Model[i].Poundage.ToString("F5")
+                    </td>
+                    <td>
+                        @Model[i].ActualTransferMoney.ToString("F5")
+                    </td>               
+                    <td class="hidden-480">@Model[i].CreateTime.ToString("yyyy-MM-dd")</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="no-data-tips">
+                    <div class="no-record">
+                        <span class="icon-address-no-record"></span><span>暂无记录</span>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<!--分页-->
+
+
+<div class="row">
+    <div class="col-xs-8" style="margin: 0px 0 0 20px;">
+        @Ajax.Pager(Model, new Webdiyer.WebControls.Mvc.PagerOptions
+   {
+       PageIndexParameterName = "Page",
+       FirstPageText = "首页",
+       LastPageText = "尾页",
+       NextPageText = "下一页",
+       PrevPageText = "上一页"
+      ,
+       CurrentPagerItemTemplate = "<span class=\"current\">{0}</span>",
+       DisabledPagerItemTemplate = "<span class=\"disabled\">{0}</span>",
+       Id = "badoopager"
+   }, new MvcAjaxOptions { UpdateTargetId = "_Transfer", HttpMethod = "Post" })
+
+    </div>
+</div>

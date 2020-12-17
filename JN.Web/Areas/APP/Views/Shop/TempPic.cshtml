@@ -1,0 +1,22 @@
+﻿@model List<JN.Data.Shop_Tmp_Pro_Img>
+@{
+    Layout = null;
+}
+<ul id="GalleryList">
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (JN.Data.Shop_Tmp_Pro_Img image in Model)
+        {
+            <li>
+                <a href="javascript:;">
+                    <img src="@image.ImgUrl" />
+                    <i class="iLeft" onclick="DelTempImg(this)" imgid="@image.Id"><a href="javascript:" title="@T("删除")">×</a></i>
+                    <i class="iRight" onclick="InserTempImg(this)" imgid="@image.ImgUrl"><a href="javascript:" title="@T("插入编辑器")">↑</a></i>
+                </a>
+            </li>
+        }
+    }
+</ul>
+
+

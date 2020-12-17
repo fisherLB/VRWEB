@@ -1,0 +1,524 @@
+﻿@{
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() != null)
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    string curl = Request.Url.ToString().ToLower();
+    string lang = Request["lang"];
+}
+
+<!doctype html>
+<html>
+<head>
+    <title>@sysSet.SysName | @T(ViewBag.Title)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="keywords" content="@sysSet.SiteKeywords">
+    <meta name="description" content="@sysSet.SiteDescription">
+
+    <script type="text/javascript">
+        var JsCommon = { uon: "zuon", uname: "zuname", uid: "zuid", aid: "zaid", rid: "zrid", vip: "zvip", aname: "zaname", note: "znote", lan: "zlan", other: "zother", mainDomain: "0", vipDomain: "", p2pDomain: "", transDomain: "", staticDomain: "" };
+        try {
+            var oldDomain = document.domain;
+            var numm1 = oldDomain.indexOf('');
+            document.domain = oldDomain.substring(numm1, oldDomain.length)
+        } catch (msg) {
+            document.domain = '';
+        }
+    </script>
+
+    <script type="text/javascript">
+        var GLOBAL = {},
+
+    </script>
+
+
+
+   
+
+    <meta charset="utf-8">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-siteapp">
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="yes" name="apple-touch-fullscreen">
+    <meta content="telephone=no" name="format-detection">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta name="author" content="CHBTC.COM">
+    <meta name="copyright" content="@sysSet.CopyInfo">
+    <meta name="revisit-after" content="1 days">
+
+    <link rel=stylesheet type=text/css href="/Theme/17112702/css/cnbtc2014.css" />
+    <link rel="stylesheet" href="/Theme/17112702/css/module.base.css">
+    <link rel="stylesheet" href="/Theme/17112702/css/module.common.css">
+    <script src="/Theme/17112702/js/module.base.js" charset="UTF-8"></script>
+    <script src="/Theme/17112702/css/module.lang.js" charset="UTF-8"></script>
+    <script src="/Theme/17112702/js/sea.js" charset="UTF-8"></script>
+    <script src="/Theme/17112702/js/sea.config.js" charset="UTF-8"></script>
+    <script type="text/javascript" src="/Theme/17112702/js/webcommon.js" charset="UTF-8"></script>
+    <script src="/Theme/17112702/js/jquery.imgscroll.js" charset="UTF-8"></script>
+    <link rel="stylesheet" href="/Theme/17112702/css/module.index.css">
+    <script src="/Theme/17112702/js/jsencrypt.js" charset="UTF-8"></script>
+    <script src="/Theme/17112702/js/jquery.peity.js" charset="UTF-8"></script>
+    <script src="~/Plugin/layer/layer.js"></script>
+    <style>
+        .bk-body {
+            position: relative;
+        }
+
+        .listcent .h5 {
+            height-top: 50%;
+        }
+    </style>
+
+
+</head>
+<body class="room">
+    <script type="text/javascript">
+        $(function () {
+            $.getJSON("/getPubTag?d=" + new Date().getTime(), function (json) {
+                $('input[name="pubTag"]').val(json.datas.pubTag);
+            });
+        });
+    </script>
+    <div class="bk-body">
+
+        <!-- Common TopMenu Begin -->
+        <style type="text/css">
+    /*字体引入*/
+    @@font-face {
+        font-family: "iconfont";
+        src: url('/Theme/17112702/fonts/iconfont.eot?v=1505116415492'); /* IE9*/
+        src: url('/Theme/17112702/fonts/iconfont.eot?#iefix&v=1505116415492') format('embedded-opentype'), /* IE6-IE8 */
+        url('/Theme/17112702/fonts/iconfont.woff?v=1505116415492') format('woff'), /* chrome, firefox */
+        url('/Theme/17112702/fonts/iconfont.ttf?v=1505116415492') format('truetype'), /* chrome, firefox, opera, Safari, Android, iOS 4.2+*/
+        url('/Theme/17112702/fonts/iconfont.svg?v=1505116415492#iconfont') format('svg'); /* iOS 4.1- */
+    }
+    @@font-face{font-family:'FontAwesome';
+        src:url('/Theme/17112702/fonts/fontawesome-webfont.eot?v=4.3.0');
+        src:url('/Theme/17112702/fonts/fontawesome-webfont.eot?#iefix&v=4.3.0') format('embedded-opentype'),
+        url('/Theme/17112702/fonts/fontawesome-webfont.woff2?v=4.3.0') format('woff2'),
+        url('/Theme/17112702/fonts/fontawesome-webfont.woff?v=4.3.0') format('woff'),
+        url('/Theme/17112702/fonts/fontawesome-webfont.ttf?v=4.3.0') format('truetype'),
+        url('/Theme/17112702/fonts/fontawesome-webfont.svg?v=4.3.0#fontawesomeregular') format('svg');
+        font-weight:normal;font-style:normal;
+    }
+    @@font-face{font-family:'Glyphicons Halflings';
+        src:url('/Theme/17112702/fonts/glyphicons-halflings-regular.eot');
+        src:url('/Theme/17112702/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'),
+        url('/Theme/17112702/fonts/glyphicons-halflings-regular.woff2') format('woff2'),
+        url('/Theme/17112702/fonts/glyphicons-halflings-regular.woff') format('woff'),
+        url('/Theme/17112702/fonts/glyphicons-halflings-regular.ttf') format('truetype'),
+        url('/Theme/17112702/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+    }
+        </style>
+
+        <!--[if lt IE 9]>
+        <div class="alert alert-warning text-left" role="alert" style="margin-bottom:0; border-radius:0;position:relative;z-index:999999;">
+        <p><i class="fa fa-exclamation-triangle fa-fw"></i>你的浏览器不支持CHBTC.COM的一些新特性，请升级或更换你的浏览器至以下新版本。</p>
+        <p>
+        <a class='alert-link' href="http://rj.baidu.com/soft/detail/14744.html" target="_blank">(1)、谷歌浏览器(百度下载)</a><br>
+        <a class='alert-link' href="https://www.google.com/intl/zh-CN/chrome/browser/" target="_blank">(2)、谷歌浏览器(官方下载)</a><br>
+        <a class='alert-link' href="http://www.firefox.com.cn/download/" target="_blank">(3)、火狐浏览器</a><br>
+        <a class='alert-link' href="http://chrome.360.cn/" target="_blank">(4)、360极速浏览器</a>
+        </p>
+        <p>HTML5时代已经来临，是时候换个浏览器了...</p>
+        </div>
+        <![endif]-->
+        @{   var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO); double tocount = 0;}
+        <script type="text/javascript" src="/Theme/17112702/js/note.js" charset="UTF-8"></script>
+        <script type="text/javascript" src="/Theme/17112702/js/sxb.js" charset="UTF-8"></script>
+
+        <header class="navbar navbar-static-top bk-nav navbar-black">
+            <div class="bk-menuBar">
+                <div class="container-fluid">
+                    <div class="navbar-header">
+
+                        <a class="navbar-brand bk-nav-logo" href="/home/index">
+
+                        
+                            <img src="@(sysSet.LogoPic)" />
+                        
+                        </a>
+
+                    </div>
+                    <nav class="navbar-collapse bk-navbar collapse" aria-expanded="false" id="bitMenu">
+                        <ul class="nav navbar-nav navbar-right" style="margin-right:0;">
+                            <li class="nologin">
+                                <a class="nav-item @(curl.Contains("/home/index") ? "current" : "")  " href="/home/index">@T("首页")</a>
+                            </li>
+                            <li class="nologin"> <a class="nav-item @(curl.Contains("/trade/buy") ? "current" : "")" href="/Trade/buy">@T("买入币种")</a>
+
+                                <ul class ="nav-down">
+
+                                    <li>
+                                        <span class="sanjiao3"></span>
+                                        <ul class="nav-down-box">
+                                        @foreach(var item in cmodelList)
+                                          {
+                                            <li><a href="/trade/buy?curid=@item.ID">@item.CurrencyName</a></li>
+                                           }
+                                        </ul>
+                                    </li>
+                                </ul>
+                            
+                            
+                            </li>
+                            <li class="nologin"> <a class="nav-item @(curl.Contains("/trade/sell") ? "current" : "")" href="/Trade/sell">@T("出售币种")</a>
+                                <ul class="nav-down">
+
+                                    <li>
+                                        <span class="sanjiao3"></span>
+                                        <ul class="nav-down-box">
+                                            @foreach (var item in cmodelList)
+                                            {
+                                                <li><a href="/trade/sell?curid=@item.ID">@item.CurrencyName</a></li>
+                                            }
+                                        </ul>
+                                    </li>
+                                </ul>
+                            
+                            
+                            
+                            </li>
+                            <li class="nologin"> <a class="nav-item @(curl.Contains("/usercenter/trade/newadvertise") ? "current" : "")" href="/usercenter/Trade/NewAdvertise">@T("发布广告")</a></li>
+                            @*<li class="nologin"> <a class="nav-item @(curl.Contains("/usercenter/user/invite") ? "current" : "")" href="/usercenter/user/invite">邀请好友<span class="icon-new"></span></a></li>*@
+                           
+                        
+                        </ul>
+@if (Umodel == null)
+                            {
+                        <ul class="login-box" >
+                          
+                            <li class="nologin"><a href="/usercenter/login"><span class="login-icon"></span>@T("登录")</a></li>
+                            <li class="nologin"><a href="/usercenter/reg"><span class="register-icon"></span>@T("注册")</a></li>
+                            <p class="footlang pull-right" style="margin-top: 28px;">
+                                <a class="btncn" href="/home/index?lang=zh-CN" title="@T("中文")"></a><a class="btnen" href="/home/index?lang=en-US" title="English"></a>
+                            </p>
+                        </ul>
+                            }
+                      else { 
+                        <ul class="login-box user-box" >
+                            <li class="nologin"><a href="/usercenter/trade/AdvertiseOrder">@T("订单")</a> </li>
+
+                            @if (Umodel != null)
+                                {                                
+                                    decimal curvalue = 0;//币种估值
+                                    decimal walletcur = 0;//钱包余额
+                                <li class="logined dropdown bk-secd" style="display:block;">
+                                    <a class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" onclick="location.href='###'">
+                                        <i id="M_userLevelIco"></i>&nbsp;&nbsp;<span id="M_userName"></span>@T("钱包")&nbsp;&nbsp;<i class="caret"></i>
+                                    </a>
+                                    <div class="dropdown-menu animated bk-secd-menu" data-animation="fadeIn" role="menu" id="M_userDropinfo" style="width:400px;">
+                                        <div class="m-userDrop">
+                                            <div class="m-userDrop-hd">
+                                                <p>
+                                                    @*<a id="topMobileStatus" href="###" target="_self" title="@T("手机认证")" style="font-size:18px;"><i class="fa fa-mobile"></i></a>
+                                                    <a id="topEmailStatus" href="###" target="_self" title="@T("邮箱认证")"><i class="fa fa-envelope-o"></i></a>
+                                                    <a id="topAuthDepth" href="###" target="_self" title="@T("实名认证")"><i class="iconfont icon-cc-card"></i></a>*@
+                                                    <a class="quit pull-right" href="/usercenter/home/Logout" target="_self" title="@T("退出登录")"><i class="fa fa-sign-out"></i>@T("退出登录")</a>
+                                                </p>
+                                                <p>@T("账户总资产")：<span class="assetNum text-primary" id="D_canAsset">--</span> USD</p>
+                                            </div>
+
+                                            <div class="m-userDrop-bd" id="M_userDrop2">
+                                                <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                                                    <thead>
+                                                        <tr>
+                                                            <th style="width:88px">@T("币种")</th>
+                                                            <th>@T("个数")</th>
+                                                            <th>@T("估值")</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="D_dropAssetData">
+
+                                                        @foreach (var item in cmodelList)
+                                                        {
+                                                            curvalue = 0;//币种估值
+                                                            walletcur = 0;//钱包余额
+                                                            //计算市值
+                                                            if ((item.GetPriceType ?? 0) == 1)
+                                                            {
+                                                                curvalue = JN.Services.Manager.Stocks.getcurrentprice(item);
+                                                            }
+                                                            else
+                                                            {
+                                                          curvalue = JN.Services.Tool.StringHelp.GetPrice("https://api.coinmarketcap.com/v1/ticker/" + item.English, item.English, "usd", true).ToDecimal();
+                                                            }
+                                                            walletcur = JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel);//余额
+                                                            tocount += (walletcur * curvalue).ToDouble();//计算总资产
+                                                            <tr>
+                                                                <td>@(item.CurrencyName)</td>
+                                                                <td>@(walletcur.ToDouble())</td>
+                                                                <td>
+                                                                            $<span>
+                                                                                @((walletcur * curvalue).ToDouble())
+                                                                            </span>        
+                                                                        </td>  
+                                                                    </tr>                                                           
+                                                        }
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                            <div class="m-userDrop-fd">
+                                                <p class="text-center">
+                                                    <input type="hidden" value="@(tocount)" id="total" />
+                                                    <a href="/usercenter/RechargeTrans/CurTransferEnter" class="btn btn-primary btn-sm mr30" role="button"><i class="bk-ico incoin"></i>@T("充值/充币")</a>
+                                                    <a href="/usercenter/CashTransfer/CurTransferout" class="btn btn-second btn-sm" role="button"><i class="bk-ico outcoin"></i>@T("提币")</a>
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </li>
+
+                            }
+
+
+
+                            <li class="nologin dropdown">
+
+                                <a href="#" class="dropdown-toggle" data-toggle="dropdown">@T("用户中心")<i class="caret"></i></a>
+                                <div class="dropdown-menu animated bk-secd-menu" data-animation="fadeIn" role="menu" id="M_userDrop" style="left: -170px; width: 300px;">
+                                    <div class="m-userDrop">
+
+                                        <div class="m-userDrop-bd" id="M_userDrop2">
+                                            <ul class="user-info">
+                                                <li><a class="link" href="/usercenter/home">@T("用戶中心")</a></li>
+                                                <li><a class="link" href="/usercenter/Trade/orderbuy">@T("我的广告")</a></li>
+                                                <li><a class="link" href="/usercenter/Trade/orderbuy">@T("我的消息")</a></li>
+                                                @*<li><a class="link" href="/usercenter/user/invite">邀请好友 <span class="icon-news"></span></a></li>*@
+                                                <li><a href="/usercenter/home/Logout">@T("退出")</a></li>
+                                            </ul>  
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </li>
+                            <p class="footlang pull-right" style="margin-top: 28px;">
+                                <a class="btncn" href="/home/index?lang=zh-CN" title="中文"></a>
+                                <a class="btnhk" href="/home/index?lang=en-TW" title="繁體"></a>
+                                <a class="btnen" href="/home/index?lang=en-US" title="English"></a>
+                            </p>
+                        </ul>
+                        }
+
+                    </nav>
+                </div>
+            </div>
+        </header>
+        @RenderBody()
+
+        <script type="text/javascript">
+
+            $(window).scroll(function () {
+                var scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
+                if (scrollTop + $(".bk-anyEq").height() > $(".bk-anyEq").offset().top) {
+                    $(".bk-anyEq").addClass("on");
+                }
+            });
+
+            $(function () {
+                $("#D_canAsset").html($("#total").val());//总资产
+
+                $(".partner a").hover(function () {
+                    $src = $(this).find("img").attr("_src");
+                    $(this).find("img").attr("src", $src);
+                }, function () {
+                    $src = $(this).find("img").attr("_srcy");
+                    $(this).find("img").attr("src", $src);
+                });
+
+
+                //移动设备下移除AD
+                if (JuaBox.isMobile()) {
+                    $(".bk-focus-fixed").remove();
+                } else {
+                    setTimeout(function () {
+                        //$(".bk-focus-fixed").slideDown();
+                        //jQuery(".bk-focus-fixed").slide({mainCell:".bd ul",titCell:".hd ul", autoPage:true, effect:"top",interTime:5000,autoPlay:true});
+                    }, 1000)
+                }
+            });
+        </script>
+
+        <input type="hidden" id="isSafe" value="1">
+        <script>
+            //seajs.use(["module_simChart"],function(simChart){
+            //    simChart.init("USD","btc");
+            //});
+
+            //seajs.use(["module_index"],function(HOME){
+            //    HOME.init();
+            //});
+
+        </script>
+        <!-- Body From mainPage End -->
+        <!-- Common FootMain Begin -->
+
+
+
+
+
+
+        <footer class="bk-footer sm-text-left">
+            <div class="bk-footer-hd">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-xs-3">
+                            <div class="bk-footer-contact">
+                                <h5><a href="/home/index" target="_self"><img src="@sysSet.LogoPic" alt="" style="height:46px;width:auto;margin-bottom:20px;" /></a></h5>
+                                @*<p class="sns">
+                                    <a class="" role="button" data-toggle="popover" data-placement="top" data-html="true" data-trigger="hover" data-content="新浪微博：官方微博" href="http://weibo.com/312328098" target="_blank"><i class="fa fa-weibo"></i></a>
+                                    <a class="" role="button" data-toggle="popover" data-placement="top" data-html="true" data-trigger="hover" data-content="<img src='/Theme/17112702/picture/ma-weixin.png' style='width:120px;height:120px;'>
+                                <p class='text-center'>官方微博</p>"><i class="fa fa-weixin"></i></a>
+                                <a class="" role="button" data-toggle="popover" data-placement="top" data-html="true" data-trigger="hover" data-content="QQ：@sysSet.KefuUrl1" onclick="javascript:window.open('http://b.qq.com/webc.htm?new=0&sid=4006166611&eid=218808P8z8p8K8x8K808p&o=www.chbtc.com&q=7&ref='+document.location, '_blank', 'height=502,width=644,toolbar=no,scrollbars=no,menubar=no,status=no');"><i class="fa fa-qq"></i></a>
+                                <a class="" role="button" data-toggle="popover" data-placement="top" data-html="true" data-trigger="hover" data-content="企业邮箱：support@chbtc.com" href="mail:support@chbtc.com" target="_self"><i class="fa fa-envelope"></i></a>
+                                </p>*@
+                            </div>
+                        </div>
+
+@{
+                
+                    int nid;//查找是新闻的
+                    var p_articleList = MvcCore.Unity.Get<JN.Data.Service.IArticleClassService>().List(x => x.Pid ==0 && !(x.IsNotice ?? false)).OrderBy(x => x.Sort).Take(3).ToList();
+                    if (p_articleList != null && p_articleList.Count() > 0)
+                    {
+                        foreach (var item in p_articleList)
+                        {
+                        <div class="col-xs-2">
+                            <div class="bk-footer-contact">
+                                <h5>@item.ClassName</h5>
+                               @{ var articleList = MvcCore.Unity.Get<JN.Data.Service.IArticleClassService>().List(x => x.Pid == item.ID ).OrderBy(x => x.Sort).Take(4).ToList();}
+                                @foreach (var itemchi in articleList)
+                                {
+                                    <p class="link"><a href="/usercenter/article/ReadOneArticle?cId=@(itemchi.ID)&sId=@(item.ID)" target="_blank">@itemchi.ClassName</a></p>
+                                }
+                                    
+                               </div>
+                        </div>
+                         }
+                     }
+    }
+                        <div class="col-xs-3 qrcode-download-home">
+                            @{ 
+                                string downUrl = (JN.Services.Tool.ConfigHelper.GetConfigBool("HaveHttps") ? "https://" : "http://") + (HttpContext.Current.Request.Url.Host + "/DownLoad/coinglobe.apk");
+                            }
+                            <img src="@MvcCore.Extensions.QRCodeExtensions.ToQRCode(downUrl, 5, 5).GetImgBase64String(System.Drawing.Imaging.ImageFormat.Png)" />                          
+                            <p>@T("下载二维码")</p>
+                        </div>
+                            <div class="col-xs-3">
+                                <div class="bk-footer-contact">
+                    <h5>Contact us</h5>
+                    <p class="link">Email：coinglobe_helpdesk@outlook.com</p>
+                    @*<p class="link"><i class="fa fa-qq fa-fw"></i>QQ2：<a href="http://wpa.qq.com/msgrd?v=3&uin=@(sysSet.KefuUrl2)&site=在线客服&menu=yes" target="_blank">@(sysSet.KefuUrl2)</a></p>
+                    <p class="link"><i class="fa fa-qq fa-fw"></i>QQ3：<a href="http://wpa.qq.com/msgrd?v=3&uin=@(sysSet.KefuUrl3)&site=在线客服&menu=yes" target="_blank">@(sysSet.KefuUrl3)</a></p>
+                    <p class="link"><i class="fa fa-phone-square fa-fw"></i>Tel：<a href="tel:@sysSet.KefuTel1" target="_self">@sysSet.KefuTel1</a></p>
+                    <p class="link"><i class="fa fa-qq fa-fw"></i>QQ交流群1：<a href="###" target="_self">@sysSet.QQGroup1</a></p>
+                    <p class="link"><i class="fa fa-qq fa-fw"></i>QQ交流群2：<a  href="###" >@sysSet.QQGroup2</a></p>
+                    <p class="link"><i class="fa fa-qq fa-fw"></i>QQ交流群3：<a  href="###" >@sysSet.QQGroup3</a></p>*@
+                </div>
+                            </div>
+                        </div>
+                    <div class="row">
+                        <div class="col-xs-12">
+                            <div class="bk-footer-menu text-left">
+                                <a href="mailto:server@ok-otc.com" target="_blank" class="icon-cu icon-mail"></a>
+								@*<p class="footlang pull-right" style="margin-top:-10px;">
+              	<a class="btncn" href="/home/index?lang=zh-CN" title="@T("中文")"></a><a class="btnen" href="/home/index?lang=en-US" title="English"></a>
+              </p>
+                                <p class="footlang pull-right" style="margin-top:-10px;display:none;">
+                                    <a class="btncn" href="/home/index?lang=zh-CN" title="@T("中文")"></a><a class="btnen" href="/home/index?lang=en-US" title="English"></a>
+                                </p>*@
+                                <p>
+                                    @sysSet.CopyInfo
+                                </p>
+                                @*<p>
+                                    <a class="kexin kx ml0" id="" href="###" title="可信网站身份验证" target="_blank">可信网站身份验证</a>
+                                    <a class="kexin qx" id="" href="###" title="企业电子身份验证" target="_blank">企业电子身份验证</a>
+                                    <a class="kexin aq" id="" href="###" title="安全联盟实名验证" target="_blank">安全联盟实名验证</a>
+                                    <a class="kexin qy" id="" href="###" title="安全联盟行业验证" target="_blank">安全联盟行业验证</a>
+                                </p>*@
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+
+
+
+
+        <script type="text/javascript">
+            $(function () {
+                //设置默认值
+                var defaultMenuState = " , unfold, unfold, unfold, unfold, unfold";
+                //初始化
+                if (window.localStorage) {
+                    if (localStorage[ZNAME + 'sideBar'] == null) {
+                        localStorage[ZNAME + 'sideBar'] = defaultMenuState;
+                    }
+                    $.cookie(ZNAME + 'quickMenu', null);
+                    $.cookie(ZNAME + 'sideBar', null);
+                } else {
+                    if ($.cookie(ZNAME + 'sideBar') == null) {
+                        $.cookie(ZNAME + 'sideBar', defaultMenuState, { expires: 7, path: '/', domain: DOMAIN_BASE });
+                    }
+                }
+                //获取菜单状态值
+                var quickMenuState = window.localStorage ? localStorage[ZNAME + 'sideBar'].split(",") : $.cookie(ZNAME + 'sideBar').split(",");
+                if (window.location.pathname.indexOf("/markets/") == -1 && window.location.pathname != "/" && JuaBox.isMySelf() && !JuaBox.isZoom()) {
+                    $('.bk-quickMenu').fadeIn().addClass(quickMenuState[0]);
+                    $(".menu-list dl").each(function (i, c) {
+                        $(this).removeClass("unfold").addClass(quickMenuState[i + 1]);
+                    });
+                }
+                $(".menu-list").on("click", "dt", function () {
+                    $(".menu-list dl").not($(".menu-list dl").eq($(this).parents("dl").index())).addClass("unfold");
+                    $(this).parents("dl").toggleClass("unfold");
+                    for (var i = 0; i < $(".menu-list dl").length; i++) {
+                        quickMenuState[i + 1] = $(".menu-list dl").eq(i).attr("class");
+                    }
+                    if (window.localStorage) {
+                        localStorage[ZNAME + 'sideBar'] = quickMenuState.join(",");
+                    } else {
+                        $.cookie(ZNAME + 'sideBar', quickMenuState.join(","), { expires: 7, path: '/', domain: DOMAIN_BASE });
+                    }
+                });
+                $(".menu-item-unfold, .menu-item-close").on("click", ".menu-item-ico", function () {
+                    $('.bk-quickMenu').toggleClass('open');
+                    quickMenuState[0] = $('.bk-quickMenu').hasClass('open') ? "open" : "";
+                    if (window.localStorage) {
+                        localStorage[ZNAME + 'sideBar'] = quickMenuState.join(",");
+                    } else {
+                        $.cookie(ZNAME + 'sideBar', quickMenuState.join(","), { expires: 7, path: '/', domain: DOMAIN_BASE });
+                    }
+                });
+                $(".menu-item-top").on("click", ".menu-item-ico", function () {
+                    goScrollTo('html,body', 0);
+                });
+            });
+        </script>
+
+        <script>
+            $(".toolbar .item-online").click(function () {
+                $("#chatBtn").trigger("click");
+            })
+        </script>
+
+        <script type="text/javascript">
+            seajs.use(["module_market", "module_asset", "module_common"], function (market, asset) {
+                market.init();
+                asset.init();
+            });
+        </script>
+        <!-- Common FootMain End -->
+    </div>
+    <script type="text/javascript" src="/Theme/17112702/js/index.js"></script>
+    <script type="text/javascript" src="/Theme/17112702/js/baidupush.js"></script>
+    <script type='text/javascript' src='/Theme/17112702/js/7moorinit.js' async='async'></script>
+</body>
+</html>

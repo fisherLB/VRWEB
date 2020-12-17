@@ -1,0 +1,94 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.User>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T("分享记录")</div>
+</header>
+
+<section class="container">
+    <!--<div class="no-content">
+        <i></i>
+        <p>暂无内容</p>
+    </div>-->
+
+    <div class="record-table">
+        <table>
+            <thead>
+                <tr>
+                    <th>@T("被邀请人")</th>
+                    <th>@T("时间")</th>
+                    <th>@T("是否激活")</th>
+                </tr>
+            </thead>
+
+            <tbody id="listcontainer">
+               
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<script src="~/Plugin/layer/layui/layui.js"></script><!--layui插件js-->
+<link href="~/Plugin/layer/layui/css/layui.css" rel="stylesheet" />
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#listcontainer', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getMyUserList")?page=' + page + '&status=1', function (res) {
+                    var strhtml = "";
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function (index, item) {
+                        strhtml += '<tr>';
+                        strhtml += '<td>' +  item.UserName + '</td>';
+                        strhtml += '<td>' + ChangeDateFormat(item.CreateTime) + '</td>';
+                        strhtml += '<td><span class="record-num">' + (item.IsActivation ? "@T("已激活")": (item.IsLock ? "@T("已冻结")":"@T("未激活")")) + '</span></td>';
+                        strhtml += '</tr>';
+                    });
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+    //日期格式转换
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return month
+            + "-"
+            + currentDate
+            + ""
+            + " "
+            + currentHours
+            + ":"
+            + currentMinutes;
+    }
+</script>

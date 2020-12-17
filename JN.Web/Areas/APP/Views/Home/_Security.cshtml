@@ -1,0 +1,64 @@
+﻿@{    
+    string curl = Request.Url.ToString().ToLower();
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+}
+    <div class="setting-leftmenu fl">
+       @* <div class="menu-head">用戶中心</div>
+    <div class="menu-c">
+       <ul>
+            <li>
+                <a href="#">
+                    <img src="~/theme/app/images/ico_5.png" />
+                    <p>用户资料</p>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="~/theme/app/images/ico_2.png" />
+                    <p>账户安全</p>
+                </a>
+            </li>
+            <li>
+                <a href="#">
+                    <img src="~/theme/app/images/ico_6.png" />
+                    <p>发布广告</p>
+                </a>
+            </li>
+             <div class="clear"></div>
+        </ul>*@
+            @*<div class="icon-fold"></div>
+        <div class="menu-title">用户资料</div>
+        <div class="menu-item-cont">
+            <a href="/App/user/myinfo" class="menu-item @(curl.Contains("/App/user/myinfo") ? "active" : "")">基本信息</a>
+            <a href="/App/user/NameAuth" class="menu-item @(curl.Contains("/App/user/nameauth") ? "active" : "")">身份认证</a>
+            @{
+                if (Umodel.BindStatus)
+                {
+                    <a href="/App/user/BingUserCancel" class="menu-item @(curl.Contains("/App/user/bingusercancel") ? "active" : "")">解绑</a>
+                }
+                else
+                {
+                    <a href="/App/user/BingUser" class="menu-item @(curl.Contains("/App/user/binguser") ? "active" : "")">绑定</a>
+                }
+            }
+        </div>
+    </div>*@
+
+        @*<div class="menu-c">
+            <div class="icon-fold"></div>
+            <div class="menu-title">账戶安全</div>
+            <div class="menu-item-cont">
+                <a href="/App/home" class="menu-item @(curl.Contains("/App/home") ? "active" : "")  ">安全设置</a>
+            </div>
+        </div>
+
+        <div class="menu-c bt">
+            <div class="icon-fold"></div>
+            <div class="menu-title">受信任的</div>
+            <div class="menu-item-cont">
+                <a href="/App/user/UserTrusted" class="menu-item @(curl.Contains("/App/user/usertrusted") ? "active" : "")">信任您的人</a>
+                <a href="/App/user/UserTrusting" class="menu-item @(curl.Contains("/App/user/usertrusting") ? "active" : "")">您信任的人</a>
+                <a href="/App/user/UserBlocking" class="menu-item @(curl.Contains("/App/user/userblocking") ? "active" : "")">您屏蔽的人</a>
+            </div>
+        </div>*@
+    </div>

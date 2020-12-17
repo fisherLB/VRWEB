@@ -1,0 +1,60 @@
+﻿@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>大数据测试</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+
+ 
+            <div class="control-group">
+                <H3>添加用户(太阳线)</H3>
+                <div class="controls">
+                    <div class="clearfix">
+                        接点推荐人<input type="text" name="username" class="form-control" style="width:100px" /> 
+                        添加<input type="text" name="username" class="form-control" style="width:50px" />代，每代<select class="form-control" style="width:80px"><option>固定</option><option>随机</option></select> <input type="text" name="username" class="form-control" style="width:50px" />人
+                        <button class="btn btn-primary" type="submit">
+                            批量添加用户
+                        </button>
+                    </div>
+                </div>
+            </div>
+    <hr />
+        <div class="control-group">
+            <H3>帐号充值</H3>
+
+            <div class="controls">
+                <div class="clearfix">
+                    给所有用户的<select class="form-control" style="width:100px"><option>Fc帐户</option><option>活期帐户</option></select>充值<input type="text" name="username" class="form-control" style="width:50px" />元
+                    <button class="btn btn-primary" type="submit">
+                        批量充值
+                    </button>
+                </div>
+            </div>
+        </div>
+        <hr />
+        <div class="control-group">
+            <H3>定期存款</H3>
+
+            <div class="controls">
+                <div class="clearfix">
+                    给所有用户增加<input type="text" name="username" class="form-control" style="width:50px" />元<input type="text" name="username" class="form-control" style="width:50px" />小时的定期存款
+                    <button class="btn btn-primary" type="submit">
+                        批量添加
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- PAGE CONTENT ENDS -->
+</div><!-- /.row -->
+</div><!-- /.page-content -->
+@section scripts{
+   
+}

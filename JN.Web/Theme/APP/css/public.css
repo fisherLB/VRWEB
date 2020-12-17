@@ -1,0 +1,80 @@
+﻿
+.coop-list-box{display:block;height:11rem;width:12rem;position:absolute;top:0;left:0;margin:-0.2rem 0 0 -0.2rem;overflow:hidden; border-radius:15px;}
+.coop-list{display:block;height:11rem;width:12rem;position:relative;}
+.border-style1{border:1px solid #dadde1; border-radius: 5px; box-shadow:2px 2px 5px #d3d6da; }
+.border-style2{border:1px solid #c6c8cb; border-bottom:none; border-radius: 5px 5px 0 0; }
+.border-style3{border:1px solid #aeb1b5; border-radius: 0 0 5px 5px; }
+.border-style4{border:1px solid #aeb1b5; border-radius: 5px; }
+.border-style5{border:1px solid #c6cacd; border-top: 0; border-radius: 0 0 5px 5px; box-shadow:2px 2px 5px #d3d6da;}
+.border-style6{border:1px solid #c6cacd; box-shadow:2px 2px 5px #d3d6da;}
+.topBorder-move{position:relative;left:-1500px;width:3000px;border-top:0.2rem dotted #DADDE1;}
+.bottomBorder-move{position:absolute;bottom:0; left:-1500px;width:4000px;border-bottom:0.2rem dotted #DADDE1;}
+.leftBorder-move{position:absolute;top:-1500px;width:1px;height:4000px;border-left: 0.2rem dotted #DADDE1;}
+.rightBorder-move{position:absolute;right:0;top:-1500px;width:1px;height:3000px;border-right: 0.2rem dotted #DADDE1;}
+
+
+.switch-box{display:block;position:absolute;top:-0.7rem;width:100%;}
+.toggle {
+	position: relative;
+	display: block;
+	margin:0 0 0 0.5rem;
+	width:6rem;
+	height:1.5rem;
+	color: white;
+	outline: 0;
+	text-decoration: none;
+	border-radius: 100px;
+	border: 1px solid #02a5c7;
+	background:rgba(3, 10, 24,0.5);
+	-webkit-transition: all 500ms;
+	-moz-transition: all 500ms;
+	-o-transition: all 500ms;
+	transition: all 500ms;
+}
+.toggle:active {background-color: #1c2429;}
+.toggle:hover:not(.toggle--moving):after {background-color: #455A64;}
+.toggle:after {
+	display: block;
+	position: absolute;
+	top: 0.1rem;
+	bottom: 0.1rem;
+	left: 4px;
+	width: calc(50% - 0.3rem);
+	line-height:1.2rem;
+	text-align: center;
+	text-transform: uppercase;
+	font-size:0.5rem;
+	color: white;
+	background-color: #37474F;
+	border: 2px solid;
+	-webkit-transition: all 500ms;
+	-moz-transition: all 500ms;
+	-o-transition: all 500ms;
+	transition: all 500ms;
+}
+.toggle--on:after {
+	content: '已开启';
+	border-radius: 50px 5px 5px 50px;
+	color: #66BB6A;
+}
+.toggle--off:after {
+	content: '已暂停';
+	border-radius: 5px 50px 50px 5px;
+	color: #f44336;
+	-webkit-transform: translate(100%, 0);
+	-moz-transform: translate(100%, 0);
+	-o-transform: translate(100%, 0);
+	transform: translate(100%, 0);
+}
+.toggle--moving {background-color: #1c2429;}
+.toggle--moving:after {
+	color: transparent;
+	border-color: #435862;
+	background-color: #222c31;
+	-webkit-transition: color 0s, transform 500ms, border-radius 500ms, background-color 500ms;
+	-moz-transition: color 0s, transform 500ms, border-radius 500ms, background-color 500ms;
+	-o-transition: color 0s, transform 500ms, border-radius 500ms, background-color 500ms;
+	transition: color 0s, transform 500ms, border-radius 500ms, background-color 500ms;
+}
+
+

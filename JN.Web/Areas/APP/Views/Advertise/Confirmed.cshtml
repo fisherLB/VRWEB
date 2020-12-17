@@ -1,0 +1,119 @@
+﻿@model JN.Data.AdvertiseOrder
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+        @*<a href="@(Url.Action("AdvertiseOrderDetail", new { id = Model.ID}))"></a>*@
+    </div>
+
+    <div class="logo">@T("确认付款")</div>
+</header>
+
+<section class="container">
+    <div class="setting-form">
+        <div class="form-widget">
+            <form action="" method="post" id="formPay">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>@T("金额")</label>
+                        <input class="form-control" type="text" readonly="readonly" value="@(Model.Quantity * Model.Price)">
+                    </div>
+                    <div class="form-group">
+                        <label>@T("上传凭证")</label>
+                        <div class="content upload-pic" id="uploader">
+                            <div class="imgs">
+                                <div class="queueList">
+
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="square" style="margin-top:10px;">
+                                    <span class="defalt-img"></span>
+                                    <input type="hidden" name="payimg" id="payimg" class="hidImgSrc" value="" />
+                                    <div class="link btnUpPic">+@T("上传图片")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>           
+                <div class="form-submit">
+                    <input type="hidden" name="id" id="id" value="@Model.ID" />
+                    <button type="button" class="form-submit-btn" id="btnPay">@T("确认付款")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<!--上传图片-->
+<script src="~/Plugin/webuploader-0.1.5/webuploader.js"></script>
+<link href="~/Plugin/webuploader-0.1.5/webuploader.css" rel="stylesheet" />
+<script src="~/Plugin/webuploader-0.1.5/webuploader.Plugin.js"></script>
+<script>
+    //确认付款操作
+    $("#btnPay").click(function () {
+        layer.confirm("@T("确认已经付款？")", {
+            title: "@T("取消确认")", //标题
+        btn: ['@T("确定")', '@T("取消")']  //按钮
+    },
+        function (index) {
+            layer.close(index);
+            $.post("@Url.Action("Confirmpayment")", $('#formPay').serialize(), function (data) {
+                if (data.Status == 200) {
+                    window.location.href = "@(Url.Action("AdvertiseOrderDetail", new { id = Model.ID}))";
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                }
+            })
+        });
+    })
+
+ $(function () {
+        // 初始化Web Uploader
+        var uploader = uploaderCreate({
+            MaxNum: 1,//默认设置为1张
+            //AutoHideArea: true,//超过上传限制后是否隐藏上传域默认设置为true
+            MaxSize: 1024 * 1024 * 6,//默认设置大小1024 * 1024 * 4     4M,
+            $container: $('#uploader'),//控件容器默设置认为null
+            Url: '@Url.Action("UpMainPic")',//服务器接收地址默设置认为null
+            FileVal: 'imgFile',//文件上传域的name值，默认设置为file
+            //Thumb: true,//是否显示缩略图默认设置true
+            //RecordReturnValue: true,//是否记录上传成功的返回值，容器为hidImgSrc
+            ThumbWidth: 160,//略缩图宽默认设置100
+            ThumbHeight: 160,//略缩图高默认设置100
+            //ThumbHorizontalShow: false,//缩略图水平显示默认设置true
+            //compress: false,//图片压缩设置false关闭压缩,默认开启
+            Error: function (message) {
+                layer.msg(message, { icon: 2 });
+            },//出错回调
+            Success: function (response) {
+                if (response.error == "0") {
+                    return response.url;//记录URL
+                } else {
+                    layer.msg(response.message, { icon: 2 });
+                    return false;//删除缩略图
+                }
+            },//成功回调
+            //Extensions: 'gif,jpg,png',//默认设置为gif,jpg,png格式
+            //Method:'post',//默认设置为POST方式请求
+            //Timeout:1000 * 10,//上传超时默认10秒
+            MessageArray: new Array('@T("不能预览")', '@T("上传失败")', '@T("您最多允许上传")', '@T("张图片")', '@T("您上传的文件大小超过")', '@T("您上传的文件格式不正确，只允许上传")', '@T("格式图片")')
+        });
+    });
+
+</script>
+
+

@@ -1,0 +1,30 @@
+﻿@model JN.Data.TakeCash
+@{
+    ViewBag.Title = "Details2";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+}
+
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+    <div class="logo text-l">@T("账单详情")</div>
+</header>
+<section class="container">
+    <div class="capital-top">
+        <p><span class="cfff margin0">@T(Model.BankName)</span></p>
+        <p class="p-b"><span>@Model.DrawMoney</span><br>@T("交易成功")</p>
+    </div>
+    <ul class="table-view bg091931">
+        <li class="table-view-cell cb7bece">@T("交易说明")<span class="float-r c00d2ff">@T("提现")</span></li>
+        <li class="table-view-cell cb7bece">@T("交易状态")<span class="float-r c00d2ff">@T("到账成功")</span></li>
+        <li class="table-view-cell cb7bece">@T("提现到")<span class="float-r c00d2ff">@T(Model.BankName) (@Model.BankCard) @Model.BankUser </span></li>
+        <li class="table-view-cell cb7bece">@T("提现金额")<span class="float-r c00d2ff">@Model.DrawMoney</span></li>
+        <li class="table-view-cell cb7bece">@T("服务费")<span class="float-r c00d2ff">@Model.Poundage</span></li>
+        <li class="table-view-cell cb7bece">@T("创建时间")<span class="float-r c00d2ff">@Model.CreateTime</span></li>
+        @*<li class="table-view-cell cb7bece">@T("订单号")<span class="float-r c00d2ff">2654765413942</span></li>*@
+    </ul>
+</section>
+
+

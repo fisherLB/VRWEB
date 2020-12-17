@@ -1,0 +1,663 @@
+﻿@model JN.Data.Shop_Product
+@{
+    ViewBag.Title = "商品编辑";
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+
+    var list = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List().ToList();
+    var Specifications = MvcCore.Unity.Get<JN.Data.Service.IShop_SPECService>().Single(x => x.PID == Model.Id);
+
+    if (Specifications == null)
+    {
+        Specifications = new JN.Data.Shop_SPEC();
+    }
+}
+
+
+<div id="content" style="text-align: left">
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+
+    <div>
+            @using (Ajax.BeginForm("ModifyProduct", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "AfterEdit" }, new { id = "frmSet" }))
+            {
+        @*<form method="get">*@
+    <table class="niunantab" style="margin-left:70px;">
+        <tr>
+            <td>商品分类</td>
+            <td>
+                <select id="Categroy1" style=" width 150px;" onchange="ChangeRootCategroy1(this)" name="Categroy1" class="input-textBox"></select>
+                <select id="Categroy2" style="display: none; width: 150px;" name="Categroy2" onchange="ChangeRootCategroy2(this)" class="input-textBox"></select>
+                <select id="Categroy3" style="display: none; width: 150px;" name="Categroy3" onchange="ChangeRootCategroy3(this)" class="input-textBox"></select>
+                <select id="Categroy4" style="display: none; width: 150px;" name="Categroy4" onchange="ChangeRootCategroy4(this)" class="input-textBox"></select>
+                <select id="Categroy5" style="display: none; width: 150px;" name="Categroy5" class="input-textBox"></select>
+                @{
+                    if (Model.GoodsClassId > 0)
+                    {
+                        var category = list.Single(x => x.Id == Model.GoodsClassId);//获取当前分类
+                        <input type="hidden" id="hidPpacth" name="Ppacth" value="@category.Ppacth">
+                    }
+                }
+                <input type="hidden" id="hidClassId" name="GoodsClassId" value="@Model.GoodsClassId">
+            </td>          
+        </tr>
+        <tr>
+            <td>商品图片(400px * 400px)：</td>
+            <td>
+                <div id="MainPic">
+                    @{
+                int ImgCount = 0;
+                if (Model.ImageUrl == null || Model.ImageUrl.Length == 0)
+                {
+                    <img style="width: 180px; height: 180px" src="~/Theme/mall/red_theme/images/goodslogo.jpg" />
+                }
+                else
+                {
+                    string[] images = Model.ImageUrl.Split(';');
+                    string imgid = "";
+                    //ImgCount = images.Length;
+                    for (int i = 0; i < images.Length; i++)
+                    {
+                        if (images[i].Length > 0)
+                        {
+                            ImgCount++;
+                            imgid = "tmpImg" + i;
+                            <img id="@imgid" style="width: 180px; height: 180px" src="@images[i]" />
+    <input type="image" onclick="funDelImg(@i, this, '@images[i]')" src="/common/theme/images/a_close.png" />
+                        }
+                    }
+                }
+}
+                </div>
+
+                @*<img style="width: 180px; height: 180px" id="MainPic" src="@JN.Services.Tool.StringHelp.GetFirstStr(@Model.ImageUrl)" />*@
+                <input type="button" id="btnUpManiPic" value="添加图片" class="" />
+                @*<input type="hidden" name="ImageUrl" id="hidMainimgSrc" value="" />*@
+                <input type="hidden" name="ImageUrl" id="hidMainimgSrc" value="@Model.ImageUrl" />
+                <input type="hidden" id="hidImgCount" value="@ImgCount" />
+            </td>
+        </tr>
+        <tr>
+            <td>商品名称：</td>
+            <td ><input type="text" name="ProductName" value="@Model.ProductName" maxlength="25" style="width: 230px;"  /></td>
+            @*<td><input type="hidden" name="Id" value="@Model.Id" /></td>*@
+        </tr>
+        <tr>
+            <td>商品简介：</td>
+            <td><input type="text" name="Info" value="@Model.Info" maxlength="100" style="width: 660px;" /></td>
+        </tr>
+        <tr>
+            <td>商品规格：</td>
+            <td><input type="text" name="Specifications" value="@Specifications.Value" maxlength="100" style="width: 660px;" /></td>
+        </tr>
+        <tr>
+            <td>销售价：</td>
+            <td>
+                <input type="text" name="RealPrice" value="@Model.RealPrice" />&nbsp;元
+                @*&nbsp;&nbsp;&nbsp;&nbsp;市场价：
+                <input type="text" name="CostPrice" value="@Model.CostPrice" />&nbsp;元*@
+            </td>
+        </tr>
+        <tr>
+            <td>通用库存：</td>
+            <td><input type="text" name="Stock" value="@Model.Stock" readonly/></td>
+        </tr>
+        @if (Model.Id <= 0)
+        {
+            <tr>
+                <td>上架：</td>
+                <td>
+                    <select name="Status">
+                        <option value="False" @(!Model.Status ? "selected" : "")>否</option>
+                        <option value="True" @(Model.Status ? "selected" : "")>是</option>                     
+                    </select>
+                </td>
+            </tr>
+        }      
+        <tr>
+            <td>详细介绍：</td>
+            <td><input type="text" id="txtContent" name="txtContent" value="@Model.InfoMation" style="width: 200px; display: none;"></td>
+        </tr>
+        <tr>
+            <td></td>
+            <td>
+                <div id="GalleryDiv">
+                    <div class="Gallery2">
+
+                    </div>
+                </div>
+            </td>
+        </tr>
+        @*<tr>
+            <td>售后服务：</td>
+            <td>
+                <input type="checkbox" name="AfterSsales" value="全国联保" style="width:30px;" @((Model.AfterSsales == "全国联保") ? "checked" : "") />全国联保&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="AfterSsales" value="店铺保修" style="width:30px;" @((Model.AfterSsales == "店铺保修") ? "checked" : "") />店铺保修&nbsp;&nbsp;&nbsp;
+                <input type="checkbox" name="AfterSsales" value="无保修" style="width:30px;" @((Model.AfterSsales == "无保修") ? "checked" : "") />无保修
+            </td>
+        </tr>*@
+        <tr>
+            <td>
+                <input type="hidden" value="@Model.Id" id="hidmodelId" name="id" />
+                <input name="Submit" type="submit" class="btn" value="确认修改" id="subPublish" disabled="disabled"/>
+            </td>
+        </tr>
+    </table>
+            }
+    </div>
+</div>
+@section scripts{
+    <link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+    <script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+    <script src="~/Plugin/kindeditor-4.1.9/lang/zh_CN.js"></script>
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+
+    <script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<script>
+        function ChangeRootCategroy1(obj) {
+            $.ajax({
+                url: "@Url.Action("GetCategroy")?ParentId=" + $(obj).val(),    //后台webservice里的方法名称
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                traditional: true,
+                success: function (data) {
+                    if (data.Id == 0) {
+                        $("#hidClassId").val($(obj).val());
+                        $("#subPublish").removeAttr("disabled");
+                        $("#Categroy2").css("display", "none");
+                        $("#Categroy3").css("display", "none");
+                        $("#Categroy4").css("display", "none");
+                        $("#Categroy5").css("display", "none");
+                        return false;
+                    }
+                    var optionstring = "";
+                    for (var i = 0; i < data.length; i++) {
+                        optionstring += "<option value=\"" + data[i].Id + "\" >" + data[i].Name + "</option>";
+                    }
+                    $("#Categroy2").html("<option value='请选择'>请选择...</option> " + optionstring);
+                    $("#Categroy2").css("display", "block");
+                    $("#subPublish").attr("disabled", "disabled");
+                },
+                error: function (msg) {
+                    $("#subPublish").attr("disabled");
+                    $("#subPublish").attr("disabled", "disabled");
+                    $("#Categroy3").css("display", "none");
+                    $("#Categroy4").css("display", "none");
+                    $("#Categroy5").css("display", "none");
+                    //alert("出错了！");
+                }
+            });
+        }
+
+        function ChangeRootCategroy2(obj) {
+            $.ajax({
+                url: "@Url.Action("GetCategroy")?ParentId=" + $(obj).val(),    //后台webservice里的方法名称
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                traditional: true,
+                success: function (data) {
+                    $("#hidClassId").val($(obj).val());
+                    if (data.Id == 0) {
+                        $("#subPublish").removeAttr("disabled");
+                        $("#Categroy3").css("display", "none");
+                        $("#Categroy4").css("display", "none");
+                        $("#Categroy5").css("display", "none");
+                        return false;
+                    }
+                    var optionstring = "";
+                    for (var i = 0; i < data.length; i++) {
+                        optionstring += "<option value=\"" + data[i].Id + "\" >" + data[i].Name + "</option>";
+                    }
+                    $("#Categroy3").html("<option value='请选择'>请选择...</option> " + optionstring);
+                    $("#Categroy3").css("display", "block");
+                    $("#subPublish").attr("disabled", "disabled");
+                },
+                error: function (msg) {
+                    $("#subPublish").attr("disabled", "disabled");
+                    $("#Categroy3").css("display", "none");
+                    $("#Categroy4").css("display", "none");
+                    $("#Categroy5").css("display", "none");
+                }
+            });
+        }
+
+        function ChangeRootCategroy3(obj) {
+            $.ajax({
+                url: "@Url.Action("GetCategroy")?ParentId=" + $(obj).val(),    //后台webservice里的方法名称
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                traditional: true,
+                success: function (data) {
+                    $("#hidClassId").val($(obj).val());
+                    if (data.Id == 0) {
+                        $("#subPublish").removeAttr("disabled");
+                        $("#Categroy4").css("display", "none");
+                        $("#Categroy5").css("display", "none");
+                        return false;
+                    }
+                    var optionstring = "";
+                    for (var i = 0; i < data.length; i++) {
+                        optionstring += "<option value=\"" + data[i].Id + "\" >" + data[i].Name + "</option>";
+                    }
+                    $("#Categroy4").html("<option value='请选择'>请选择...</option> " + optionstring);
+                    $("#Categroy4").css("display", "block");
+                    $("#subPublish").attr("disabled", "disabled");
+                },
+                error: function (msg) {
+                    $("#subPublish").attr("disabled", "disabled");
+                    $("#Categroy4").css("display", "none");
+                    $("#Categroy5").css("display", "none");
+                }
+            });
+        }
+
+        function ChangeRootCategroy4(obj) {
+            $.ajax({
+                url: "@Url.Action("GetCategroy")?ParentId=" + $(obj).val(),    //后台webservice里的方法名称
+                type: "post",
+                dataType: "json",
+                contentType: "application/json",
+                traditional: true,
+                success: function (data) {
+                    $("#hidClassId").val($(obj).val());
+                    if (data.Id == 0) {
+                        $("#subPublish").removeAttr("disabled");
+                        $("#Categroy5").css("display", "none");
+                        return false;
+                    }
+                    var optionstring = "";
+                    for (var i = 0; i < data.length; i++) {
+                        optionstring += "<option value=\"" + data[i].Id + "\" >" + data[i].Name + "</option>";
+                    }
+                    $("#Categroy5").html("<option value='请选择'>请选择...</option> " + optionstring);
+                    $("#Categroy5").css("display", "block");
+                    $("#subPublish").attr("disabled", "disabled");
+                },
+                error: function (msg) {
+                    $("#subPublish").attr("disabled", "disabled");
+                    $("#Categroy5").css("display", "none");
+                }
+            });
+        }
+
+</script>
+    <script>
+        $(function () {
+            AddTempPic();
+            if ($("#hidPpacth").length > 0) {
+                $("#subPublish").removeAttr("disabled");
+
+                var ppacth = $("#hidPpacth").val();
+                var ppacths = ppacth.split(',');
+                var classId = $("#hidClassId").val();
+                $.ajax({
+                    url: "@Url.Action("GetCategroy")?ParentId=0",    //后台webservice里的方法名称
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    traditional: true,
+                    success: function (data) {
+                        if (data.Id == 0) {
+                            return false;
+                        }
+                        var optionstring = "";
+                        var selVal = "";
+                        for (var i = 0; i < data.length; i++) {
+                            if (data[i].Id == ppacths[1]) {
+                                selVal = "selected";
+                            } else {
+                                selVal = "";
+                            }
+                            optionstring += "<option value=\"" + data[i].Id + "\" " + selVal + ">" + data[i].Name + "</option>";
+                        }
+                        $("#Categroy1").html(optionstring);
+                        $("#Categroy1").css("display", "block");
+                        $("#Categroy1").attr("disabled", "disabled");
+                    },
+                    error: function (msg) {
+                        alert("出错了！");
+                    }
+                });
+                if (ppacths.length > 2) {
+                    $("#Categroy2").css("display", "block");
+                    $.ajax({
+                        url: "@Url.Action("GetCategroy")?ParentId=" + ppacths[1],    //后台webservice里的方法名称
+                        type: "post",
+                        dataType: "json",
+                        contentType: "application/json",
+                        traditional: true,
+                        success: function (data) {
+                            if (data.Id == 0) {
+                                return false;
+                            }
+                            var optionstring = "";
+                            var selVal = "";
+                            var selId = ppacths[2];
+                            if (ppacths[2] == "") {
+                                selId = classId;
+                            }
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Id == selId) {
+                                    selVal = "selected";
+                                } else {
+                                    selVal = "";
+                                }
+                                optionstring += "<option value=\"" + data[i].Id + "\" " + selVal + ">" + data[i].Name + "</option>";
+                            }
+                            $("#Categroy2").html(optionstring);
+                            $("#Categroy2").css("display", "block");
+                            $("#Categroy2").attr("disabled", "false");
+                        },
+                        error: function (msg) {
+                            alert("出错了！");
+                        }
+                    });
+                }
+                if (ppacths.length > 3) {
+                    $("#Categroy3").css("display", "block");
+                    $.ajax({
+                        url: "@Url.Action("GetCategroy")?ParentId=" + ppacths[2],    //后台webservice里的方法名称
+                        type: "post",
+                        dataType: "json",
+                        contentType: "application/json",
+                        traditional: true,
+                        success: function (data) {
+                            if (data.Id == 0) {
+                                return false;
+                            }
+                            var optionstring = "";
+                            var selVal = "";
+                            var selId = ppacths[3];
+                            if (ppacths[3] == "") {
+                                selId = classId;
+                            }
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Id == selId) {
+                                    selVal = "selected";
+                                } else {
+                                    selVal = "";
+                                }
+                                optionstring += "<option value=\"" + data[i].Id + "\" " + selVal + ">" + data[i].Name + "</option>";
+                            }
+                            $("#Categroy3").html(optionstring);
+                            $("#Categroy3").css("display", "block");
+                            $("#Categroy3").attr("disabled", "disabled");
+                        },
+                        error: function (msg) {
+                            alert("出错了！");
+                        }
+                    });
+                }
+                if (ppacths.length > 4) {
+                    $("#Categroy4").css("display", "block");
+                    $.ajax({
+                        url: "@Url.Action("GetCategroy")?ParentId=" + ppacths[3],    //后台webservice里的方法名称
+                        type: "post",
+                        dataType: "json",
+                        contentType: "application/json",
+                        traditional: true,
+                        success: function (data) {
+                            if (data.Id == 0) {
+                                return false;
+                            }
+                            var optionstring = "";
+                            var selVal = "";
+                            var selId = ppacths[4];
+                            if (ppacths[4] == "") {
+                                selId = classId;
+                            }
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Id == selId) {
+                                    selVal = "selected";
+                                } else {
+                                    selVal = "";
+                                }
+                                optionstring += "<option value=\"" + data[i].Id + "\" " + selVal + ">" + data[i].Name + "</option>";
+                            }
+                            $("#Categroy4").html(optionstring);
+                            $("#Categroy4").css("display", "block");
+                            $("#Categroy4").attr("disabled", "disabled");
+                        },
+                        error: function (msg) {
+                            alert("出错了！");
+                        }
+                    });
+                }
+                if (ppacths.length > 5) {
+                    $("#Categroy5").css("display", "block");
+                    $.ajax({
+                        url: "@Url.Action("GetCategroy")?ParentId=" + ppacths[4],    //后台webservice里的方法名称
+                        type: "post",
+                        dataType: "json",
+                        contentType: "application/json",
+                        traditional: true,
+                        success: function (data) {
+                            if (data.Id == 0) {
+                                return false;
+                            }
+                            var optionstring = "";
+                            var selVal = "";
+                            var selId = ppacths[5];
+                            if (ppacths[5] == "") {
+                                selId = classId;
+                            }
+                            for (var i = 0; i < data.length; i++) {
+                                if (data[i].Id == selId) {
+                                    selVal = "selected";
+                                } else {
+                                    selVal = "";
+                                }
+                                optionstring += "<option value=\"" + data[i].Id + "\" " + selVal + ">" + data[i].Name + "</option>";
+                            }
+                            $("#Categroy5").html(optionstring);
+                            $("#Categroy5").css("display", "block");
+                            $("#Categroy5").attr("disabled", "disabled");
+                        },
+                        error: function (msg) {
+                            alert("出错了！");
+                        }
+                    });
+                }
+            }
+            else {
+                $.ajax({
+                    url: "@Url.Action("GetCategroy")?ParentId=0",    //后台webservice里的方法名称
+                    type: "post",
+                    dataType: "json",
+                    contentType: "application/json",
+                    traditional: true,
+                    success: function (data) {
+                        if (data.Id == 0) {
+                            return false;
+                        }
+                        var optionstring = "";
+                        for (var i = 0; i < data.length; i++) {
+                            optionstring += "<option value=\"" + data[i].Id + "\" >" + data[i].Name + "</option>";
+                        }
+                        $("#Categroy1").html("<option value='请选择'>请选择...</option> " + optionstring);
+                        $("#Categroy1").css("display", "block");
+                    },
+                    error: function (msg) {
+                        alert("出错了！");
+                    }
+                });
+            }
+        })
+
+        function AddTempPic() {
+            $.get("@Url.Action("TempPic")", function (data) {
+                $(".Gallery2").empty();
+                $(".Gallery2").append(data);
+            });
+        }
+        //售后服务
+        $(function () {
+            $(':checkbox[name=AfterSsales]').each(function () {
+                $(this).click(function () {
+                    if ($(this).prop('checked')) {
+                        $(':checkbox[name=AfterSsales]').removeAttr('checked');
+                        $(this).prop('checked', 'checked');
+                    }
+                });
+            });
+
+        });
+
+  //上传主图
+        KindEditor.ready(function (K) {
+            //var hidId = $("#hidmodelId").val();
+            var editor = K.editor({
+                uploadJson: '@Url.Action("UpMainPic")?sid=' + "@*@userInfo.Sid*@",
+                allowFileManager: true
+            });
+            K('#btnUpManiPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            if (K('#hidImgCount').val() == "0") {
+                                K("#MainPic").html("");
+                            }
+                            if (K('#hidImgCount').val() == "4") {
+                                alert("最多可上传4个商品图片");
+                                editor.hideDialog();
+                                return false;
+                            }
+                            //.attr("src", url);
+                            var newImageHtml = "<img id=\"tmpImg"+ parseInt(K('#hidImgCount').val()) +"\" style=\"width: 180px; height: 180px\" src=\"" + url + "\" />";
+                            //var delHtml =" <i class=\"iLeft\" ><a href=\"javascript:\" >×</a></i>";
+                            var delHtml = "<input type=\"image\" onclick=\"funDelImg(" + parseInt(K('#hidImgCount').val()) + ",this,'" + url + "')\" src=\"/common/theme/images/a_close.png\"  title=\"\" />";
+                            K("#MainPic").append(newImageHtml);
+                            K("#MainPic").append(delHtml);
+
+                            K('#hidMainimgSrc').val(K('#hidMainimgSrc').val() + ";" + url);
+                            var count = parseInt(K('#hidImgCount').val()) + 1;
+                            K('#hidImgCount').val(count);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+        });
+
+        //显示主图
+        function funDelImg(index, obj, url) {
+            //删除点击的图片
+            var objName = "#tmpImg"+index;
+            var MainimgSrc = $('#hidMainimgSrc').val();
+            MainimgSrc = MainimgSrc.replace(url, "");
+            $('#hidMainimgSrc').val(MainimgSrc);
+            //修改当前图片的数量
+            var count = parseInt($('#hidImgCount').val()) - 1;
+            $('#hidImgCount').val(count);
+
+            //当删除所有图片时重新显示默认图片
+            if (count == 0) {
+                $('#hidMainimgSrc').val("");
+                var defImg = " <img style=\"width: 180px; height: 180px\" src=\"/Theme/mall/red_theme/images/goodslogo.jpg\" />";
+                $('#MainPic').append(defImg);
+            }
+
+            //删除当前图片和x图片
+            $(objName).remove();
+            $(obj).remove();
+        }
+
+        //显示主图
+        function ShowPic(data) {
+            var url = data.SaveName;
+            $("#GalleryItem").attr("src", url);
+            $("#imgSrc").val(url);
+        };
+        //提交后返回结果
+        function AfterEdit(data) {
+            if (data.Status == 200) {
+                alert("编辑成功！");
+                location.href = "@(Url.Action("ModifyProduct", "MallManagement"))";
+            }
+            else {
+                alert("保存失败！错误信息：" + data.Message);
+            }
+        }
+
+
+        //临时图片上传
+        $(function () {
+            AddTempPic();
+        })
+
+        function AddTempPic() {
+            $.get("@Url.Action("TempPic")", function (data) {
+                $(".Gallery2").empty();
+                $(".Gallery2").append(data);
+            });
+        }
+
+        //绑定内容编辑器
+        var editorSa;
+        KindEditor.ready(function (a) {
+            editorSa = a.create('#txtContent', {
+                pasteType: 1,
+                uploadJson: '@Url.Action("UpInfoPic",new {ASPSESSID = Session.SessionID })',
+                allowFileManager: true,
+                items: [
+                    'source', 'undo', 'redo', 'preview', 'template', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', 'table', 'hr', 'image1'
+                ],
+                width: "680px",
+                height: "280px"
+            });
+        });
+
+        // 自定义插件 #1
+        KindEditor.lang({
+            image1: '上传图片'
+        });
+        KindEditor.plugin('image1', function (K) {
+            var self = this, name = 'image1';
+            self.clickToolbar(name, function () {
+                self.loadPlugin('image', function () {
+                    self.plugin.imageDialog({
+                        showRemote: false,
+                        clickFn: function () {
+                            AddTempPic();
+                            self.hideDialog();
+                        }
+                    });
+                });
+            });
+        });
+        function InserTempImg(obj) {
+            var url = $(obj).attr("imgId");
+            var hidId = $("#hidmodelId").val();
+            $.post("@Url.Action("InserTempImg")", { url: url, hidId: hidId }, function (data) {
+                if (data.result == "ok") {
+                    editorSa.insertHtml('<img src="' + data.url + '" alt=""/>');
+                } else {
+                    alert(data.result);
+                }
+            });
+        }
+        function DelTempImg(obj) {
+            var imgId = $(obj).attr("imgId");
+            $.post("@Url.Action("DelTempImg")", { imgId: imgId }, function (data) {
+                if (data == "ok") {
+                    $(obj).parent().hide();
+                }
+            });
+        }
+</script>
+}
+

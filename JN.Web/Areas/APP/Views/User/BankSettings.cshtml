@@ -1,0 +1,195 @@
+﻿@model JN.Data.UserBankCard
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000).ToList();
+
+    var banklist = cacheSysParam.Where(x => x.PID == 5000).OrderBy(x => x.Sort).ToList();
+
+}
+<link href="/Theme/app/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+    <div class="logo">@T("添加银行卡")</div>
+</header>
+
+<section class="container">
+    <div class="setting-form">
+        <div class="form-widget bankcard-form">
+            <form id="form" method="get">
+                <div class="form-box">
+                    <div class="form-tips">
+                        *@T("请绑定持卡人本人的银行卡，姓名一经保存不可修改")！
+                    </div>
+                    <div class="form-group">
+                        <label><i>*</i>@T("持卡人姓名")</label>
+                        <input class="form-control" name="BankUser" type="text" value="@Umodel.RealName" @*@(!string.IsNullOrWhiteSpace(Umodel.RealName) ? "readonly=\"readonly\"" : "")*@ autocomplete="off" placeholder="@T("请输入持卡人姓名")">                       
+                    </div>
+                    <div class="form-group">
+                        <label><i>*</i>@T("开户银行")</label>
+                        @*@Html.DropDownList("BankNameId", new SelectList(cacheSysParam.Where(x => x.PID == 5000).OrderBy(x => x.Sort).ToList(), "ID", "Name", Model.BankNameID), new { @class = "form-control", })*@
+
+                        <select class="form-control" data-val="true" data-val-number="字段 银行名称ID号 必须是一个数字。" data-val-required="银行名称ID号 字段是必需的。" id="BankNameId" name="BankNameId" onchange="giveBankType(this.options[this.options.selectedIndex].value)">
+                            @if (banklist.Count > 0)
+                            {
+                                foreach (var item in banklist)
+                                {
+                                    <option value="@item.ID">@T(item.Name)</option>
+                                }
+                            }
+                            @*<option value="5001">微信</option>
+                            <option value="5002">支付宝</option>
+                            <option value="5004">银行</option>*@
+                        </select>
+
+                    </div>
+
+                    <div class="form-group">
+                        <label id="bankLabel"><i>*</i>@T("微信账户")</label>
+                        <input class="form-control" name="BankCard" type="text" value="@Model.BankCard" autocomplete="off" placeholder="@T("请输入账户")">                     
+                    </div>
+                    <div class="form-group">
+                        <label id="bankLabel2"><i>*</i>@T("确认账户")</label>
+                        <input class="form-control" name="BankCard2" type="text" value="@Model.BankCard" autocomplete="off" placeholder="@T("请再次确认账户")">
+                    </div>
+                    <div class="form-group" id="depositDiv" style="display:none;">
+                        <label><i>*</i>@T("开户行")</label>@*<i class="form-tips">支付宝、微信无需填写</i>*@
+                        <input class="form-control" name="BankOfDeposit" type="text" value="@Model.BankOfDeposit" placeholder="@T("请输入开户行名称")" autocomplete="off">                            
+                    </div>
+
+                    <div class="form-group" id="bankImgThis">
+                        <label><i>*</i>@T("收款二维码")</label>
+                        <div class="setting-img member-bg">
+                            <img src="@(string.IsNullOrEmpty(Model.BankImgUrl) ? "" : Model.BankImgUrl)">
+                        </div>
+                    </div>
+
+                    <div class="form-group" id="bankImgDiv">
+                        <label>@T("上传收款二维码")</label>
+                        <div class="content upload-pic" id="uploader">
+                            <div class="imgs">
+                                <div class="queueList">
+
+                                </div>
+                            </div>
+                            <div class="upload-area">
+                                <div class="square" style="margin-top:10px;">
+                                    <span class="defalt-img"></span>
+                                    <input type="hidden" name="bankimg" id="bankimg" class="hidImgSrc" value="" />
+                                    <div class="link btnUpPic">+@T("上传图片")</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="set-default">
+                    <input type="checkbox" value="true" name="IsDefault" @(Model.IsDefault ?"checked":"") >
+                    <span>@T("设为默认")</span>
+                </div>
+
+                <div class="form-submit">
+                    <input type="hidden" name="bankid" value="@Model.ID" />
+                    <button type="button" id="btnSubmit" class="form-submit-btn">@T("确认提交")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+
+<script src="~/Plugin/webuploader-0.1.5/webuploader.js"></script>
+<link href="~/Plugin/webuploader-0.1.5/webuploader.css" rel="stylesheet" />
+<script src="~/Plugin/webuploader-0.1.5/webuploader.Plugin.js"></script>
+<script>
+    $("#btnSubmit").click(function () {
+        $('#btnSubmit').attr("disabled", "disabled");
+        $("#form").ajaxSubmit({
+            url: "@Url.Action("BankSubmit")",
+            type: "post",
+            success: function (d) {
+                if (d.Status == 200) {
+                    layer.msg("@T("操作成功")", { icon: 1 }, function () {
+                        window.location.href = "@Url.Action("banklist")";
+                    });
+                } else {
+                    layer.msg(d.Message, { icon: 2 });
+                    $('#btnSubmit').removeAttr("disabled");
+                }
+            },
+            error: function (error) {
+                layer.msg(error, { icon: 2 });
+                $('#btnSubmit').removeAttr("disabled");
+            }
+        });
+    });
+
+
+    function giveBankType(id) {
+        var giveToid = id;
+        if (giveToid == 5001) {
+            $('#bankLabel').html("<i>*</i>@T("微信账户")");
+            $('#bankLabel2').html("<i>*</i>@T("确认账户")");
+            $('#depositDiv').hide();
+
+            $("#bankImgDiv").show();
+            $("#bankImgThis").show();
+        }
+        else if(giveToid == 5002)
+        {
+            $('#bankLabel').html("<i>*</i>@T("支付宝账户")");
+            $('#bankLabel2').html("<i>*</i>@T("确认账户")");
+            $('#depositDiv').hide();
+
+            $("#bankImgDiv").show();
+            $("#bankImgThis").show();
+        }
+        else
+        {
+            $('#bankLabel').html("<i>*</i>@T("银行卡号")");
+            $('#bankLabel2').html("<i>*</i>@T("确认卡号")");
+            $("#depositDiv").show();
+            $('#bankImgDiv').hide();
+            $('#bankImgThis').hide();
+            
+        }
+
+    }
+
+    $(function () {
+        // 初始化Web Uploader
+        var uploader = uploaderCreate({
+            MaxNum: 1,//默认设置为1张
+            //AutoHideArea: true,//超过上传限制后是否隐藏上传域默认设置为true
+            MaxSize: 1024 * 1024 * 6,//默认设置大小1024 * 1024 * 4     4M,
+            $container: $('#uploader'),//控件容器默设置认为null
+            Url: '@Url.Action("UpMainPic")',//服务器接收地址默设置认为null
+            FileVal: 'imgFile',//文件上传域的name值，默认设置为file
+            //Thumb: true,//是否显示缩略图默认设置true
+            //RecordReturnValue: true,//是否记录上传成功的返回值，容器为hidImgSrc
+            ThumbWidth: 160,//略缩图宽默认设置100
+            ThumbHeight: 160,//略缩图高默认设置100
+            //ThumbHorizontalShow: false,//缩略图水平显示默认设置true
+            //compress: false,//图片压缩设置false关闭压缩,默认开启
+            Error: function (message) {
+                layer.msg(message, { icon: 2 });
+            },//出错回调
+            Success: function (response) {
+                if (response.error == "0") {
+                    return response.url;//记录URL
+                } else {
+                    layer.msg(response.message, { icon: 2 });
+                    return false;//删除缩略图
+                }
+            },//成功回调
+            //Extensions: 'gif,jpg,png',//默认设置为gif,jpg,png格式
+            //Method:'post',//默认设置为POST方式请求
+            //Timeout:1000 * 10,//上传超时默认10秒
+            MessageArray: new Array('@T("不能预览")', '@T("上传失败")', '@T("您最多允许上传")', '@T("张图片")', '@T("您上传的文件大小超过")', '@T("您上传的文件格式不正确，只允许上传")', '@T("格式图片")')
+        });
+    });
+
+
+</script>

@@ -1,0 +1,31 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>404 NOT FOUND</title>
+    <link href="~/Theme/Error/css/nodata.css" rel="stylesheet" />
+    <style>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="part1">
+            <div class="imgbox imgbox2"></div>
+        </div>
+        <div class="part2">
+            <div class="txt">
+                <h1>@(Request["msg"]?? T("抱歉！您所访问的页面不存在").ToString())</h1>
+            </div>
+            <div class="btn-box">
+                <button type="button" onclick="javascript:history.go(-1)">@T("返回上一页")</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>

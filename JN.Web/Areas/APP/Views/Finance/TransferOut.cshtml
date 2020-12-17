@@ -1,0 +1,50 @@
+﻿@{
+    ViewBag.Title = "转出";
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="/app/Home"></a>*@
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">@T(ViewBag.Title)</div>
+</header>
+<section class="container">
+    <div class="trade-form">
+        <div class="form-widget">
+            <form id="frmSubmit" method="get">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("对方账号")</label>
+
+                        <div class="form-control">
+                            <input placeholder="@T("请输入对方ID或者电话号码")" name="tousername" type="text" maxlength="20">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-submit">
+                    <button type="button" class="form-submit-btn red-btn" id="btnSubmit">@T("下一步")</button>
+                    <a href="@Url.Action("ApplyExchangeCur", "Finance",new { fid =3,toid=2})" class="form-submit-btn">@T("兑换积分")</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<script>
+    $("#btnSubmit").click(function () {
+        $('#btnSubmit').attr("disabled", "disabled");
+        $.post("@Url.Action("TransferOut", "Finance")", $("#frmSubmit").serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("提交成功，请即将为您跳转")", { icon: 1 }, function () {
+                    location.href = data.Message;
+                });
+        } else {
+                layer.msg(data.Message, { icon: 2 });
+                $('#btnSubmit').removeAttr("disabled");
+    }
+    });
+    })
+</script>

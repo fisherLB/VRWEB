@@ -1,0 +1,291 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.StockTrade>
+@{
+    ViewBag.Title = "成交查询";
+    JN.Data.User Umodel = JN.Services.UserLoginHelper.CurrentUser();
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+
+    var curPriceList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().ListCache("curPriceList");
+
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List().OrderBy(x => x.ID).ToList();
+    
+    var cur = cmodelList.Where(x => x.ID == 1).FirstOrDefault();
+
+    var todayPrice = JN.Services.Manager.PriceHelps.getcurrentprice(cur);
+
+    var ztPrice = JN.Services.Manager.PriceHelps.getyescloseprice(cur);
+
+    //var zfd = ((todayPrice - ztPrice) / ztPrice * 100).ToString("F2");
+
+    var chart = MvcCore.Unity.Get<JN.Data.Service.IAdvertiseChartDayService>().List(x => x.CurID == cur.ID && System.Data.Entity.SqlServer.SqlFunctions.DateDiff("DAY", x.StockDate, DateTime.Now) == 0).ToList();
+    decimal num = 0;
+    if (chart.Count > 0)
+    {
+        num = chart.Sum(x => x.Volume);
+    }
+
+    decimal wenduji = cacheSysParam.Single(x => x.ID == 3112).Value.ToDecimal();
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header muiopen">
+    <h1>@T("交易市场")</h1>
+    @*<a class="my-mine" href="/APP/Finance/Transactionrecord">@T("交易记录")</a>*@
+    <div class="my-mine muiopen">
+        <a href="/APP/hq/index" class="lablecolor">@T("行情")</a>
+        <a href="@Url.Action("AdvertiseOrder","advertise", new { status=1, fromcoid=1 })" class="lablecolor">@T("交易记录")</a>
+        <a href="@Url.Action("Order","advertise", new { Direction = 0, status = 1 })" class="lablecolor">@T("C2C交易订单")</a>
+        @*<a href="/APP/Finance/Exchangerate">@T("汇率表")</a>*@
+    </div>
+</header>
+<section class="container transaction-main muiopen">
+    <marquee behavior="scroll">
+        @if (curPriceList.Count > 0)
+        {
+            foreach (var item in curPriceList)
+            {
+                <a class="lablecolor">@item.EnSigns:$<span class="lablecolor">@item.TranPrice</span></a>
+            }
+        }
+        @*<a>BTC:$<span>1521.00</span></a>
+            <a>ETH:$<span>1521.00</span></a>
+            <a>USDT:$<span>1521.00</span></a>*@
+    </marquee>
+    <div class="transaction-top bg091931">
+        <div class="price-l">
+            <p class="lablecolor">@T("今日价")：<span>@todayPrice.ToString("F4") </span></p>
+            <p class="yesterday lablecolor">@T("昨日价")：<span class="lablecolor">@ztPrice.ToString("F4")</span></p>
+        </div>
+        @*<div class="price-b">
+                    <p>@T("24h涨幅度")：<span>+@zfd %</span></p>
+                    <p>@T("今日交易量")：<span>@num.ToString("F2")</span></p>
+            </div>*@
+        <div class="price-r">
+            <p class="lablecolor">@T("涨幅度")：<span class="lablecolor">@wenduji %</span></p>
+            <div class="progress">
+                <div class="progress-bar green yellow red" style="width:@wenduji%;"></div>
+            </div>
+        </div>
+    </div>
+    @*<ul class="wode_list">
+        <li class="on" id="ine1"><a>@T("卖出")</a></li>
+        <li class="" id="ine2"><a>@T("买入")</a></li>
+    </ul>*@
+    <ul class="table-view" id="listcontainer_sell" style="display:none;">
+
+    </ul>
+
+    <ul class="table-view" id="listcontainer_buy">
+
+        </ul>
+
+        <div class="release-box"> @*release-box S50*@
+            <button type="button" class="form-submit-btn white" id="btn_sell" onclick="window.location.href = '/APP/Advertise/Sell?fromcoid=1&tocoid=1'">@T("我要出售")</button>
+            <button type="button" class="form-submit-btn white" id="btn_buy" style="display:none;" onclick="window.location.href = '/APP/Advertise/buy'">@T("我要购买")</button>
+        </div>
+</section>
+<!--底部导航-->
+
+
+
+@Html.Partial("~/Areas/APP/Views/Shared/_Footer.cshtml")
+
+<script src="~/Theme/APP/js/jquery-1.10.2.js"></script>
+<script>
+    $(function () {
+        $('#ine1').click(function () {
+            $('#listcontainer_sell').show();
+            $('#listcontainer_buy').hide();
+            $('#btn_sell').show();
+            $('#btn_buy').hide();
+        })
+        $('#ine2').click(function () {
+            $('#listcontainer_sell').hide();
+            $('#listcontainer_buy').show();
+            $('#btn_sell').hide();
+            $('#btn_buy').show();
+        })
+
+        $(".wode_list li").click(function () {
+            $(this).addClass("on").siblings().removeClass("on");
+
+        })
+    });
+</script>
+
+@*<script src="~/Plugin/layer/layui/layui.js"></script>
+    <link href="~/Plugin/layer/layui/css/layui.css" rel="stylesheet" />*@
+
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+
+        @*flow.load({
+            elem: '#listcontainer_sell', //指定列表容器
+            isAuto: true,//是否自动加载
+            end: ' ',
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getAdvertiseList", "Advertise")?page=' + page + "&type=1&curid=1&coinid=1", function (res) {
+                    var strhtml = "";
+                    if (res.data.length > 0) {
+                        //假设你的列表返回在data集合中
+                        layui.each(res.data, function (index, item) {
+                            //判断在时间范围内才展示
+                            strhtml += '<li class="table-view-cell mui-media">';
+
+                            if (item.IsEnableSecurity == true) {
+                                strhtml += '<a href="###" class="">';
+                            }
+                            else {
+                                strhtml += '<a href="/APP/Finance/Purchase?advertiseid=' + item.ID + '" class="">';
+                            }
+                            strhtml += '<div class="pull-left">';
+                            strhtml += '<img src="' + (item.OutTable_User.HeadFace == null ? "/Theme/app/images/member.png" : item.OutTable_User.HeadFace) + '" />';
+                            strhtml += '<p>@T("已认证")</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="media-body">';
+                            strhtml += '<div class="media-body-top">';
+                            strhtml += '<h3>' + item.UserName + '</h3>';
+                            if (item.CoinName == "1")
+                                strhtml += '<img src="/Theme/APP/img/alipay.png" />';
+                            if (item.LocationName == "1")
+                                strhtml += '<img src="/Theme/APP/img/cny.png" />';
+                            if (item.CoinID == 5005)
+                                strhtml += '<img src="/Theme/APP/img/wechat.png" />';
+                            strhtml += '<img src="/Theme/APP/img/fjc.png" />';
+                            strhtml += '</div>';
+                            strhtml += '<p class="ellipsis">@T("数量") (' + item.CurName +'):' + (item.Quantity - item.HaveQuantity).toFixed(1) + '</p>';
+                            strhtml += '<p class="ellipsis">@T("价格"):' + (item.Price).toFixed(5) + '</p>';
+                            strhtml += '<p class="ellipsis">@T("单数"):' + item.LocationID + '</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="right-content">';
+                            strhtml += '<p>' + item.Quantity + '<span>' + item.CurName +'</span></p>';
+                            if (item.IsEnableSecurity == true) {
+                                strhtml += '<input type="button" value="已完成">';
+                            }
+                            else {
+                                strhtml += '<input type="button" value="' + (item.Direction == 0 ? "@T("购买")" : "@T("卖出")") + '">';
+                            }
+
+                            strhtml += '</div>';
+                            strhtml += '</a>';
+                            strhtml += '</li>';
+                            //}
+                        });
+                    } else {
+                        strhtml += '<div class="load-no-more">';
+                        strhtml += '<span>@T("没有更多了")</span>';
+                        strhtml += '</div>';
+                    }
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });*@
+
+        
+        flow.load({
+            elem: '#listcontainer_buy', //指定列表容器
+            isAuto: true,//是否自动加载
+            end: ' ',
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getAdvertiseList", "Advertise")?page=' + page + "&type=0&curid=1&coinid=1", function (res) {
+                    var strhtml = "";
+                    if (res.data.length > 0) {
+                        //假设你的列表返回在data集合中
+                        layui.each(res.data, function (index, item) {
+                            //判断在时间范围内才展示
+                            strhtml += '<li class="table-view-cell mui-media">';
+
+                            if (item.IsEnableSecurity == true) {
+                                strhtml += '<a href="###" class="">';
+                            }
+                            else {
+                                strhtml += '<a href="/APP/Finance/Purchase?advertiseid=' + item.ID + '" class="">';
+                            }
+                            strhtml += '<div class="pull-left">';
+                            strhtml += '<img src="' + (item.OutTable_User.HeadFace == null ? "/Theme/app/images/member.png" : item.OutTable_User.HeadFace) + '" />';
+                            strhtml += '<p class="lablecolor">@T("已认证")</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="media-body">';
+                            strhtml += '<div class="media-body-top">';
+                            strhtml += '<h3 class="lablecolor">' + item.UserName + '</h3>';
+                            if (item.CoinName == "1")
+                                strhtml += '<img src="/Theme/APP/img/alipay.png" />';
+                            if (item.LocationName == "1")
+                                strhtml += '<img src="/Theme/APP/img/cny.png" />';
+                            if (item.CoinID == 5005)
+                                strhtml += '<img src="/Theme/APP/img/wechat.png" />';
+                            strhtml += '<img src="/Theme/APP/img/fjc.png" />';
+                            strhtml += '</div>';
+                            strhtml += '<p class="ellipsis lablecolor" >@T("数量") (' + item.CurName+'):' + (item.Quantity - item.HaveQuantity).toFixed(1) + '</p>';
+                            strhtml += '<p class="ellipsis lablecolor">@T("价格"):' + (item.Price).toFixed(5) + '</p>';
+                            @*strhtml += '<p class="ellipsis">@T("完成率"):' + (item.HaveQuantity / item.Quantity).toFixed(5) + '%</p>';*@
+                            strhtml += '<p class="ellipsis lablecolor">@T("单数"):' + item.LocationID + '</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="right-content">';
+                            strhtml += '<p>' + item.Quantity + '<span class="lablecolor">' + item.CurName +'</span></p>';
+                            if (item.IsEnableSecurity == true) {
+                                strhtml += '<input type="button" value="已完成">';
+                            }
+                            else {
+                                strhtml += '<input type="button" value="' + (item.Direction == 0 ? "@T("购买")" : "@T("卖出")") + '">';
+                            }
+
+                            strhtml += '</div>';
+                            strhtml += '</a>';
+                            strhtml += '</li>';
+                            //}
+                        });
+                    } else {
+                        strhtml += '<div class="load-no-more">';
+                        strhtml += '<span>@T("没有更多了")</span>';
+                        strhtml += '</div>';
+                    }
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+
+    //判断时间范围
+    function checkTime(beginTime, endTime) {
+        var strb = beginTime.split(":");
+        if (strb.length != 2) {
+            return false;
+        }
+
+        var stre = endTime.split(":");
+        if (stre.length != 2) {
+            return false;
+        }
+
+        var b = new Date();
+        var e = new Date();
+        var n = new Date();
+
+        b.setHours(strb[0]);
+        b.setMinutes(strb[1]);
+        e.setHours(stre[0]);
+        e.setMinutes(stre[1]);
+
+        if (n.getTime() - b.getTime() > 0 && n.getTime() - e.getTime() < 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>

@@ -1,0 +1,175 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.TimeDeposit>
+@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <!-- PAGE CONTENT BEGINS -->
+        <div class="filter-bar margin-bottom-none">
+            <form method="get">
+
+                <!-- Filter -->
+                <div>
+                    <select name="datefiled" style="width: 80px;">
+                        <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>创建时间</option>
+                    </select>
+                </div>
+                <div>
+                    <label>从:</label>
+                    <div class="input-append">
+                        <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                        <span class="add-on glyphicons calendar"><i></i></span>
+                    </div>
+                </div>
+                <!-- // Filter END -->
+                <!-- Filter -->
+                <div>
+                    <label>到:</label>
+                    <div class="input-append">
+                        <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                        <span class="add-on glyphicons calendar"><i></i></span>
+                    </div>
+                </div>
+                <!-- // Filter END -->
+                <!-- Filter -->
+                <div style="margin-left:10px">
+                    <select name="numberfiled" style="width: 80px;">
+                        <option value="ID" @(Request["numberfiled"] == "ID" ? "selected" : "")>ID</option>
+                    </select>
+                </div>
+                <div>
+                    <label>从:</label>
+                    <div class="input-append">
+                        <input type="text" name="numberform" class="input-mini" style="width: 30px;" value="@Request["numberform"]" />
+                        <span class="add-on glyphicons euro"><i></i></span>
+                    </div>
+                </div>
+                <!-- // Filter END -->
+                <!-- Filter -->
+                <div>
+                    <label>到:</label>
+                    <div class="input-append">
+                        <input type="text" name="numberto" class="input-mini" style="width: 30px;" value="@Request["numberto"]" />
+                        <span class="add-on glyphicons euro"><i></i></span>
+                    </div>
+                </div>
+                <!-- // Filter END -->
+                <!-- Filter -->
+                <div style="margin-left:10px">
+                    <select name="keyfiled" style="width: 80px;">
+                        <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>用户名</option>
+                    </select>
+                </div>
+                <div>
+                    <div class="input-append">
+                        <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                        <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                    </div>
+                </div>
+                <!-- // Filter END -->
+                <!-- Filter -->
+                <div>
+                    <input type="hidden" name="IsAsc" value="0" />
+                    <input type="hidden" name="OrderFiled" value="ID" />
+                    <input type="hidden" name="IsExport" value="0" />
+                    <input type="submit" onclick="$('input[name=\'IsExport\']').val(0)" value="查询" />
+                    <input type="submit" onclick="$('input[name=\'IsExport\']').val(1)" value="导出" />
+                </div>
+                <div class="clearfix"></div>
+                <!-- // Filter END -->
+            </form>
+        </div>
+
+        <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+            <thead>
+                <tr>
+                    <th class="center">
+                        <label>
+                            <input type="checkbox" class="ace" />
+                            <span class="lbl"></span>
+                        </label>
+                    </th>
+                    <th>用户名</th>
+                    <th>存款金额</th>
+                    <th>定存期</th>
+                    <th>分红比例</th>
+                    <th>累计分红</th>
+                    <th>剩余分红时</th>
+                    <th>状态</th>
+                    <th>
+                        <i class="icon-time bigger-110 hidden-480"></i>
+                        创建时间
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @if (Model.Count > 0)
+                {
+                    for (int i = 0; i < Model.Count; i++)
+                    {
+
+                        <tr>
+                            <td class="center">
+                                <label>
+                                    <input type="checkbox" class="ace" name="ckid" value="@Model[i].ID" />
+                                    <span class="lbl"></span>
+                                </label>
+                            </td>
+                            <td>
+                                @Model[i].UserName
+                            </td>
+
+                            <td>
+                                @Model[i].DepositAmount
+                            </td>
+                            <td>
+                                @Model[i].AccrualHour
+                            </td>
+                            @*<td>
+                                    @Model[i].Investment
+                                </td>*@
+                            <td class="hidden-480">@Model[i].AccruaRate</td>
+                            <td>
+                               @Model[i].AccrualMoney
+                            </td>
+                            <td>
+                                @Model[i].SurplusHour
+                            </td>
+                            <td>
+                               @(Model[i].Status == 2 ? "已结取" : "返利中")
+
+                            <td>
+                                @Model[i].CreateTime
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+        <div class="separator top form-inline small">
+            <!-- Pagination -->
+            @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+
+            <div class="clearfix"></div>
+            <!-- // Pagination END -->
+        </div>
+    </div><!-- /.table-responsive -->
+</div><!-- /.page-content -->
+<!-- PAGE CONTENT ENDS -->
+@section scripts{
+
+}

@@ -1,0 +1,286 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<dicts>
+  <dict name="登录" value="login" />
+  <dict name="手机/UID" value="Phone / UID" />
+  <dict name="请输入手机号/UID" value=" enter your mobile number/UID" />
+  <dict name="登录密码" value="Password" />
+  <dict name="请输入登录密码" value="enter your password" />
+  <dict name="立即注册" value="Sign up now" />
+  <dict name="忘记密码" value="forget password" />
+  <dict name="分享记录" value="Sharing record" />
+  <dict name="被邀请人" value="Invitees" />
+  <dict name="时间" value="Time" />
+  <dict name="是否激活" value="Activate now" />
+  <dict name="已激活" value="Activated" />
+  <dict name="已冻结" value="Frozen" />
+  <dict name="未激活" value="Inactivated" />
+  <dict name="已激活用户列表" value="Activated user list" />
+  <dict name="开发中" value="In development" />
+  <dict name="等级" value="Grade" />
+  <dict name="扫码支付" value="Scan code payment" />
+  <dict name="余额" value="Balance" />
+  <dict name="积分" value="Integral" />
+  <dict name="转出" value="Transfer out" />
+  <dict name="转入" value="Transfer" />
+  <dict name="买入" value="Buy" />
+  <dict name="卖出" value="Sell" />
+  <dict name="数字资产" value="Digital assets" />
+  <dict name="商城" value="Mall" />
+  <dict name="充值" value="Recharge" />
+  <dict name="提现" value="Withdraw" />
+  <dict name="领取奖励" value="Receive award" />
+  <dict name="首页" value="Home" />
+  <dict name="网络请求失败,请检查您的网络设置" value="Network request failed, please check your network settings" />
+  <dict name="已开启网络连接" value="Network connection is turned on" />
+  <dict name="无法识别此图片" value="Unrecognized this image" />
+  <dict name="载入中" value="loading" />
+  <dict name="取　 消" value="Cancel" />
+  <dict name="从相册选择二维码" value="Select QR code from the album" />
+  <dict name="此功能暂未开放，敬请期待" value="This feature is not open yet, so stay tuned" />
+  <dict name="确认" value="Confirm" />
+  <dict name="财务记录" value="Financial record" />
+  <dict name="金额" value="Amount" />
+  <dict name="币种" value="Currency" />
+  <dict name="对方账号" value="Accounts" />
+  <dict name="请输入对方UID" value="enter the other party's UID" />
+  <dict name="下一步" value="Next step" />
+  <dict name="兑换积分" value="Redeem points" />
+  <dict name="提交成功，请即将为您跳转" value="Submitted successfully, please jump for you" />
+  <dict name="保存二维码" value="Save QR code" />
+  <dict name="扫一扫，向我付款" value="Sweep and pay me" />
+  <dict name="转入记录" value="Transfer record" />
+  <dict name="已复制到剪切板" value="Has been copied to the clipboard" />
+  <dict name="复制失败" value="Replication failed" />
+  <dict name="创建订单" value="Create Order" />
+  <dict name="等待付款" value="Payment" />
+  <dict name="等待确认" value="Confirm" />
+  <dict name="已完成订单" value="Order completed" />
+  <dict name="买入记录" value="Buy record" />
+  <dict name="买入中心" value="Buy center" />
+  <dict name="绑定的银行卡" value="Bound bank card" />
+  <dict name="用户名" value="username" />
+  <dict name="账号" value="account number" />
+  <dict name="请选择买入金额" value="Please select the purchase amount" />
+  <dict name="请输入支付密码" value="Please enter the payment password" />
+  <dict name="取消" value="Cancel" />
+  <dict name="请先设置默认银行卡" value="Please set the default bank card first." />
+  <dict name="输入交易密码" value="Enter transaction password" />
+  <dict name="您成功创建买入订单" value="You successfully created a buy order" />
+  <dict name="操作失败" value="Operation failed" />
+  <dict name="单号" value="Single number" />
+  <dict name="剩余时间" value="Time left" />
+  <dict name="订单详情" value="Order details" />
+  <dict name="已完成" value="Completed" />
+  <dict name="买入金额" value="Purchase amount" />
+  <dict name="状态" value="Statu" />
+  <dict name="记录" value="Recording" />
+  <dict name="点击选择匹配金额" value="Click to select a matching amount" />
+  <dict name="创建时间" value="Creation time" />
+  <dict name="支付方式" value="Payment method" />
+  <dict name="交易金额" value="Amount of the transaction" />
+  <dict name="挂卖金额" value="Hanging amount" />
+  <dict name="购买" value="Buy" />
+  <dict name="您成功购买订单" value="Your successful purchase order" />
+  <dict name="设置" value="Setting" />
+  <dict name="更换头像" value="Change avatar" />
+  <dict name="设置安全口令" value="Set a security password" />
+  <dict name="电话号码" value="Telephone number" />
+  <dict name="多语言" value="Multi-language" />
+  <dict name="我的银行卡" value="My bank card" />
+  <dict name="我的资产" value="My assets" />
+  <dict name="点击修改" value="Click edit" />
+  <dict name="支付密码" value="Payment password" />
+  <dict name="公告" value="Announcement" />
+  <dict name="个人消息" value="Personal message" />
+  <dict name="我的店铺" value="My shop" />
+  <dict name="我的订单" value="My Order" />
+  <dict name="地址管理" value="Address management" />
+  <dict name="投诉建议" value="Suggestions" />
+  <dict name="分享" value="Share it" />
+  <dict name="关于" value="About" />
+  <dict name="退出登录" value="Logout" />
+  <dict name="相册选择图片" value="Album selection picture" />
+  <dict name="选择语言" value="Choose a language" />
+  <dict name="English" value="English" />
+  <dict name="简体中文" value="Simplified Chinese" />
+  <dict name="头像上传失败" value="Avatar upload failed" />
+  <dict name="您上传的图片格式不正确，请重新选择!" value="The image you uploaded is not in the correct format. Please choose again!" />
+  <dict name="确定退出登录？" value="Ok to log out?" />
+  <dict name="操作确认" value="Operation confirmation" />
+  <dict name="狠心退出" value="Heartless exit" />
+  <dict name="我在想想" value="I am thinking about it." />
+  <dict name="安全口令" value="Secure password" />
+  <dict name="请输入安全口令" value="Please enter a security password" />
+  <dict name="确定" value="Determine" />
+  <dict name="您确定要设置安全口令吗？" value="Are you sure you want to set a security password?" />
+  <dict name="安全口令设置确认" value="Security password setting confirmation" />
+  <dict name="添加银行卡" value="Add a bank card" />
+  <dict name="默认" value="Default" />
+  <dict name="解绑" value="Untied" />
+  <dict name="确定设为默认？" value="Are you sure to set to default?" />
+  <dict name="确认操作" value="Confirmation operation" />
+  <dict name="操作成功" value="Successful operation" />
+  <dict name="确定要解绑该银行卡？" value="Are you sure you want to unbind the card?" />
+  <dict name="请绑定持卡人本人的银行卡，姓名一经保存不可修改" value="Please bind the cardholder’s bank card. The name cannot be modified once it is saved" />
+  <dict name="持卡人姓名" value="Cardholder's Name" />
+  <dict name="请输入持卡人姓名" value="Please enter the cardholder name" />
+  <dict name="开户银行" value="Bank account" />
+  <dict name="银行卡号" value="Bank card number" />
+  <dict name="请输入银行卡号" value="Please enter the bank card number" />
+  <dict name="确认卡号" value="Confirm card number" />
+  <dict name="请再次确认银行卡号" value="Please confirm the bank card number again" />
+  <dict name="开户支行" value="Account opening branch" />
+  <dict name="请输入开户支行名称" value="Please enter the name of the account opening branch" />
+  <dict name="设为默认银行卡" value="Set as default bank card" />
+  <dict name="确认提交" value="confirm submission" />
+  <dict name="您还没有绑定手机！" value="You have not bound your phone yet!" />
+  <dict name="正在发送短信，请稍后" value="Sending text message, please wait" />
+  <dict name="短信已发送" value="SMS has been sent" />
+  <dict name="手机不能为空" value="The phone cannot be empty" />
+  <dict name="重新获取" value="Reacquire" />
+  <dict name="重发" value="Resend" />
+  <dict name="添加/绑定银行卡" value="Add/bind bank card" />
+  <dict name="修改登录密码" value="Modify the login password" />
+  <dict name="新登录密码" value="New login password" />
+  <dict name="请输入新登录密码" value="Please enter a new login password" />
+  <dict name="忘记安全口令？" value="Forgot your security password?" />
+  <dict name="修改成功" value="Successfully modified" />
+  <dict name="找回密码" value="Retrieve password" />
+  <dict name="手机号" value="Phone number" />
+  <dict name="请输入手机号码" value="Please enter the phone number" />
+  <dict name="请输入有效的手机号码" value="Please enter a valid phone number" />
+  <dict name="取回手机号码不能为空！" value="Retrieving the mobile number cannot be empty!" />
+  <dict name="请选择反馈问题类型" value="Please select a feedback question type" />
+  <dict name="注册问题" value="Registration problem" />
+  <dict name="激活问题" value="Activation problem" />
+  <dict name="节点问题" value="Node problem" />
+  <dict name="充值问题" value="Recharge problem" />
+  <dict name="提现问题" value="Cash withdrawal problem" />
+  <dict name="老系统节点对接问题" value="Old system node docking problem" />
+  <dict name="卖方不确认" value="Seller does not confirm" />
+  <dict name="买方没转款" value="Seller does not confirm" />
+  <dict name="描述一下您的问题" value="Describe your problem" />
+  <dict name="问题反馈最少输入5个字" value="Question input at least 5 words" />
+  <dict name="请上传相关问题截图" value="Please upload a screenshot of the relevant question" />
+  <dict name="提交" value="Submit" />
+  <dict name="提交成功" value="Submitted successfully" />
+  <dict name="提交失败" value="Submission Failed" />
+  <dict name="写邮件" value="write an email" />
+  <dict name="修改支付密码" value="Modify payment password" />
+  <dict name="新支付密码" value="New payment password" />
+  <dict name="请输入新支付密码" value="Please enter a new payment password" />
+  <dict name="手机号码不存在！" value="The mobile number does not exist!" />
+  <dict name="确认密码" value="confirm password" />
+  <dict name="请确认登录密码" value="Please confirm the login password" />
+  <dict name="操作成功，即将为您跳转登录！" value="The operation is successful, and you will be logged in for you!" />
+  <dict name="每日奖励" value="Daily reward" />
+  <dict name="过期时间" value="Expiration" />
+  <dict name="释放时间" value="Release time" />
+  <dict name="操作" value="Operating" />
+  <dict name="已领" value="Has received" />
+  <dict name="未领" value="Uncollected" />
+  <dict name="领取" value="Receive" />
+  <dict name="领取奖励？" value="Receive award?" />
+  <dict name="卖出记录" value="Sell record" />
+  <dict name="卖出中心" value="Selling center" />
+  <dict name="请选择卖出金额" value="Please select the selling amount" />
+  <dict name="您成功创建卖出订单" value="You successfully created a sell order" />
+  <dict name="出售" value="Sell" />
+  <dict name="您成功出售订单" value="Your successful sale order" />
+  <dict name="卖出金额" value="Selling amount" />
+  <dict name="手续费" value="Handling fee" />
+  <dict name="你的余额不足！" value="Your balance is not enough!" />
+  <dict name="修改手机号码" value="Modify mobile number" />
+  <dict name="手机号码" value="Phone number" />
+  <dict name="您还未设置安全口令" value="You have not set a security password yet" />
+  <dict name="请设置6-20位数的安全口令" value="Please set a 6-20 digit security password" />
+  <dict name="注册" value="Registered" />
+  <dict name="邀请码" value="Invitation code" />
+  <dict name="请输入邀请码(UID)" value="Please enter the invitation code (UID)" />
+  <dict name="请输入英文用户名" value="Please enter your English username" />
+  <dict name="请輸入手机号码" value="Please enter the phone number" />
+  <dict name="请输入6~32位数字、字母、数字加字母" value="Please enter 6~32 digits, letters, numbers and letters" />
+  <dict name="请输入6位数字支付密码" value="Please enter a 6-digit payment password" />
+  <dict name="注册成功" value="Registration success" />
+  <dict name="请输入用户名，用于登录和找回密码" value="Please enter a username to log in and retrieve your password" />
+  <dict name="登录密码不能为空" value="Login password cannot be empty" />
+  <dict name="交易密码不能为空" value="Transaction password cannot be empty" />
+  <dict name="登录密码必须为6位数以上，字母加数字加符号组合" value="Login password must be 6 digits or more, letter plus number plus symbol combination" />
+  <dict name="交易密码必须为6位数以上，字母加数字加符号组合" value="The transaction password must be more than 6 digits, the letter plus the number plus the symbol combination" />
+  <dict name="手机号码不能为空" value="Phone number can not be blank" />
+  <dict name="推荐人不存在或未激活" value="Referrer does not exist or is not activated" />
+  <dict name="用户名或密码错误" value="wrong user name or password" />
+  <dict name="用户名或密码不能为空" value="Username or password cannot be empty" />
+  <dict name="请您填写开户行" value="Please fill in the bank" />
+  <dict name="请您填写银行卡号" value="Please fill in the bank card number" />
+  <dict name="两次银行卡号填写不一致！" value="The two bank card numbers are inconsistent!" />
+  <dict name="分享好友" value="Sharing friends" />
+  <dict name="扫描二维码即可分享好友呦" value="Scan the QR code to share your friends" />
+  <dict name="复制下载地址" value="Copy download address" />
+  <dict name="邀请好友" value="Invite friends" />
+  <dict name="安全口令不正确" value="Incorrect security password" />
+  <dict name="以上必填" value="Above required" />
+  <dict name="对方会员不存在" value="The other party member does not exist" />
+  <dict name="不能转给自己" value="Can't transfer to yourself" />
+  <dict name="转出记录" value="Transfer out record" />
+  <dict name="转出金额" value="Transfer amount" />
+  <dict name="请输入转出金额" value="Please enter the transfer amount" />
+  <dict name="支付余额" value="Please enter the transfer amount to pay the balance" />
+  <dict name="手机末4位" value="4 mobile phones" />
+  <dict name="请输入对方手机号手机末4位" value="Please enter the mobile phone number of the other party." />
+  <dict name="确认转出" value="Confirm transfer" />
+  <dict name="选择货币" value="Choose currency" />
+  <dict name="对方会员手机号手机末4位不能为空" value="Select currency counterparty mobile phone number mobile phone last 4 digits can not be empty" />
+  <dict name="对方会员手机号手机末4位数字不正确" value="The last 4 digits of the mobile phone number of the other party's mobile phone is incorrect." />
+  <dict name="余额不足，请重新填写" value="Insufficient balance, please re-fill" />
+  <dict name="财务流水详情" value="Financial flow details" />
+  <dict name="流水信息" value="Flow information" />
+  <dict name="描述" value="description" />
+  <dict name="交易数量不正确" value="The number of transactions is incorrect" />
+  <dict name="兑换" value="Exchange" />
+  <dict name="换" value="Change" />
+  <dict name="请输入兑换的" value="Please enter the redemption" />
+  <dict name="获得" value="Obtain" />
+  <dict name="交易密码" value=" Password" />
+  <dict name="请输入您的交易密码" value="Please enter your transaction password" />
+  <dict name="提示" value="Prompt" />
+  <dict name="最大兑换数量" value="Maximum number of redemptions" />
+  <dict name="请输入" value="Please enter the maximum number of redemptions" />
+  <dict name="的整数倍" value="Integer multiple" />
+  <dict name="确认兑换" value="Confirm exchange" />
+  <dict name="操作成功！" value="Successful operation!" />
+  <dict name="币种兑换" value="Currency exchange" />
+  <dict name="交易密码不正确" value="Transaction password is incorrect" />
+  <dict name="金额必须是100.00000000的倍数" value="The amount must be a multiple of 100.00000000" />
+  <dict name="您还没有设置默认银行卡，去设置" value="You have not set a default bank card to set" />
+  <dict name="支付密码不正确" value="Payment password is incorrect" />
+  <dict name="交易订单详情" value="Transaction order details" />
+  <dict name="对方会员信息" value="Partner information" />
+  <dict name="会员编号" value="Member number" />
+  <dict name="推荐人编号" value="Referrer number" />
+  <dict name="推荐人电话号码" value="Referrer phone number" />
+  <dict name="订单信息" value="order information" />
+  <dict name="订单单号" value="Order number" />
+  <dict name="类型" value="Types of" />
+  <dict name="数量" value="Quantity" />
+  <dict name="银行名称" value="Bank name" />
+  <dict name="开户行" value="Bank" />
+  <dict name="银行户名" value="Bank account name" />
+  <dict name="您已成功上传凭证！确认打款：您已经成功点击【确认打款】，请联系对方点击【确认收款】" value="You have successfully uploaded your credentials! Confirm the payment: You have successfully clicked [Confirm Payment], please contact the other party to click [Confirm Collection]" />
+  <dict name="您已经成功点击【确认收款】，若未收到款项，后果自负" value="You have successfully clicked [Confirm Collection], if you have not received the payment, you will be responsible for your own consequences." />
+  <dict name="确认失败" value="Confirmation failure" />
+  <dict name="不要轻易点击，否则会封掉您的账号" value="Don't click easily, otherwise your account will be blocked." />
+  <dict name="提交成功，即将为您跳转" value="Submitted successfully, will jump for you" />
+  <dict name="请上传付款截图" value="Please upload a payment screenshot" />
+  <dict name="请您上传凭证！" value="Please upload your credentials!" />
+  <dict name="付款截图" value="Payment screenshot" />
+  <dict name="确认收款" value="Confirm payment" />
+  <dict name="虚假汇款信息" value="False remittance information" />
+  <dict name="切换中文" value="Switch Chinese" />
+  <dict name="下载" value="Download" />
+  <dict name="QJT" value="" />
+  <dict name="用户不存在" value="User does not exist" />
+  <dict name="验证码错误" value="Verification code error" />
+  <dict name="米" value="" />
+  <dict name="种子" value="" />
+</dicts>

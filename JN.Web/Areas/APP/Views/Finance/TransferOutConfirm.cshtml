@@ -1,0 +1,164 @@
+﻿@model JN.Data.Currency
+@{
+    ViewBag.Title = "转出";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List().ToList();
+    JN.Data.User ToUser = ViewBag.ToUser as JN.Data.User;
+}
+
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T(ViewBag.Title)</div>
+
+    <div class="header-btn">
+        <a href="@Url.Action("TransferOutRecord", "Finance")">@T("转出记录")</a>
+    </div>
+</header>
+
+<section class="container">
+    <div class="trade-people">
+        <div class="trade-people-photo">
+            <img src="@(ToUser.HeadFace ?? "/Theme/app/images/member.png")">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@(ToUser.UserName)@(!string.IsNullOrWhiteSpace(ToUser.RealName)? "("+ ToUser.RealName + ")" : "")</h3>
+        </div>
+    </div>
+
+    <div class="trade-form">
+        <div class="form-widget">
+            <form id="frmSubmit" method="get">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("选择钱包")</label>
+                        <div class="form-control">
+                            <select name="curid" id="curid" class="weui-input form-control">
+                                @foreach (var item in cmodelList)
+                                {
+                                    <option value="@item.ID">@T(item.CurrencyName)</option>
+                                }
+
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="clr"></div>
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("转出金额")</label>
+                        <div class="form-control">
+                            <input placeholder="@T("请输入转出金额")" class="primary-input" type="text" name="money">
+                        </div>
+
+                        @*<div class="choose-unit">
+                            <select name="coinid" id="curid" class="weui-input form-control">
+                                @foreach (var item in cmodelList)
+                                {
+                                    <option value="@item.ID">@T(item.CurrencyName)</option>
+                                }
+
+                            </select>
+                        </div>*@
+
+                        @*<div id="ChooseUnit" class="choose-unit">
+                            <span>@T(Model.CurrencyName)</span>
+                        </div>*@
+                    </div>
+
+                    @*<div class="transfer-number">
+                        <span>@T("支付余额")：</span>
+                        <h3>@JN.Services.Manager.Users.WalletCur((int)Model.WalletCurID, Umodel).ToDouble() </h3>
+                    </div>*@
+                </div>
+                <div class="clr"></div>
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("手机末4位")</label>
+                        <div class="form-control">
+                            <input placeholder="@T("请输入对方手机号手机末4位")" type="text" name="tomobile">
+                        </div>
+                    </div>
+                </div>
+                <div class="clr"></div>
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("交易密码")</label>
+                        <div class="form-control">
+                            <input placeholder="@T("请输入交易密码")" type="password" name="tradepassword">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-submit">
+                    <input value="@ToUser.ID" type="hidden" name="touid">
+                    @*<input value="@Model.ID" type="hidden" name="curid">*@
+                    <button type="button" class="form-submit-btn" id="btnSubmit">@T("确认转出")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<div class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title">@T("选择货币")</div>
+
+        <div class="popup-box-content">
+            <div class="choose-list">
+                <ul>
+                    <li>
+                        <input type="radio">
+                        <label>@T(Model.CurrencyName)</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+            <button type="button" class="confirm-btn">@T("确认")</button>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    $("#btnSubmit").click(function () {
+        $('#btnSubmit').attr("disabled", "disabled");
+        $.post("@Url.Action("TransferOutConfirm", "Finance")", $("#frmSubmit").serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("提交成功，请即将为您跳转")", { icon: 1 }, function () {
+                    location.href = "@Url.Action("TransferOutRecord", "Finance")"; 
+                });
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+                $('#btnSubmit').removeAttr("disabled");
+            }
+        });
+    })
+
+	//选择货币单位
+	$(function(){
+		$('#ChooseUnit').click(function(){
+			$('.popup').fadeIn();
+
+			var h = ($(window).height() - $('.popup-box').height())/2;
+			$('.popup-box').css('margin-top',h);
+		});
+
+		$('.cancle-btn').click(function(){
+			$('.popup').fadeOut();
+		});
+	});
+</script>

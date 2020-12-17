@@ -1,0 +1,79 @@
+﻿
+@{   string curl = Request.Url.ToString().ToLower();
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO).ToList();
+    string lang = Request["lang"];
+    }
+<div class="nav clear-float fl">
+    <div class="">
+        <div class="menu">
+            <a class="nav-item @(curl.Contains("/home/index") ? "current" : "")  " href="/home/index">@T("首页")</a>
+        </div>
+        <div class="menu">
+            <a class="nav-item @(curl.Contains("/trade/buy") ? "current" : "")" href="/Trade/buy"> @T("买入币种")               </a>
+                
+                <ul class="nav-sublist">
+                    <span class="sanjiao sanjiao-2"></span>
+                    @foreach (var item in cmodelList)
+                    {
+                        <li><a href="/trade/buy?curid=@item.ID">@item.CurrencyName</a></li>
+                    }
+                </ul>
+        </div>
+        <div class="menu">
+            <a class="nav-item @(curl.Contains("/trade/sell") ? "current" : "")" href="/Trade/sell">@T("出售币种") </a>
+                
+                <ul class="nav-sublist">
+                    <span class="sanjiao sanjiao-2"></span>
+                    @foreach (var item in cmodelList)
+                    {
+                        <li><a href="/trade/sell?curid=@item.ID">@item.CurrencyName</a></li>
+                    }
+
+                </ul>
+        </div>
+        <div class="menu">
+            <a class="nav-item @(curl.Contains("/usercenter/trade/newadvertise") ? "current" : "")" href="/usercenter/Trade/NewAdvertise">@T("发布广告")</a>
+        </div>
+        @*<div class="yuyan">
+            <input type="hidden" id="lang" value="@Request["lang"]" />
+            <ul>
+                <li class="@((lang == "zh-CN") ? "cur" : "")"><a onclick="changelang(1)">@T("中文")</a></li>
+                <li class="@((lang == null || lang == "" || lang == "en-US") ? "cur" : "")">
+                    <a onclick="changelang(0)">@T("英文")</a>
+                </li>
+            </ul>
+        </div>*@
+    </div>
+   
+    
+    
+    
+    @*<a class="nav-item @(curl.Contains("/usercenter/user/invite") ? "current" : "")" href="/usercenter/user/invite">邀请好友<span class="icon-new"></span></a>*@
+</div>
+<script type="text/javascript">
+        //语言切换
+        function changelang(type) {
+            var lang = $("#lang").val();
+            if (lang == "zh-CN") {
+                var reg = new RegExp("lang=zh-CN", 'i');
+                if (window.location.href.match(reg)) {
+                    var strUrl = window.location.href.replace(reg, 'lang=en-US');
+                    window.location.href = strUrl;
+                } else if (window.location.href.indexOf("?") >= 0) {
+                    window.location.href = window.location.href + "&lang=en-US";
+                } else {
+                    window.location.href = window.location.href + "?lang=en-US";
+                }
+            } else {
+                var reg = new RegExp("lang=en-US", 'i');
+                if (window.location.href.match(reg)) {
+                    var strUrl = window.location.href.replace(reg, 'lang=zh-CN');
+                    window.location.href = strUrl;
+                } else if (window.location.href.indexOf("?") >= 0) {
+                    window.location.href = window.location.href + "&lang=zh-CN";
+                } else {
+                    window.location.href = window.location.href + "?lang=zh-CN";
+                }
+            }
+        }
+</script>

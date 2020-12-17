@@ -1,0 +1,508 @@
+﻿@{
+    Layout = "/Views/Shared/_LayoutHome.cshtml";
+    JN.Data.User Umodel = null;
+    //总资产
+    if (JN.Services.UserLoginHelper.CurrentUser() != null)
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO).OrderBy(x => x.ID).ToList();
+}
+<link href="~/Theme/17112702/css/demo.css" rel="stylesheet" />
+<link href="~/Theme/17112702/css/tabs.css" rel="stylesheet" />
+<link href="~/Theme/17112702/css/tabstyles.css" rel="stylesheet" />
+
+<!-- Common TopMenu End -->
+<!-- Body From mainPage Begin -->
+<script type="text/javascript">
+    $(".bk-nav").removeClass("navbar-black");
+    $(".bk-toolBar").css("display", "none");
+</script>
+<input type="hidden" name="pubTag" value="" />
+
+
+<div class="homeTab">
+
+    <!-- 活动专区  -->
+    <div class="homeActivity">
+
+        <!-- 			<div class="a-cont"> -->
+        <!-- 				<p class="list03"><a ><span>初八开年有礼</span><i></i></a></p> -->
+        <!-- 			</div> -->
+        <!-- 			<div class="newtechpic"> -->
+        <!-- 			</div> -->
+    </div>
+
+    <div class="activity-app-ecode">
+        <a class="close-btn"><i>×</i></a>
+        <span>
+            <img src="/Theme/17112702/picture/5b5c6feac194468182bcfc92508ed8a5.gif">
+        </span>
+        <h3>@T("扫描下载官方APP参与活动")</h3>
+    </div>
+
+    <!-- 活动内容END -->
+
+    <script type="text/javascript">
+        $(".homeActivity .list03 a").click(function () { $(".activity-app-ecode").addClass("on"); })
+        $(".activity-app-ecode .close-btn").click(function () { $(".activity-app-ecode").removeClass("on"); })
+    </script>
+
+
+
+    <a class="prev"></a>
+    <a class="next"></a>
+    <div class="hd">
+        <a></a><a></a><a></a>
+    </div>
+
+@{
+    string img1 = "";
+    string img2 = "";
+    string img3 = "";
+    if (!string.IsNullOrEmpty(sysSet.BannerPic) && !string.IsNullOrEmpty(sysSet.BannerAlt))
+    {
+        string[] images = sysSet.BannerPic.Split(';');
+        string[] ImgAlts = sysSet.BannerAlt.Split(';');
+        for (int i = 0; i < images.Length; i++)
+        {
+            if (images[i].Length > 0)
+            {
+                if (ImgAlts.Length > i)
+                {
+                    if (i == 0) {img1 = images[i].ToString();}
+                    if (i == 1) { img2 = images[i].ToString(); }
+                    if (i == 2){ img3 = images[i].ToString();}
+            }}
+        }
+    }
+    }
+    <div class="bd">
+        <div class="homeList listLoad" style="background: url(@(img1));background-repeat:no-repeat;">
+            <div class="listcent">
+                <h3><i></i><b>@T("最专业的场外交易平台")</b><i></i></h3>
+                @{
+                    //找的最新的新闻
+                    var articleListtop = MvcCore.Unity.Get<JN.Data.Service.IArticleService>().List(x => (x.IsShowHome ?? false) && (x.IsNotice ?? false)).OrderBy(x => (x.IsTop ?? false)).ThenBy(x => x.ID).Take(5).ToList();
+                }
+                <h5 class="homelist01h5" style=" font-weight:bold; "><a href="@(articleListtop.Count > 0 ? "/usercenter/article/ReadArticle?cId=" + articleListtop[0].ID : "###")" style=" color:red; font-size:14px;  background:rgba(0,0,0,0.5); padding:5px 20px; display:inline; ">@(articleListtop.Count > 0 ? articleListtop[0].Title : T("暂无公告").ToString())</a></h5>
+
+                @*@if (Umodel == null)
+                {
+                    <div class="bk-homeLogin nologin">
+                        <form class="form-inline" method="get" name="homeForm" id="indexloginUser" autocomplete="off">
+                            <div class="form-group form-group-lg">
+                                <label for="nick" class="sr-only">@T("用户名/手机/邮箱")：</label>
+                                <input type="text" class="form-control" id="nick" placeholder="@T("用户名/手机/邮箱")" name="username" pattern="limit(2,30)" errormsg="" autocomplete="off">
+                            </div>
+                            <div class="form-group form-group-lg passwordinput">
+                                <label for="pwd" class="sr-only">@T("密码")：</label>
+                                <input type="password" class="form-control" id="pwd" placeholder="@T("密码")" name="password" pattern="limit(6,30)" errormsg="" autocomplete="off">
+                                <a href="/App/login/getpwd" target="_blank" class="forgetbtn" title='@T("忘记密码")？'>@T("忘记密码")？</a>
+                            </div>
+                            <div class="form-group form-group-lg">
+                                <input type="hidden" name="remember" id="remember" value="12" />
+                                <button type="button" class="btn btn-primary btn-lg" id="btnlogin"><i></i></button>
+                            </div>
+                            <div class="form-group form-group-lg text-left">
+                            </div>
+                        </form>
+                    </div>
+                }*@
+
+            </div>
+
+
+        </div>
+        <div class="homeList listTrade" style="background: url(@(img2));background-repeat:no-repeat;">
+            <div class="listcent">
+                <h3><i></i><b>@T("金融级别的场外交易交易网")</b><i></i></h3>
+                <h4>@T("超过十年研发经验")、@T("多重技术安全防护")、@T("7×24小时服务支持")</h4>
+                <div class="abtn bk-homeAdmin ">
+                    <a role="button" class="btn btn-primary btn-lg" id="proTrade" href="@Url.Action("buy", "Trade")" target="_self"><i class="bk-ico probuy"></i>@T("专业交易")</a>
+                </div>
+            </div>
+
+        </div>
+
+        <div class="homeList listAbout" style="background: url(@(img3));background-repeat:no-repeat;">
+            <div class="listcent">
+                <h3><i style="width:100px;"></i><b>@T("承载用户的信赖与支持")</b><i style="width:100px;"></i></h3>
+                <h4>@T("无论经历多少风雨我们始终坚持")，@T("用户满意才是我们真正的成功")！</h4>
+            </div>
+        </div>
+    </div>
+
+    <div class="bk-homeMarket ">
+        <div class="container">
+            <div class="bk-homeMarketlist ">
+                <ul >
+                    @{
+                        int m = 1;
+
+                        foreach (var item in cmodelList)
+                        {
+                            <li class="H_btcMarket">
+                                <div class="item" onclick="window.top.location.href='/trade/buy?curid=@item.ID'" data-val="btc">
+                                    <h4>@(item.CurrencyName)/USD<span class="rise down" style="display:none !important;">--</span></h4>
+                                    @*/USD<p><b class="price text-primary">@((JN.Services.Tool.StringHelp.GetCurInfo("https://api.coinmarketcap.com/v1/ticker/" + item.English + "/?convert=USD", "USD").Split('|')[0].ToDouble()).ToString("#0.00"))</b> <span class="echart-line hide">3,5,7,3,5,4,8,7,4,5,7,8,6</span> </p>*@
+                                    <p class="price text-primary">
+                                        <span>
+                                            @if (m == 1)
+                                            {
+                                                @(JN.Services.Manager.Stocks.getcurrentprice(item).ToString("#0.00"))
+                                            }
+                                            else
+                                            {
+                                                @JN.Services.Tool.StringHelp.GetPrice("https://api.coinmarketcap.com/v1/ticker/" + item.English, item.English, "usd", true).ToDecimal();
+                                            }
+                                            
+                                        </span>
+                                    </p>
+                                </div>
+                            </li>
+                            m++;
+                        }
+
+
+                       
+                    }
+                  
+
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<script>
+
+    $(function () {
+        $("#btnlogin").click(function () {
+            $.post('/usercenter/login/index', $('#indexloginUser').serialize(), function (d) {
+                if (d.Status == 200) {
+                    location.href = d.Message;
+                } else {
+                    // 判断是否已存在，如果已存在则直接显示
+                    layer.msg(d.Message, {
+                        icon: 2
+                    })
+                }
+            }, 'json')
+        });
+    })
+
+
+    jQuery(".homeTab").slide({
+        titCell: ".hd a", effect: "fold", autoPlay: true, interTime: 8000, mouseOverStop: true,
+        startFun: function (i, c) {
+            $(".homeTab .homeList").eq(i).addClass("on").siblings().removeClass("on");
+        },
+        endFun: function (i, c) {
+            $(".homeTab .homeList").find("h3").css("top", "28%");
+            $(".homeTab .homeList").eq(i).find("h3").css("top", "37%");
+            $(".homeTab .homeList").find("h4").css("top", "50%");
+            $(".homeTab .homeList").eq(i).find("h4").css("top", "47%");
+            $(".homeTab .homeList").find(".abtn").css("top", "65%");
+            $(".homeTab .homeList").eq(i).find(".abtn").css("top", "55%");
+            $(".homeTab .homeList").find(".bk-homeLogin").css("top", "60%");
+            $(".homeTab .homeList").eq(i).find(".bk-homeLogin").css("top", "55%");
+            $(".homeTab .homeList").find(".homelist01h5").css("top", "53%");
+            $(".homeTab .homeList").eq(i).find(".homelist01h5").css("top", "47%");
+
+        }
+    });
+</script>
+
+
+
+
+<script type="text/javascript">
+    $(".bk-pageTop, .homeTab").height(function () {
+        var tHeight = $(window).height() * 0.8;
+        if (tHeight > 950) tHeight = 950;
+        if (tHeight < 600) tHeight = 300;
+        return tHeight;
+    });
+
+    $(function () {
+
+        imgScroll.rolling({
+            name: 'bk-homeMarketlist',
+            width: '250px',
+            height: '180px',
+            direction: 'left',
+            speed: 20,
+            addcss: true
+        });
+
+        $.fn.peity.defaults.line = {
+            delimiter: ",",
+            fill: "",
+            height: 20,
+            max: null,
+            min: 0,
+            stroke: "#FFFFFF",
+            strokeWidth: 1,
+            width: 60
+        }
+        $(".echart-line").peity("line");
+
+        $(window).resize(function () {
+            $(".bk-pageTop, .homeTab").height(function () {
+                var tHeight = $(window).height() * 0.8;
+                if (tHeight > 950) tHeight = 950;
+                if (tHeight < 600) tHeight = 300;
+                return tHeight;
+            });
+        });
+    });
+
+</script>
+
+<div class="site-info">
+    <div class="container">
+
+        <div class="col-33  ta-l">
+
+                <div class="item-icon-1"></div>
+                <div class="h3">@T("快速买卖")</div>
+                <div class="desc">@T("本平台是一个不涉及第三方的OTC交易平台，交易过程方便快捷")</div>
+
+        </div>
+
+        <div class="col-33 ta-c">
+ 
+                <div class="item-icon-2"></div>
+                <div class="h3">@T("安全可靠")</div>
+                <div class="desc">@T("冷存储、SSL、多重加等银行级别安全技术，十年金融安全经验的安全团队")</div>
+        </div>
+
+        <div class="col-33 ta-r">
+
+                <div class="item-icon-3"></div>
+                <div class="h3">@T("及时掌控")</div>
+                <div class="desc">@T("WEB、PC多终端，行情及时掌握在，交易随时随地")</div>
+
+        </div>
+
+    </div>
+</div>
+@{ 
+    var cmodel = cmodelList.FirstOrDefault();//诺贝尔币
+}
+<div class="kline">
+    <div class="body">
+        <div class="container">
+            <section>
+                <div class="tabs tabs-style-underline">
+                    <nav>
+                        <ul>
+                            <li class="tab-current"><a href="#section-underline-1"><span>@cmodel.EnSigns</span></a></li>
+                            <li class=""><a href="#section-underline-2"><span>BTC</span></a></li>
+                            <li><a href="#section-underline-3"><span>LTC</span></a></li>
+                            <li><a href="#section-underline-5"><span>&nbsp;</span></a></li>
+                            <li><a href="#section-underline-5"><span>&nbsp;</span></a></li>
+                        </ul>
+                    </nav>
+                    <div class="content-wrap">
+                        <section id="section-underline-1" class="content-current"><iframe src="/Trade/fullkline?market=@cmodel.ID" style="border:0; width:100%;height:650px;"></iframe></section>
+                        <section id="section-underline-2" class=""><iframe src="https://bitcoinwisdom.com/markets/bitstamp/btcusd" style="border:0; width:100%;height:650px;"></iframe></section>
+                        <section id="section-underline-3"><iframe src="https://bitcoinwisdom.com/markets/bitfinex/ltcusd" style="border:0; width:100%;height:650px;"></iframe></section>
+                        <section id="section-underline-4"></section>
+                        <section id="section-underline-5"></section>
+                    </div><!-- /content -->
+                </div><!-- /tabs -->
+            </section>     
+        </div>
+
+    </div>
+</div>
+
+
+
+<div class="bk-homeNews">
+    <div class="container">
+        <div class="row ">@*homeNews-box*@
+            @{
+                //查找是新闻的
+    int nid;
+    var articleNoticeList = MvcCore.Unity.Get<JN.Data.Service.IArticleClassService>().List(x => x.Pid >0 && (x.IsNotice ?? false)).OrderBy(x => x.Sort).Take(2).ToList();
+    if (articleNoticeList != null && articleNoticeList.Count() > 0)
+    {
+        foreach (var item in articleNoticeList)
+        {
+
+
+            <div class="col-xs-6 ">@*news-border*@
+                <div class="hd clearfix ">@*news-title*@
+                    <h3 class="pull-left">@item.ClassName</h3>
+                    <a class="pull-right" href="/usercenter/article/ArticleList?cId=@item.ID" target="_self">@T("查看更多")</a>
+                </div>
+                <div class="bd" style=" overflow:hidden;">
+                    <ul>
+                        @{
+            nid = item.ID;
+            var articleList = MvcCore.Unity.Get<JN.Data.Service.IArticleService>().List(x => (x.IsShowHome ?? false) == true && x.ClassID == item.ID).OrderBy(x => (x.IsTop ?? false)).ThenBy(x => x.ID).Take(8).ToList();
+            if (articleList != null && articleList.Count() > 0)
+            {
+                foreach (var item2 in articleList)
+                {
+                    <li>
+                        <a href="/usercenter/article/ReadArticle?cId=@item2.ID" title="@item2.Title" target="_self">@item2.Title</a>
+                        <div class="snote">
+                            @item2.SubTitle
+                        </div>
+                    </li>
+                }
+            }
+                        }
+
+                    </ul>
+
+                </div>
+            </div>
+        }
+    }
+
+}
+
+        </div>
+    </div>
+</div>
+
+
+
+
+@*<div class="bk-introduce partner">
+    <div class="container">
+        <h3>合作伙伴</h3>
+        <p style="margin-bottom:30px;">优质的合作伙伴，为您提供全方位的服务</p>
+        <div class="row">
+            <div class="col-xs-2"><a href="https://www.btc123.com/" target="_blank"><img src="/Theme/17112702/picture/logo_btc123_g.png" _src="https://s.chbtc.com/statics/img/home/v2/logo_btc123_c.png" _srcy="https://s.chbtc.com/statics/img/home/v2/logo_btc123_g.png"><span>Click into >>></span></a></div>
+            <div class="col-xs-2"><a href="http://www.bitkan.com/" target="_blank"><img src="/Theme/17112702/picture/logo_bikan_g.png" _src="https://s.chbtc.com/statics/img/home/v2/logo_bikan_c.png" _srcy="https://s.chbtc.com/statics/img/home/v2/logo_bikan_g.png"><span>Click into >>></span></a></div>
+            <div class="col-xs-2"><a href="http://www.8btc.com/" target="_blank"><img src="/Theme/17112702/picture/logo_8btc_g.png" _src="https://s.chbtc.com/statics/img/home/v2/logo_8btc_c.png" _srcy="https://s.chbtc.com/statics/img/home/v2/logo_8btc_g.png"><span>Click into >>></span></a></div>
+            <div class="col-xs-2"><a href="http://www.etc.tm/" target="_blank"><img src="/Theme/17112702/picture/logo_etctm_g.png" _src="https://s.chbtc.com/statics/img/home/v2/logo_etctm_c.png" _srcy="https://s.chbtc.com/statics/img/home/v2/logo_etctm_g.png"><span>Click into >>></span></a></div>
+            <div class="col-xs-2"><a href="http://ethfans.org/" target="_blank"><img src="/Theme/17112702/picture/logo_ethfans_g.png" _src="https://s.chbtc.com/statics/img/home/v2/logo_ethfans_c.png" _srcy="https://s.chbtc.com/statics/img/home/v2/logo_ethfans_g.png"><span>Click into >>></span></a></div>
+            <div class="col-xs-2"><a href="http://www.coindesk.com/" target="_blank"><img src="/Theme/17112702/picture/logo_coindesk_g.png" _src="https://s.chbtc.com/statics/img/home/v2/logo_coindesk_c.png" _srcy="https://s.chbtc.com/statics/img/home/v2/logo_coindesk_g.png"><span>Click into >>></span></a></div>
+        </div>
+    </div>
+</div>*@
+
+@if (sysSet.IsOpenKefu)
+{
+    <div class="kefulist">
+        @{
+            var param5500 = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.PID == 5500).ToList();
+        }
+        <div class="container">
+            <div class="col-33  ta-l">
+
+                <div class="kefu2 padding-left-0">
+
+                    <div class="h3">
+                        <img src="@sysSet.QRUrl1" style="width:150px;height:150px;">
+                    </div>
+                    <div class="text">
+                        @{
+                            var kflist1 = param5500.Where(x => x.Value != null && x.Value.Trim() != "" && x.IsUse).ToList();
+                            foreach (var item in kflist1)
+                            {
+                                <p class="desc">@(item.Name.Split('\\')[0])&nbsp; @(item.Value)</p>
+                            }
+                        }
+                    </div>
+
+                </div>
+            </div>           
+                <div class="col-33 ta-c">
+                    <div class="kefu2 padding-left-0">
+
+                        <div class="h3">
+                            <img src="@sysSet.QRUrl2" style="width:150px;height:150px;">
+                        </div>
+                        <div class="text">
+                            @{
+                                var kflist2 = param5500.Where(x => x.Value2 != null && x.Value2.Trim() != "" && x.IsUse).ToList();
+                                foreach (var item in kflist2)
+                                {
+                                    <p class="desc">@(item.Name.Split('\\')[1])&nbsp; @(item.Value2)</p>
+                                }
+                            }
+                        </div>
+
+                    </div>
+                </div> 
+
+            <div class="col-33 ta-r">
+                <div class="kefu2 padding-left-0">
+                    <div class="h3">
+                        <img src="@sysSet.QRUrl3" style="width:150px;height:150px;">
+                    </div>
+                    <div class="text">
+                        @{
+                            var kflist3 = param5500.Where(x => x.Value3 != null && x.Value3.Trim() != "" && x.IsUse).ToList();
+                            foreach (var item in kflist3)
+                            {
+                                <p class="desc">@(item.Name.Split('\\')[2])&nbsp; @(item.Value3)</p>
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+                            
+        </div>
+    </div>
+                            }
+
+<div class="bk-firendLink">
+    <div class="container">
+        <div class="fd">
+            <ul class="clearfix">
+                <b>@T("友情链接")</b>
+
+                <li><a href="https://github.com" target="_blank">Github</a></li>
+
+				<li><a href="http://www.poloniex.com" target="_blank">Poloniex</a></li>
+				
+				<li><a href="http://www.coinmarketcap.com" target="_blank">@T("币值排行榜")</a></li>
+				
+				<li><a href="http://www.bitfinex.com" target="_blank">bitfinex</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="notice-bar">
+    <img src="/Theme/17112702/picture/notice.png" alt="notice" />
+    <a href="@(articleListtop.Count > 0 ? "/usercenter/article/ReadArticle?cId=" + articleListtop[0].ID : "###")"><p>@(articleListtop.Count > 0 ? articleListtop[0].Title : T("暂无公告").ToString())</p></a>
+    <a href="#"> <img src="/Theme/17112702/picture/more.png" alt="more" /></a>
+</div>
+
+<div class="subnav-bar">
+    <ul class="subnav-box">
+        <li><a href="/trade/buy"><img src="/Theme/17112702/picture/icon-buy.png" alt="ICON" /><h5>@T("买入币种")</h5></a></li>
+        <li><a href="/trade/sell"><img src="/Theme/17112702/picture/icon-sell.png" alt="ICON" /><h5>@T("出售币种")</h5></a></li>
+        <li><a href="/usercenter/trade/NewAdvertise"><img src="/Theme/17112702/picture/icon-write.png" alt="ICON" /><h5>@T("发布广告")</h5></a></li>
+    </ul>
+    <ul class="subnav-box">
+        <li><a href="/usercenter/home"><img src="/Theme/17112702/picture/icon-invite.png" alt="ICON" /><h5>@T("个人中心")</h5></a></li>
+        <li><a href="/usercenter/trade/AdvertiseOrder"><img src="/Theme/17112702/picture/icon-guanli.png" alt="ICON" /><h5>@T("订单管理")</h5></a></li>
+        <li><a href="/usercenter/trade/orderbuy"><img src="/Theme/17112702/picture/icon-ad.png" alt="ICON" /><h5>@T("我的广告")</h5></a></li>
+    </ul>
+</div>
+<script src="~/Theme/17112702/js/cbpFWTabs.js"></script>
+<script>
+			(function() {
+				[].slice.call( document.querySelectorAll( '.tabs' ) ).forEach( function( el ) {
+					new CBPFWTabs( el );
+				});
+			})();
+</script>
+
+

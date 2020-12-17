@@ -1,0 +1,86 @@
+﻿
+@{
+    ViewBag.Title = "Putforward";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var bankList = MvcCore.Unity.Get<JN.Data.Service.IUserBankCardService>().List(x => x.UID == Umodel.ID).OrderByDescending(x => x.ID);
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="/APP/User/Personal"></a>*@
+    </div>
+    <div class="logo text-l">@T("兑商")</div>
+</header>
+<section class="container">
+    <div class="form-box">
+        <form id="frmEdit">
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("兑商到")</label>
+                @*<select class="form-control" name="bankid">
+                    @if (bankList.Count() > 0)
+                    {
+                        foreach (var item in bankList)
+                        {
+                            <option value="@item.ID">@item.BankName:@item.BankCard</option>
+                        }
+
+                    }
+                </select>*@
+                <input type="text" name="currencyAddress" class="form-control " placeholder="@T("请您输入imtoken地址")">
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("兑商数量")</label>
+                <input type="text" class="form-control" name="drawmoney" placeholder="@T("请输入兑商数量")">
+                <p>@T("商务钱包可用余额")：<span>@Umodel.Cur3003</span></p>
+            </div>
+            
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("备注")</label>
+                <input type="text" name="remark" class="form-control " placeholder="@T("请您输入备注")">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputPassword1">@T("交易密码")</label>
+                <input type="password" name="password2" class="form-control" placeholder="@T("请输入交易密码")">
+            </div>
+            <button type="button" class="form-submit-btn border1 bgf40" id="btnEdit">@T("确认提现")</button>
+        </form>
+    </div>
+</section>
+
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    $("#btnEdit").click(function () {
+        $('#btnEdit').attr("disabled", "disabled");
+        $("#frmEdit").ajaxSubmit({
+            url: "@Url.Action("RMBCash", "CashTransfer")",
+            type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                       layer.msg("@T("提交成功，请您等待审核")", { icon: 1 }, function () {
+                           @*location.href = "@Url.Action("CurTransferOutList", "CashTransfer")?curid=@Model.ID";*@
+                           location.reload();
+                        });
+                } else {
+                layer.msg(data.Message, { icon: 2 });
+                    $('#btnEdit').removeAttr("disabled");
+                }
+            },
+            error: function (error) {
+                layer.msg(error, { icon: 2 });
+                $('#btnEdit').removeAttr("disabled");
+            }
+        });
+    });
+</script>
+

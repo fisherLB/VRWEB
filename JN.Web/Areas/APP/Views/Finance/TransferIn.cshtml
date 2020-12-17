@@ -1,0 +1,61 @@
+﻿@{
+    ViewBag.Title = "转入";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+
+    string url = HttpContext.Current.Request.Url.GetLeftPart(UriPartial.Authority) + Url.Action("TransferOutConfirm", "Finance",new { username = Umodel.UserName});
+}
+
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T("收款")</div>
+
+    <div class="header-btn">
+        <a href="###" id="qrurl" data-value="@url" data-title="@T("保存二维码")">@T("保存二维码")</a>
+    </div>
+</header>
+
+<section class="container transfer">
+    <div class="transfer-box">
+        <h3>@T("扫一扫，向我付款")</h3>
+        <div class="transfer-code">
+            <img src="@MvcCore.Extensions.QRCodeExtensions.ToQRCode(url, 5, 5).GetImgBase64String(System.Drawing.Imaging.ImageFormat.Png)">
+            @*@url*@
+        </div>
+    </div>
+
+    <div class="transfer-record-link">
+        <a href="@Url.Action("TransferInRecord","Finance")">@T("收款记录")</a>
+    </div>
+</section>
+<script src="~/Plugin/clipboard/js/clipboard.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var clipboard = new Clipboard('#qrurl', {
+            text: function (e) {
+                return $(e).data('value');
+            }
+        });
+        clipboard.on('success', function (e) {
+            console.log(e);
+            layer.msg($(e.trigger).data('title') + '@T("已复制到剪切板")');
+        });
+
+        clipboard.on('error', function (e) {
+            console.log(e);
+            layer.msg('@T("复制失败")', { icon: 2 });
+        });
+    });
+</script>

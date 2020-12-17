@@ -1,0 +1,78 @@
+﻿@model List<JN.Data.Machine>
+@{
+    ViewBag.Title = "购买矿机";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    var Param = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x =>(x.WalletCurID??0)!=3005).OrderBy(x => x.ID).ToList();
+}
+
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header muiopen">
+    <h1>@T("购买矿机")</h1>
+    <a class="my-mine" href="/APP/User/Mymine">@T("我的矿机")</a>
+</header>
+<div class="jp_pro_div ">
+
+    @foreach (var item in Model)
+            {
+        <div class="jp_pro_div_3">
+            <div class="jp_pro_div_3_2">
+                <div class="jp_pro_div_3_3"><a href="white"><img src="@item.ImageUrl"></a></div>
+                <div class="jp_pro_div_3_4" >
+                    <div class="jp_pro_div_3_5 fontcolor"><a href="" class="fontcolor">️@T(item.MachineName)</a></div>
+                    <div class="jp_pro_div_3_6 fontcolor">@T("算力"):@((item.Performance ?? 0).ToString("F2"))</div>
+                    <div class="jp_pro_div_3_6 fontcolor">@T("使用周期")：@(item.Duration) @T("天")</div>
+                    <div class="jp_pro_div_3_6 fontcolor">@T("每天收益")：@item.TimesType.ToString("F6") @T("币")</div>
+                    <div class="jp_pro_div_3_6 fontcolor">@T("价格")：@item.RealPrice </div>
+                    <div class="jp_pro_div_3_6 fontcolor">
+                        @T("购买币种")：
+                        <select name="coinid-@item.ID" id="coinid-@item.ID" style="width:40%" class="weui-input">
+                            @foreach (var coinlist in Param)
+                            {
+                                <option value="@coinlist.WalletCurID">@coinlist.CurrencyName</option>
+                            }
+                        </select>
+                    </div>
+                    <div class="jp_pro_div_3_6 fontcolor">
+                        @T("数量")：<input class="form-control fontcolor" style="width:55%;height:29px;" id="number-@item.ID" type="number" value="1"/>
+                    </div>
+                    <div class="jp_pro_div_3_8">
+                        <span class="f_r"><a href="javascript:buy(@item.ID)">@T("购买")</a></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<!--底部导航-->
+
+@Html.Partial("~/Areas/APP/Views/Shared/_Footer.cshtml")
+
+<script>
+
+    function buy(Id) {
+        var number = $("#number-"+Id).val();
+        var coinid = $("#coinid-" + Id).val();
+        if ($.trim(number).length <= 0) {
+            $.toast("@T("请输入购买数量")", "forbidden");
+            return false;
+        }
+        $.confirm("@T("是否购买这台矿机？")", "@T("确认?")", function () {
+            $.post("@Url.Action("Pay")", { id: Id, number: number, coinid: coinid}, function (data) {
+                if (data.Status == 200) {
+                    $.toast("@T("购买成功!")", 3000, function () {
+                        location.reload();
+                    });
+                } else {
+                    $.toast(data.Message, "forbidden");
+                }
+            })
+        });
+    }
+
+</script>
+
+
+
+

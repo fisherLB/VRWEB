@@ -1,0 +1,102 @@
+﻿@{
+    JN.Data.User Umodel = JN.Services.UserLoginHelper.CurrentUser();
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+
+    JN.Data.Currency cur = ViewBag.Currency as JN.Data.Currency;
+    int curid = cur.ID;
+}
+
+<header class="header backHeader">
+    <i class="backIcon"></i>
+
+    <h2 class="tit" id="tit">@T(cur.CurrencyName)@T("充值记录")</h2>
+
+    <div class="choose-skin">
+        <div class="choose-skin-btn" onclick="showskin('skin');"></div>
+
+        <div id="skin" class="skin-panel" onclick="hideskin(this.id);">
+            <div class="choose-skin-panel">
+                <span onClick="javascript:changeWhite();" class="skin-white"></span>
+                <span onClick="javascript:changeDark();" class="skin-dark"></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section class="ticketsMain newsMain">
+    <!--<div class="textCenter mtop">
+        <img src="../../Theme/images/noMsg.png" width="86" alt="">
+        <p> 您暂时没有充值记录</p>
+    </div>-->
+
+    <div class="index_coinTrade passetsCon personAssets">
+        <ul id="listcontainer">
+           
+        </ul>
+    </div>
+
+</section>
+
+
+<script src="~/Plugin/layer/layui/layui.js"></script><!--layui插件js-->
+<link href="~/Plugin/layer/layui/css/layui.css" rel="stylesheet" />
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#listcontainer', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getRechargeList")?page=' + page + "&curid=@(curid)", function (res) {
+                        var strhtml = "";
+                        //假设你的列表返回在data集合中
+                        layui.each(res.data, function (index, item) {
+                                strhtml += '<li>';
+                                strhtml += '<div class="order-status"><span>' + ChangeDateFormat(item.CreateTime) + '</span><i>' + (item.Status == 1 ? "@T("待确认")" : item.Status == 2 ? "@T("已完成")" : item.Status == 0 ? "@T("未充值")" : "@T("已取消")") + '</i></div>';
+                                strhtml += '<table class="order-table"><tbody>';
+                                strhtml += '<tr><th class="textLeft">@T("编号")</th><th class="textLeft">@T("充值方式")</th><th class="textLeft">@T("充值金额")</th><th class="textRight">@T("应付人民币")</th></tr>';
+                            strhtml += '<tr><td class="textLeft">' + (item.ChongNumber.length > 10 ? item.ChongNumber.substring(0, 10) + "…" : item.ChongNumber) + '</td><td class="textLeft">' + item.RechargeWay + '</td><td class="textLeft">' + item.RechargeAmount + '</td><td class="textRight"><span class="order-price">' + item.ActualAmount + '</span></td></tr>';
+                                strhtml += '</tbody></table>';
+                                strhtml += '<span class="textRight">';
+                                strhtml += '<a href="@Url.Action("RechargeDetail")?id=' + item.ID + '" class="cblue">@T("详情")</a>';
+                            if (item.Status == 1 || item.Status == 0) {
+                                strhtml += '&nbsp;&nbsp;<a class="cblue" onclick="Cancel(' + item.ID + ')">@T("取消")</a>';
+                            }
+                                strhtml += '</span>';
+                                strhtml += '</li>';
+                        });
+                        lis.push(strhtml);
+                        //alert(lis);
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.pages);
+                    });
+                }
+            });
+        });
+</script>
+<script type="text/javascript">
+    //弹窗取消提示
+    function Cancel(id) {
+
+        layer.confirm("@T("您确定要取消这条记录么？")", {
+            title: "@T("取消确认")", //标题
+            btn: ['@T("确定")', '@T("取消")']  //按钮
+    },
+    function (index) {
+        layer.close(index);
+     $.post("@(Url.Action("CancelRemittance"))", { id: id }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("操作成功!")", { icon: 1 }, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                }
+            });
+    });
+    };
+</script>

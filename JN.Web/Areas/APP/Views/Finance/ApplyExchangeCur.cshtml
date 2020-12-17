@@ -1,0 +1,152 @@
+﻿@model JN.Data.ExchangeCurrency
+@{
+    ViewBag.Title = "币种兑换";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+
+    List<JN.Data.Currency> CurrencyList = ViewBag.CurrencyList;
+    List<JN.Data.ExchangeCurrency> ExchangeCurrencyList = ViewBag.ExchangeCurrencyList;//兑换规则
+
+    var FromCurrency = CurrencyList.SingleAndInit(x=>x.ID==Model.FromCoinID);
+    var ToCurrency = CurrencyList.SingleAndInit(x => x.ID == Model.ToCoinID);
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo header-open-arrow">@T(FromCurrency.CurrencyName)@T("兑换")@T(ToCurrency.CurrencyName)</div>
+</header>
+
+<section class="container">
+    <div class="balance">
+        <ul>
+            <li>
+                <span>@T(FromCurrency.CurrencyName)</span>
+                <h3>@JN.Services.Manager.Users.WalletCur((FromCurrency.WalletCurID??0), Umodel).ToDouble()</h3>
+            </li>
+
+            <li>
+                <span>@T(ToCurrency.CurrencyName)</span>
+                <h3>@JN.Services.Manager.Users.WalletCur((ToCurrency.WalletCurID??0), Umodel).ToDouble()</h3>
+            </li>
+        </ul>
+    </div>
+
+    <div class="trade-form">
+        <div class="form-widget">
+            <form id="frmSubmit" method="get">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label class="form-label">@T("兑换数量")</label>
+                        <div class="form-control">
+                            <input placeholder="@T("请输入兑换的")@T(FromCurrency.CurrencyName)" type="text" name="accout" id="accout" maxlength="20" onkeyup="change()">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">@T("获得")@T(ToCurrency.CurrencyName)</label>
+                        <div class="form-control">
+                            <input type="text" id="money" readonly="readonly" value="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">@T("交易密码")</label>
+                        <div class="form-control">
+                            <input placeholder="@T("请输入您的交易密码")" type="password" name="tradeinPassword" maxlength="20">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-tips">
+                    @T("提示")：@T("最大兑换数量")@(Model.MaxNumber.ToDouble())，@T("请输入")@(Model.MinNumber.ToDouble())@T("的整数倍")。
+                </div>
+
+                <div class="form-submit">
+                    <input type="hidden" id="rate" value="@Model.Rate" />
+                    <input type="hidden" name="rulerid" value="@Model.ID" />
+                    <input type="hidden" name="tocoinid" value="@Model.ToCoinID" />
+                    <input type="hidden" name="fromcoinid" value="@Model.FromCoinID" />
+                    <button type="button" class="form-submit-btn" id="btnSubmit">@T("确认兑换")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!--选择兑换方式弹窗-->
+<div id="coin" class="popup">
+    <div class="popup-box">
+        <div class="popup-box-content">
+            <div class="choose-list">
+                <ul>
+                    @if (ExchangeCurrencyList != null && ExchangeCurrencyList.Count() > 0)
+                    {
+                        foreach (var item in ExchangeCurrencyList)
+                        {
+                            <li>
+                                <input type="radio" name="tocoid" value="@(item.ID)" @(item.ID == Model.ID ? "checked" : "")>
+                                <label>@T(item.FromCoinName)@T("兑换")@T(item.ToCoinName)</label>
+                            </li>
+                        }
+                    }
+
+                </ul>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+            <button type="button" class="confirm-btn" onclick="gotoSell()">@T("确认")</button>
+        </div>
+    </div>
+</div>
+<script>
+    function change() {
+        var money = (parseFloat($("#accout").val()) * parseFloat($("#rate").val())).toFixed(5);
+        if (isNaN(money)) {
+            money = 0;
+        }
+        $("#money").val(money);
+    }
+    $("#btnSubmit").click(function () {
+        $('#btnSubmit').attr("disabled", "disabled");
+        $.post("@Url.Action("ApplyExchangeCur", "Finance")", $("#frmSubmit").serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("操作成功！")", { icon: 1,time: 1000 }, function () {
+                    location.reload();
+                });
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+                $('#btnSubmit').removeAttr("disabled");
+            }
+        });
+    })
+
+    //选择兑换方式弹窗
+    $(function () {
+        $('.header-open-arrow').click(function () {
+            $('#coin.popup').fadeIn();
+
+            var h = ($(window).height() - $('#coin .popup-box').height()) / 2;
+            $('#coin .popup-box').css('margin-top', h);
+        });
+
+        $('.cancle-btn').click(function () {
+            $('#coin.popup').fadeOut();
+        });
+    });
+    function gotoSell() {
+        var tocoid = $('input[name="tocoid"]:checked').val();
+        if (tocoid <= 0) return;
+        window.location.href = '/APP/Finance/ApplyExchangeCur?excid=' + tocoid;
+    }
+</script>

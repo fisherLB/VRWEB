@@ -1,0 +1,107 @@
+﻿@model JN.Data.Article
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    int cId = Request["cId"].ToInt();
+    JN.Data.ArticleClass aclass = ViewBag.Data as JN.Data.ArticleClass;
+}
+<link rel="stylesheet" href="/theme/app/css/notice_84a334d49a.css">
+
+<script src="~/theme/app/js/jquery-3.1.1.min.js"></script>
+<script src="~/theme/app/js/bootstrap.min.js"></script>
+
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page notice">
+
+            <div class="aside notice-cont all">
+                <div class="subnav">
+
+
+                    <ul class="collapse-box">
+
+                        @{var aclasslist = MvcCore.Unity.Get<JN.Data.Service.IArticleClassService>().List(x => x.Pid == aclass.ID && !(x.IsNotice ?? false)); int num = 1;}
+                        @foreach(var item in aclasslist)
+                        { 
+                        <li>
+                            <h1><a href="#" class="open-btn" id="open-btn-@(num)" >@(num). @item.ClassName <span class="file-icon "></span></a> </h1>
+
+                            <div class="collapse-cont" id="collapse-cont-@(num)" style="display:@((Request["classid"].ToInt()==0 &&Model.ClassID== item.ID)?"block":Request["classid"].ToInt()== item.ID ? "block" : "none");" >
+                                @{var acount = MvcCore.Unity.Get<JN.Data.Service.IArticleService>().List(x => x.ClassID == item.ID && !(x.IsNotice ?? false));  int numstow = 0; }
+                                @foreach (var itema in acount)
+                                {
+                                    <h5><a href="/App/article/ReadOneArticle?id=@(itema.ID)&sId=@(aclass.ID)&classid=@item.ID"> @(num).@(numstow) @itema.Title</a></h5>
+                                     numstow++;
+                                }
+                            </div>
+                        </li>
+                                num++; 
+                        }
+
+                    </ul>
+
+                </div>
+            </div>
+
+            <script>
+ 
+                $("#open-btn-1").click(function(){
+                    $("#collapse-cont-1").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-2").click(function () {
+                    $("#collapse-cont-2").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-3").click(function () {
+                    $("#collapse-cont-3").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-4").click(function () {
+                    $("#collapse-cont-4").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-5").click(function () {
+                    $("#collapse-cont-5").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-6").click(function () {
+                    $("#collapse-cont-6").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-7").click(function () {
+                    $("#collapse-cont-7").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-8").click(function () {
+                    $("#collapse-cont-8").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-9").click(function () {
+                    $("#collapse-cont-9").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+                $("#open-btn-10").click(function () {
+                    $("#collapse-cont-10").toggle();
+                    $(this).children("span").toggleClass("file-icon-on");
+                });
+
+
+            </script>
+
+            <script>
+                _czc.push(["_trackEventw", '首页', "/chongzhi.help.html"]);
+            </script>
+            <div class="notice-cont">
+                <h1 class="h1">@Model.Title</h1>
+                @*<h5 class="h5">发布时间：<span>@Model.CreateTime.ToString("yyyy-MM-dd HH:mm")</span> &nbsp; 来源：<span class="guanjianzi">@Model.Source</span>&nbsp; &nbsp; 点击量：<span class="guanjianzi">@Model.ReadCount</span></h5>*@
+
+                <p class="p-text">@MvcHtmlString.Create(Model.Content)</p>
+
+                @*<p class="signature">@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</p>*@
+            </div>
+
+        </div>
+    </div>
+</div>
+
+

@@ -1,0 +1,164 @@
+﻿@model JN.Data.Shop_Product
+@{
+    ViewBag.Title = "确认订单";
+    string curl = Request.Url.ToString().ToLower();
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+
+    var Param = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.ID <= 2).OrderBy(x => x.ID).ToList();
+}
+<link href="/Theme/APP/css/shop.css" rel="stylesheet">
+<link href="/Theme/APP/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T("订单确认")</div>
+</header>
+
+<section class="container">
+    @{
+        JN.Data.Shop_ReceiptAddress recModel = MvcCore.Unity.Get<JN.Data.Service.IShop_ReceiptAddressService>().Single(x => x.UID == Umodel.ID && x.IsDefault == true);
+    }
+    @if (recModel == null)
+    {
+        <div class="setting-menu bgf4f4f4">
+            <a href="/APP/shop/ModifyMyAddress" class="setting-menu-2" style="padding: .3rem 3rem .3rem 1.4rem;">
+                <em></em>
+                <h3 style="color: #46adfc;">@T("请先添加收货地址")</h3>
+            </a>
+        </div>
+    }
+    else
+    {
+        <div class="setting-menu bgf4f4f4">
+            <a href="/APP/shop/ModifyMyAddress?id=@recModel.ID" class="setting-menu-2 add_del" style="padding: .5rem .6rem .5rem 1.2rem;">
+                <em class="add_icon"></em>
+                <h3 class="add_icon_t" style="padding-right: 0;">
+                    @T("收货人"):@recModel.Addressee<br />
+                    <p class="address_t" style="margin-top:.2rem;">@T("地址"): @(recModel.Province + recModel.City + recModel.County)</p>
+                    <p class="address_t">@T("详细地址"): @(recModel.Detail)</p>
+                </h3>
+                <span style="line-height: 0.6rem; right: 0.7rem; top:.6rem;">@recModel.Phone</span>
+            </a>
+        </div>
+    }
+
+    <form method="post" id="orderForm">
+        <div class="sett_list">
+            <div class="sett_l_pic clearfix">
+                <div class="sett_pic_cont">
+                    <img src="@JN.Services.Tool.StringHelp.GetFirstStr(Model.ImageUrl)" />
+                </div>
+                <p class="sett_pic_bd">@(Model.ProductName)</p>
+            </div>
+            <div class="sett_pic_add">
+                <input id="pids" name="pids" value="@Model.Id" type="hidden" />
+                <input id="price" name="price" value="@Model.RealPrice" type="hidden" />
+                <p class="sett_price">@(Model.RealPrice)</p>
+                <div class="add_btn">
+                    <p>
+                        <span onclick="numDec()" class="add_btn_l">
+                            <img src="/Theme/APP/images/shop/cont_icon_16.png" />
+                        </span> <input class="nub_show" value="1" type="text" id="quantity" name="pCounts" />
+                        <span class="add_btn_l" onclick="numAdd()">
+                            <img src="/Theme/APP/images/shop/cont_icon_15.png" />
+                        </span>
+                    </p>
+                </div>
+            </div>
+        </div>
+    </form>
+    @*<div class="remark_cont">
+        <textarea placeholder="备注：（不能输入表情）"></textarea>
+    </div>*@
+</section>
+
+<div style="height: 2.5rem;"></div>
+<footer class="botton_box">
+    <div class="foot_cont foot_buy">
+        <ul class="clearfix">
+            <li class="foot_t"><p>@T("合计")：<span id="totalPrice">@(Model.RealPrice)</span></p></li>
+            @*<li class="add_btn">
+                <select name="PayWay" id="PayWay">
+                    @foreach (var coinlist in Param)
+                    {
+                        <option value="@coinlist.WalletCurID">@coinlist.CurrencyName</option>
+                    }
+                </select>
+            </li>*@
+            <li><a href="###" onclick="funTrueToPay()">@T("提交订单")</a></li>
+        </ul>
+    </div>
+</footer>
+
+<script type="text/javascript">
+    $(function () {
+        $("#quantity").keyup(function () {
+            if (isNaN($(this).val()) || parseInt($(this).val()) < 1) {
+                $(this).val("1");
+                $("#totalPrice").html($("#price").val());
+                return;
+            }
+            var total = parseFloat($("#price").val()) * parseInt($(this).val());
+            $("#totalPrice").html(total.toFixed(2));
+        })
+
+    })
+
+    /*商品数量+1*/
+    function numAdd() {
+        var num_add = parseInt($("#quantity").val()) + 1;
+        if ($("#quantity").val() == "") {
+            num_add = 1;
+        }
+        $("#quantity").val(num_add);
+        var total = parseFloat($("#price").val()) * parseInt($("#quantity").val());
+        $("#totalPrice").html(total.toFixed(2));
+    }
+
+    /*商品数量-1*/
+    function numDec() {
+        var num_dec = parseInt($("#quantity").val()) - 1;
+        if (num_dec < 1) {
+            //购买数量必须大于或等于1
+
+        } else {
+            $("#quantity").val(num_dec);
+            var total = parseFloat($("#price").val()) * parseInt($("#quantity").val());
+            $("#totalPrice").html(total.toFixed(2));
+        }
+    }
+
+</script>
+<script>
+    var subsumt = false;
+    function funTrueToPay() {
+        layer.prompt({ title: '@T("输入交易密码")', formType: 1 }, function (val, index) {
+            if (subsumt) return;
+            subsumt = !subsumt;
+            var pids = $("#pids").val();
+            var pCounts = $("#quantity").val();
+            $.post('@Url.Action("ProductInfo", "Shop")', { pids: pids,pCounts: pCounts, pwd: val }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("购买成功")！");
+                    setTimeout(function () {  //使用  setTimeout（）方法设定定时2000毫秒
+                        window.location = "/APP/Shop/MyOrder";//页面刷新
+                    }, 2000);
+                } else {
+                    layer.msg("@T("操作失败")：" + data.Message);
+                    subsumt = !subsumt;
+                }
+            });
+        });
+    };
+</script>

@@ -1,0 +1,102 @@
+﻿@model JN.Data.TakeCash
+@{
+    Layout = "~/Areas/App/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    ViewBag.Title = "提现详情";
+
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+}
+
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T(ViewBag.Title)</div>
+</header>
+
+<section class="container">
+    <div class="trade-people">
+        <div class="trade-people-photo">
+            <img src="@(Umodel.HeadFace ?? "/Theme/app/images/member.png") ">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@(Umodel.UserName)@(!string.IsNullOrWhiteSpace(Umodel.RealName) ? "(" + Umodel.RealName + ")" : "")</h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-order-details">
+        <ul>
+            <li>
+                <label>@T("时间")</label>
+                <span>@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+            </li>
+
+            <li>
+                <label>@T("提现金额")</label>
+                <span class="order-details-price">@Model.DrawMoney.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("币种")</label>
+                <span class="order-details-status">@T(Model.CurName)</span>
+            </li>
+
+            <li>
+                <label>@T("手续费")</label>
+                <span>@Model.Poundage.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("实收金额")</label>
+                <span>@Model.ActualDrawMoney.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("银行名称")</label>
+                <span>@Model.BankName</span>
+            </li>
+
+            <li>
+                <label>@T("银行账号")</label>
+                <span>@Model.BankCard</span>
+            </li>
+
+            <li>
+                <label>@T("状态")</label>
+                <span>@T(typeof(JN.Data.Enum.TakeCaseStatus).GetEnumDesc(Model.Status))</span>
+            </li>
+            @if (Model.Status == (int)JN.Data.Enum.TakeCaseStatus.Wait)
+            {
+                <li>
+                    <label>@T("操作")</label>
+                    <span style="color:red;" onclick="Cancel(@Model.ID)">@T("取消")</span>
+                </li>
+            }
+          
+        </ul>
+    </div>
+</section>
+<script type="text/javascript">
+    //弹窗取消提示
+    function Cancel(id) {
+        layer.confirm("@T("您确定要取消这条记录么？")", {
+            title: "@T("取消确认")", //标题
+            btn: ['@T("确定")', '@T("取消")']  //按钮
+    },
+    function (index) {
+        layer.close(index);
+     $.post("@(Url.Action("CancelTakeCash"))", { id: id }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("操作成功!")", { icon: 1 }, function () {
+                        location.reload();
+                    });
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                }
+            });
+    });
+    };
+</script>

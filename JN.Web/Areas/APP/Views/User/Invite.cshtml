@@ -1,0 +1,72 @@
+﻿@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    string lang = "";
+    if (Request["lang"] != null && Request["lang"] != "" && !string.IsNullOrWhiteSpace(Request["lang"]))
+    {
+        lang = Request["lang"].Trim();
+    }
+    else
+    {
+        lang = JN.Services.Resource.ResourceProvider.Culture ?? "zh-CN";
+    }
+    string url = Request.Url.GetLeftPart(UriPartial.Authority) + "/App/reg/index?rename=" + Model.UserName + "&lang=" + lang;
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T("分享好友")</div>
+
+    @*<div class="header-btn">
+            <a href="">保存二维码</a>
+        </div>*@
+</header>
+
+<section class="container share">
+    <div class="share-address">
+        <a href="###" class="colorfont">@T("分享人"):@Model.UserName @T("姓名"):@Model.RealName </a>
+        @*<a id="qrurl" data-value="@url" data-title="@T("复制分享地址")">@T("复制分享地址")</a>*@
+    </div>
+    <div class="share-box">
+        <div class="share-code">
+            <img src="@MvcCore.Extensions.QRCodeExtensions.ToQRCode(url, 5, 5).GetImgBase64String(System.Drawing.Imaging.ImageFormat.Png)">
+        </div>
+
+        <div class="share-box-bottom">
+            <img src="/Theme/app/images/QRcode_bg.png">
+
+            <p>@T("扫描二维码即可分享好友呦")</p>
+            <p>@url</p>
+        </div>
+    </div>
+
+    <div class="share-address muiopen">
+        <a href="@Url.Action("index","user")" class="colorfont">@T("分享记录")</a><br />
+    </div> 
+
+    <div class="share-record-link">
+        <a id="qrurl" data-value="@url" data-title="@T("复制分享地址")" class="colorfont">@T("复制分享地址")</a>
+    </div>
+</section>
+<script src="~/Plugin/clipboard/js/clipboard.min.js"></script>
+<script type="text/javascript">
+    $(function () {
+        var clipboard = new Clipboard('#qrurl', {
+            text: function (e) {
+                return $(e).data('value');
+            }
+        });
+        clipboard.on('success', function (e) {
+            console.log(e);
+            layer.msg($(e.trigger).data('title') + '@T("已复制到剪切板")');
+        });
+
+        clipboard.on('error', function (e) {
+            console.log(e);
+            layer.msg('@T("复制失败")', { icon: 2 });
+        });
+    });
+</script>

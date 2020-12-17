@@ -1,0 +1,127 @@
+﻿@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+}
+
+<!--头部导航 开始-->
+<header class="bar bar-nav">
+    <a href="javascript:history.go(-1);" class="icon pull-left"><img src="/theme/app/images/login_icon_arrow2.png" /></a>
+</header>
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax提交表单-->
+
+<link href="~/theme/app/css/common_b0a143bbc2.css" rel="stylesheet" />
+<link href="~/theme/app/css/setting_0f1c0ad40a.css" rel="stylesheet" />
+<div class="container clear-float main">
+    @Html.Partial("/Areas/APP/Views/Home/_Security.cshtml")
+    @if (Model.BindStatus)
+    {
+        <div class="fr">
+            <div class="setting-title">@T("账户绑定")</div>
+            <div class="setting-panel">
+                <form id="form" class="form-cont">
+                    <div class="form-text">
+                        @T("绑定状态：") <span> @T(Umodel.BindStatus ? "已绑定:【" + Umodel.BindUserName + "】" : "无")</span>
+                    </div>
+                    <div class="input-cont">
+                        <div class="input-cont">
+                            <span class="icon form-password"></span>
+                            <input class="input" value="@T(Model.BindStatus ? "已绑定:【" + Model.BindUserName + "】" : "无")" readonly="readonly">
+                            <div class="form-tips"></div>
+                            <div class="error-msg"></div>
+                        </div>
+                        @if (cacheSysParam.SingleAndInit(x => x.ID == 3510).Value.ToInt() == 1)
+                        {
+                            <div class="input-cont">
+                                <span class="icon form-token"></span>
+                                <input class="input" type="text" name="mobilecode" placeholder="@T("请输入验证码")">
+                                <button class="link get-token" id="yzm" type="button" style="background: #fff;border: 0;">
+                                    @T("发送验证码")
+                                </button>
+                                <div class="form-tips"></div>
+                            </div>
+                        }
+                        <div class="input-cont">
+                            <span class="icon form-password"></span>
+                            <input class="input" type="password" value="" name="password2" placeholder="@T("请输入交易密码")">
+                            <div class="form-tips"></div>
+                            <div class="error-msg"></div>
+                        </div>
+                        <a id="btnSubmit" class="btn submit">@T("确定提交")</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+    else
+    {
+        <div class="fr">
+            <div class="setting-title">>@T("当前未绑定任何账户！")</div>
+            <div class="setting-panel">
+                <form id="form" class="form-cont">
+                    <div class="form-text">
+                        @T("当前未绑定任何账户！") 
+                    </div>
+                </form>
+            </div>
+        </div>
+    }
+</div>
+
+<script>
+    //取消绑定账户
+    $("#btnSubmit").click(function () {
+        $("#btnSubmit").attr("disabled", "disabled");
+        if (confirm('确认解绑？')) {
+            $.post('@Url.Action("BingUserCancel")', $('#form').serialize(), function (d) {
+                if (d.Status != 200) {
+                    layer.msg(d.Message, { icon: 2 }, function () { $('#btnSubmit').removeAttr("disabled"); });
+                   // $.toast(d.Message, "text", function () { $('#btnSubmit').removeAttr("disabled"); });
+                } else {
+                    layer.msg(d.Message, { icon: 1 }, function () { location.reload(); });
+                   // $.toast(d.Message, "text", function () { location.reload(); });
+                }
+            }, 'json');
+        }
+    });
+      //验证手机
+                function codephone(thisval) {
+                        layer.msg('@T("正在发送短信，请稍后...")');
+                    $.post("/app/user/SendCancelBindUserMobileMsm", {}, function (data) {
+                            if (data.Status == 200) {
+                                layer.msg('@T("短信已发送")', { icon: 1 });
+                                time(thisval);
+                            } else {
+
+                                layer.msg(data.Message, { icon: 2 });
+                            }
+                        });
+                }
+
+                var yzmbtn = document.getElementById("yzm");
+                if (yzmbtn != null) {
+                    var wait = 60;
+                    document.getElementById("yzm").disabled = false;
+                    function time(o) {
+                        if (wait == 0) {
+                            o.removeAttribute("disabled");
+                            o.innerHTML = "@T("重新获取验证码")";
+                            wait = 60;
+                        } else {
+                            o.setAttribute("disabled", true);
+                            o.innerHTML = "@T("重新发送") (" + wait + ")";
+                            wait--;
+                            setTimeout(function () {
+                                time(o)
+                            },
+                            1000)
+                        }
+                    }
+                    document.getElementById("yzm").onclick = function () {
+                        codephone(this);
+                    }
+                }
+</script>

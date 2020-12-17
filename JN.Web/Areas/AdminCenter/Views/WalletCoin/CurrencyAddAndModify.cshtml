@@ -1,0 +1,425 @@
+﻿@model JN.Data.Currency
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="col-xs-12">
+            <div class="widget" data-toggle="collapse-widget" data-collapse-closed="false">
+
+                <!-- Widget heading -->
+                <div class="widget-head">
+                    <h4 class="heading">添加修改表单</h4>
+                    <span class="collapse-toggle"></span>
+                </div>
+                <!-- // Widget heading END -->
+
+                <div class="widget-body in collapse" style="height: auto;">
+
+
+                    <!-- PAGE CONTENT BEGINS -->
+                    <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post">
+                        <div class="control-group">
+                            <label class="control-label"></label>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="username">币种名称</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="CurrencyName" value="@Model.CurrencyName" class="form-control" /><span style="color:red;">&nbsp; *币种名称</span>
+                                    <input type="hidden" name="ID" value="@Model.ID" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="username">币种英文（缩写）</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="EnSigns" value="@Model.EnSigns" class="form-control" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="username">币种英文</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="English" value="@Model.English" class="form-control" @(Model.ID > 0 ? "readonly=\"readonly\"" : "") /> <span style="color:red;">&nbsp; *注意填写与国际英文相符，否则会出现价格获取不了</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="realname">币种logo</label>
+
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <img src="@Model.CurrencyLogo" id="productimg" height="80" style="height:80px;" />
+                                    <input type="file" name="imgurl" value="@Model.CurrencyLogo" class="btn btn-default btn-file" />(JPG/PNG/GIF)
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">提币最大额度</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="TbMaxLimit" value="@Model.TbMaxLimit" class="form-control" /><span style="color:red;">&nbsp; *0为不限制,限制的是单笔</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">提币最小额度</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="TbMinLimit" value="@Model.TbMinLimit" class="form-control" /><span style="color:red;">&nbsp; *0为不限制,限制的是单笔</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">提币手续费</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="TbPoundage" value="@Model.TbPoundage" class="form-control" /><span style="color:red;">&nbsp; *0为不限制</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">买入手续费</label>
+
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="BuyPoundage" value="@Model.BuyPoundage" class="form-control" /><span style="color:red;">&nbsp; *买入手续费</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">卖出手续费</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="SellPoundage" value="@Model.SellPoundage" class="form-control" /><span style="color:red;">&nbsp; *卖出手续费</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">加入最低购买限制</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <select name="IsLimit">
+                                        <option value="False" @(!(Model.IsLimit ?? false) ? "selected" : "")>否</option>
+                                        <option value="True" @((Model.IsLimit ?? false) ? "selected" : "")>是</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="email">最低购买限制</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="MinLimit" value="@Model.MinLimit" class="form-control" /><span style="color:red;">&nbsp; 最低购买限制</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="email">初始价格</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="OriginalPrice" value="@Model.OriginalPrice" class="form-control" /><span style="color:red;">&nbsp; 初始价格</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">交易价格</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="TranPrice" value="@Model.TranPrice" class="form-control" /><span style="color:red;">&nbsp; 交易价格</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">交易量</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="TranTotal" value="@Model.TranTotal" class="form-control" readonly /><span style="color:red;">&nbsp; 交易量</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">涨幅价格</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="IncreasePrice" value="@Model.IncreasePrice" class="form-control" /><span style="color:red;">&nbsp; 涨幅价格</span>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">涨幅条件</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="IncreaseConditions" value="@Model.IncreaseConditions" class="form-control" /><span style="color:red;">&nbsp; 涨幅条件</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">已涨幅次数</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="IncreaseTimes" value="@Model.IncreaseTimes" class="form-control" /><span style="color:red;">&nbsp; 已涨幅次数</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        @*<div class="control-group">
+            <label class="control-label" for="idcard">是否有邀请奖励</label>
+            <div class="controls">
+                <div class="clearfix">
+                    <select name="IsInvitaReward">
+                        <option value="False" @(!(Model.IsInvitaReward ?? false) ? "selected" : "")>否</option>
+                        <option value="True" @((Model.IsInvitaReward ?? false) ? "selected" : "")>是</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="email">邀请奖励百分比</label>
+            <div class="controls">
+                <div class="clearfix">
+                    <input type="text" name="InvitaRewardParam" value="@Model.InvitaRewardParam" class="form-control" /><span style="color:red;">&nbsp; 不能大于1，如：10%填0.1</span>
+                </div>
+            </div>
+        </div>*@
+
+                        @*<div class="control-group">
+            <label class="control-label" for="idcard">是否注册赠送</label>
+            <div class="controls">
+                <div class="clearfix">
+                    <select name="IsRegReward">
+                        <option value="False" @(!(Model.IsRegReward ?? false) ? "selected" : "")>否</option>
+                        <option value="True" @((Model.IsRegReward ?? false) ? "selected" : "")>是</option>
+                    </select>
+                </div>
+            </div>
+        </div>*@
+                        @*<div class="control-group">
+            <label class="control-label" for="email">赠送奖励（个数）</label>
+            <div class="controls">
+                <div class="clearfix">
+                    <input type="text" name="RegRewardParam" value="@Model.RegRewardParam" class="form-control" />
+                </div>
+            </div>
+        </div>*@
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">是否开启交易</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <select name="TranSwitch">
+                                        <option value="False" @(!Model.TranSwitch ? "selected" : "")>否</option>
+                                        <option value="True" @(Model.TranSwitch ? "selected" : "")>是</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        @*<div class="control-group">
+            <label class="control-label" for="bankcard">使用钱包</label>
+            <div class="controls">
+                <div class="clearfix">
+                    <select name="@(Model.ID > 0 ? "" : "CurID")">
+                        <option value="0">请选择钱包</option>
+                        <option value="3001" @(Model.WalletCurID == 3001 ? "selected" : "")>钱包1</option>
+                        <option value="3002" @(Model.WalletCurID == 3002 ? "selected" : "")>钱包2</option>
+                        <option value="3003" @(Model.WalletCurID == 3003 ? "selected" : "")>钱包3</option>
+                        <option value="3004" @(Model.WalletCurID == 3004 ? "selected" : "")>钱包4</option>
+                        <option value="3005" @(Model.WalletCurID == 3005 ? "selected" : "")>钱包5</option>
+                        <option value="3006" @(Model.WalletCurID == 3006 ? "selected" : "")>钱包6</option>
+                        <option value="3007" @(Model.WalletCurID == 3007 ? "selected" : "")>钱包7</option>
+                        <option value="3008" @(Model.WalletCurID == 3008 ? "selected" : "")>钱包8</option>
+                        <option value="3009" @(Model.WalletCurID == 3009 ? "selected" : "")>钱包9</option>
+                        <option value="3010" @(Model.WalletCurID == 3010 ? "selected" : "")>钱包10</option>
+                        <option value="3011" @(Model.WalletCurID == 3011 ? "selected" : "")>钱包11</option>
+                        <option value="3012" @(Model.WalletCurID == 3012 ? "selected" : "")>钱包12</option>
+                        <option value="3013" @(Model.WalletCurID == 3013 ? "selected" : "")>钱包13</option>
+                        <option value="3014" @(Model.WalletCurID == 3014 ? "selected" : "")>钱包14</option>
+                        <option value="3015" @(Model.WalletCurID == 3015 ? "selected" : "")>钱包15</option>
+                    </select><span style="color:red;">&nbsp; *用来保存该币种的数量，使用钱包不能和其他冲突,添加后不能修改</span>
+                </div>
+            </div>
+        </div>*@
+                        @if (Model.ID > 0)
+                        {<input type="hidden" name="CurID" value="@Model.WalletCurID" class="form-control" />}
+
+
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">是否以太坊网络</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <select name="IsEthereum">
+                                        <option value="False" @(!(Model.IsEthereum ?? false) ? "selected" : "")>否</option>
+                                        <option value="True" @((Model.IsEthereum ?? false) ? "selected" : "")>是</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="bankcard">以太坊网络钱包地址</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="EthereumAddress" value="@Model.EthereumAddress" class="form-control" style="width:500px;" /><span style="color:red;">&nbsp; *这是以太坊及以太坊衍生出来的钱包地址（用于充值收款）</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">是否开启充值</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <select name="IsRecharge">
+                                        <option value="True" @((Model.IsRecharge) ? "selected" : "")>是</option>
+                                        <option value="False" @(!(Model.IsRecharge) ? "selected" : "")>否</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">是否开启提现</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <select name="IsCashTransfer">
+                                        <option value="True" @((Model.IsCashTransfer) ? "selected" : "")>是</option>
+                                        <option value="False" @(!(Model.IsCashTransfer) ? "selected" : "")>否</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="idcard">是否自动(充值/提币)</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <select name="IsAutomatic">
+                                        <option value="True" @((Model.IsAutomatic ?? false) ? "selected" : "")>是</option>
+                                        <option value="False" @(!(Model.IsAutomatic ?? false) ? "selected" : "")>否</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">API网络类型</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <select name="NetworkType" class="form-control" @*onchange="$(this).val() == '@((int)JN.Data.Enum.CurrencyNetworkType.EthereumContract)' ? $('#AccountAddress').show() : $('#AccountAddress').hide()"*@>
+                                        @foreach (int item in Enum.GetValues(typeof(JN.Data.Enum.CurrencyNetworkType)))
+                                        {
+                                            <option value="@item" @(Model.NetworkType == item ? "selected" : "")>@typeof(JN.Data.Enum.CurrencyNetworkType).GetEnumDesc(item)</option>
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group" @*style="@(Model.NetworkType ==(int)JN.Data.Enum.CurrencyNetworkType.EthereumContract ?"":"display:none")" id="AccountAddress"*@>
+                            <label class="control-label" for="idcard">账号/合约地址</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="AccountAddress" value="@Model.AccountAddress" class="form-control" style="width:500px;" />
+                                    <span style="color:red;">&nbsp; *（可选）部分API网络需要配置此选项</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="bankcard">钱包API地址</label>
+                            <div class="controls">
+                                <div class="clearfix">
+                                    <input type="text" name="WalletKey" value="@Model.WalletKey" class="form-control" style="width:500px;" /><span style="color:red;">&nbsp; *该地址由技术提供</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="hr hr-dotted"></div>
+                        <div class="control-group">
+                            <label class="control-label">&nbsp;</label>
+                            <div class="controls">
+                                <button class="btn btn-primary" type="submit">
+                                    保存
+                                </button>
+
+                                <a href="javascript:history.go(-1);" class="btn btn-grey">
+                                    <i class="icon-arrow-left"></i>
+                                    返 回
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+            </div>
+        </div>
+@section scripts{
+    <!-- page specific plugin styles -->
+    <script type="text/javascript" src="~/Plugin/xhEditor/xheditor.js"></script>
+    <script type="text/javascript" src="~/Plugin/xhEditor/xheditor_lang/zh-cn.js"></script>
+    <script type="text/javascript">
+    $(pageInit);
+    function pageInit() {
+        $.extend(XHEDITOR.settings, { shortcuts: { 'ctrl+enter': submitForm } });
+        $('#doccontent').xheditor({ upLinkUrl: "/PicUpload/Upload?ASPSESSID=" + "@Session.SessionID", upLinkExt: "zip,rar,txt", upImgUrl: "/PicUpload/Upload?ASPSESSID==" + "@Session.SessionID", upImgExt: "jpg,jpeg,gif,png", onUpload: insertUpload });
+    }
+    function insertUpload(arrMsg) {
+    }
+    function submitForm() { $('#validation-form').submit(); }
+
+    function FreezeSelect(b) {
+        if (b == "True") {
+            $("#Freeze").css("display", "block");
+        } else {
+            $("#Freeze").css("display", "none");
+        }
+    }
+
+
+
+    function BonusPoints(b)
+    {
+        if (b == "True") {
+            $("#Points").css("display", "block");
+        } else {
+            $("#Points").css("display", "none");
+        }
+    }
+   
+    function SysParamRegion(isxnq)
+    {
+        var num = $("#" + isxnq).val();
+        if (num == 1) {
+            $("#Pointsfen").css("display", "block")
+        } else { $("#Pointsfen").css("display", "none") }
+        
+    }
+    </script>
+}

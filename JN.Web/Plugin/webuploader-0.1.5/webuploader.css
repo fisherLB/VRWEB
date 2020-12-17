@@ -1,0 +1,70 @@
+.webuploader-container {
+	position: relative;
+}
+.webuploader-element-invisible {
+	position: absolute !important;
+	clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    clip: rect(1px,1px,1px,1px);
+}
+.webuploader-pick {
+	position: relative;
+	display: inline-block;
+	cursor: pointer;
+	background: #00b7ee;
+	padding: 10px 15px;
+	color: #fff;
+	text-align: center;
+	border-radius: 3px;
+	overflow: hidden;
+}
+.webuploader-pick-hover {
+	background: #00a2d4;
+}
+
+.webuploader-pick-disable {
+	opacity: 0.6;
+	pointer-events:none;
+}
+    .queueList>div{
+        position:relative;
+        margin-right:5px;
+        margin-top:5px;
+    }
+    .progress {
+        width: 100%;
+        height: 100%;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        -webkit-transform: translate(-50%, -50%);
+        transform: translate(-50%, -50%);
+        color: #FFFFFF;
+        display: inline-block;
+        box-sizing: border-box;
+        padding: 0;
+        margin: 0;
+    }
+    .progress:before {
+        content: " ";
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    .file-panel{
+        position: absolute;
+        top: 0;
+        right: 0;
+    }
+ .progress,.notThumb {
+        line-height: 10rem;
+        list-style: none;
+        font-style: normal !important;
+        font-family: "Î¢ÈíÑÅºÚ" !important;
+        font-size: 18px !important;
+        text-align: center;
+        font-size: 0.4rem;
+}

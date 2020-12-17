@@ -1,0 +1,287 @@
+﻿@model JN.Data.MachineOrder
+@{
+    ViewBag.Title = "Mining";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+
+    var product = MvcCore.Unity.Get<JN.Data.Service.IShopProductService>().Single(Model.ProductID);
+
+    var timeMin = 0;
+    if (Model.ShopID == 1)
+    {
+        timeMin = (Model.Duration - Model.TodayMiningTime) * 60;
+    }
+
+}
+<link href="~/Theme/APP/css/public.css" rel="stylesheet" />
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+
+<script src="~/Theme/APP/js/jquery-1.10.2.js"></script>
+<script>
+    /*
+    11     ① 用setInterval(draw, 33)设定刷新间隔
+    12
+    13     ② 用String.fromCharCode(1e2+Math.random()*33)随机生成字母
+    14
+    15     ③ 用ctx.fillStyle=’rgba(0,0,0,.05)’; ctx.fillRect(0,0,width,height); ctx.fillStyle=’#0F0′; 反复生成opacity为0.5的半透明黑色背景
+    16
+    17     ④ 用x = (index * 10)+10;和yPositions[index] = y + 10;顺序确定显示字母的位置
+    18
+    19     ⑤ 用fillText(text, x, y); 在指定位置显示一个字母 以上步骤循环进行，就会产生《黑客帝国》的片头效果。
+    20 */
+    $(document).ready(function () {
+        //设备宽度
+        var s = window.screen;
+        var width = q.width = s.width;
+        var height = q.height;
+        var yPositions = Array(300).join(0).split('');
+        var ctx = q.getContext('2d');
+        var draw = function () {
+            ctx.fillStyle = 'rgba(0,0,0,.05)';
+            ctx.fillRect(0, 0, width, height);
+            ctx.fillStyle = '#0d6a86';/*代码颜色*/
+            ctx.font = '10pt Georgia';
+            yPositions.map(function (y, index) {
+                text = String.fromCharCode(1e2 + Math.random() * 530);
+                x = (index * 10) + 10;
+                q.getContext('2d').fillText(text, x, y);
+                if (y > Math.random() * 1e4) {
+                    yPositions[index] = 0;
+                } else {
+                    yPositions[index] = y + 10;
+                }
+            });
+        };
+        RunMatrix();
+        function RunMatrix() {
+            Game_Interval = setInterval(draw, 30);
+        }
+    });
+</script>
+
+<header class="header">
+    <div class="header-return">
+        @*<a href="javascript:history.go(-1);"></a>*@
+        @if (Model.ShopID == 1)
+        {
+            <a href="/app/Home/Index"></a>
+        }
+        else
+        {
+            <a href="/APP/User/Mymine"></a>
+
+        }
+
+    </div>
+    <div class="logo text-l">@T("挖矿")</div>
+    @*<div class="my-mine">
+            <a href="/APP/User/Miningrecord">@T("挖矿记录")</a>
+        </div>*@
+</header>
+<!--背景乱码-->
+<div align="center" style="position:fixed;left:0; top:0px; width:100%; height:100%;">
+    <canvas id="q" width="1440" height="900"></canvas>
+</div>
+<!--main-->
+<section class="container p-b0 height100">
+    <div class="mining-main">
+        <div class="qipao-group">
+            <div class="position-r">
+                @*@if (Model.ShopID == 1)
+                    {
+                         <!--开关按钮-->
+                        <div class="switch-box">
+                            <a href="#" class="toggle toggle--off toggleFalse" id="kaiguan"></a>
+
+                        </div>
+                        if (Model.IsBalance == false)
+                        {
+                            <button onclick="MinerInvestment()" class="recast-btn">@T("复投")</button>
+                        }
+
+                    <!--开始动图-->
+                        <div class="miner-box mining-border newyuyue_list" style="display:none;">
+                            <img class="mining-img1" src="~/Theme/APP/img/mining-1.GIF" />
+                            <img class="mining-img2" src="~/Theme/APP/img/mining-1.gif" />
+                        </div>
+                    }
+                    else
+                    {
+                           <!--开关按钮-->
+                        <div class="switch-box">
+                            <a href="#" class="toggle toggle--on"></a>
+                        </div>
+                        if (Model.IsBalance == false && Model.ShopID == 1)
+                        {
+                            <button onclick="MinerInvestment()" class="recast-btn">@T("复投")</button>
+                        }
+                    <!--开始动图-->
+                        <div class="miner-box mining-border newyuyue_list">
+                            <img class="mining-img1" src="~/Theme/APP/img/mining-1.GIF" />
+                            <img class="mining-img2" src="~/Theme/APP/img/mining-1.GIF" />
+                        </div>
+                    }*@
+
+                <!--开关按钮-->
+                <div class="switch-box">
+                    <a href="#" class="toggle toggle--on" @*id="kaiguan"*@></a>
+                </div>
+                @if (Model.IsBalance == false && Model.ShopID == 1)
+                {
+                    <button onclick="MinerInvestment()" class="recast-btn">@T("复投")</button>
+                }
+                <!--开始动图-->
+                <div class="miner-box mining-border newyuyue_list">
+                    <img class="mining-img1" src="~/Theme/APP/img/mining-1.GIF" />
+                    <img class="mining-img2" src="~/Theme/APP/img/mining-1.GIF" />
+                </div>
+
+
+                <!--矿机型号-->
+                <div class="miner-model">
+                    <span>@T(Model.ProductName)</span>
+                    <img src="~/Theme/APP/img/miner-g1.png" />
+                </div>
+                <!--静止图-->
+                <div class="suspend">
+                    <img class="mining-img1" src="~/Theme/APP/img/mining-1.jpg" />
+                    <img class="mining-img2" src="~/Theme/APP/img/mining-1.jpg" />
+                </div>
+                @*<img class="suspend" src="~/Theme/APP/img/timg.jpg" />*@
+            </div>
+        </div>
+        <div class="income-btn_group">
+            <ul id="tabs" class="suan">
+                <li data-value="1"><img src="~/Theme/APP/images/Logo.png" /><em>@T("产量")</em><span class="num">@Model.TopBonus </span><em>（FJC）</em></li>
+                @*<li data-value="1" class="bg-none text-r float-r"><em>@T("倒计时")</em><span class="num">12:35</span></li>*@
+            </ul>
+            <ul class="table-view bg-none">
+                <li class="table-view-cell cb7bece">@T("矿机编号")<span class="float-r c00d2ff">@Model.InvestmentNo</span></li>
+                @if (Model.PayWay == "系统后台赠送")
+                {
+                    <li class="table-view-cell cb7bece">@T("购买日期")<span class="float-r c00d2ff">---/--/--</span></li>
+                }
+                else
+                {
+                    <li class="table-view-cell cb7bece">@T("购买日期")<span class="float-r c00d2ff">@Model.CreateTime</span></li>
+                }
+                <li class="table-view-cell cb7bece">@T("累计产币")<span class="float-r c00d2ff">@Model.AddupInterest</span></li>
+                <li class="table-view-cell cb7bece">@T("当前算力")<span class="float-r c00d2ff">@product.Performance GH/s </span></li>
+            </ul>
+            <!--倒计时-->
+            @if (timeMin > 0)
+            {
+                <div class="warp count-down">
+                    @T("挖矿倒计时")
+                    <strong class="a">@timeMin</strong>@T("秒")
+                </div>
+            }
+        </div>
+
+    </div>
+</section>
+<!--倒计时-->
+<script type="text/javascript">
+    $(document).ready(function() {
+        if(@Model.ShopID == 1)
+        {
+            var t;
+            t = setTimeout("AddMachineMin()", 60000)
+        }
+        var times = @timeMin * 100; // 60秒
+        if(times>0)
+        {
+            countTime = setInterval(function() {
+                times = --times < 0 ? 0 : times;
+                var ms = Math.floor(times / 100).toString();
+
+                if(ms.length <= 1) {
+                    ms = "0" + ms;
+                }
+                var hm = Math.floor(times % 100).toString();
+                if(hm.length <= 1) {
+                    hm = "0" + hm;
+                }
+                if(times == 0) {
+                    alert("@T("挖矿结束")");
+                    clearInterval(countTime);
+                }
+                // 获取分钟、毫秒数
+                $(".a").html(ms);
+                $(".b").html(hm);
+            }, 10);
+        }
+    });
+</script>
+<!--开关-->
+<script type="text/javascript">
+    //var t;
+    //$('#kaiguan').on('click', function () {
+    //    if ($('#kaiguan').hasClass("toggle toggle--on")) {
+    //        clearTimeout(t);
+    //        $('.newyuyue_list').hide();
+    //    } else {
+    //        t = setTimeout("AddMachineMin()", 60000)
+    //        $('.newyuyue_list').show();
+    //    }
+    //});
+
+    //$('.toggle').click(function (e) {
+
+    //    var toggle = this;
+
+    //    e.preventDefault();
+
+    //    $(toggle).toggleClass('toggle--on').toggleClass('toggle--off').addClass('toggle--moving');
+
+    //    setTimeout(function () {
+    //        $(toggle).removeClass('toggle--moving');
+    //    }, 200)
+
+    //});
+
+    $('.toggleFalse').click(function (e) {
+
+        var toggle = this;
+
+        e.preventDefault();
+
+        $(toggle).toggleClass('toggle--on').toggleClass('toggle--off').addClass('toggle--moving');
+
+        setTimeout(function () {
+            $(toggle).removeClass('toggle--moving');
+        }, 200)
+
+    });
+
+
+    //$(document).ready(function () {
+    //    var t = setTimeout("AddMachineMin()", 60000)
+    //});
+
+
+    function AddMachineMin()
+    {
+        $.post("AddMachineMin", {id:@Model.ID}, function (data) {
+            @*if(data.Status==200)
+            alert("@T("刷新成功")");
+        else
+                alert("@T("刷新失败")");*@
+            if(data.Status==200)
+                t=setTimeout("AddMachineMin()",60000)
+            else
+                layer.msg(data.Message, { icon: 2 });
+        });
+    }
+
+    function MinerInvestment()
+    {
+        $.post("MinerInvestment", {id:@Model.ID}, function (data) {
+            if(data.Status==200)
+                alert("@T("复投成功")");
+            else
+                alert("@T("复投失败")");
+        });
+    }
+
+
+</script>

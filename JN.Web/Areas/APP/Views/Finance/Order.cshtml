@@ -1,0 +1,32 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.StockEntrustsTrade>
+
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<link href="~/theme/app/css/Pager.css" rel="stylesheet" />
+@{Html.RegisterMvcPagerScriptResource();}
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page">
+            @Html.Partial("/Areas/APP/Views/Finance/_Finance.cshtml")
+            <div class="main" style="padding-top:5px;">
+
+                <div class="pay_record" style="margin-top:0;">
+                    <div class="head">
+                        @T("委托记录")
+                    </div>
+                    <div class="body" id="_Order">
+                        <!--数据开始-->
+                        @Html.Partial("_Order", Model)
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+

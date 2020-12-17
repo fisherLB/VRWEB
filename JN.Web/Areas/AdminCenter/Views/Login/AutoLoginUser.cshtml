@@ -1,0 +1,21 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>正在自动登录</title>
+    <script>
+        window.location = "@(Html.Raw(ViewBag.url))";
+    </script>
+</head>
+<body>
+    <div> 
+        正在自动登录...
+    </div>
+</body>
+</html>

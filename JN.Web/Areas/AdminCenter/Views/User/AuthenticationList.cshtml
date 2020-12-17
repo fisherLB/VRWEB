@@ -1,0 +1,244 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.User>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="@(action == "authenticationlist" && Request["isauthentication"] == "0" ? "active" : "")">
+                    <a href="@(Url.Action("authenticationlist", new { isauthentication = 0 }))">
+                        未认证的用户
+                    </a>
+                </li>
+                <li class="@(action == "authenticationlist" && Request["isauthentication"] == "1" ? "active" : "")">
+                    <a href="@(Url.Action("authenticationlist", new { isauthentication = 1 }))">
+                        已认证的用户
+                    </a>
+                </li>   
+                <li class="@(action == "noauthenticationlist"? "active" : "")">
+                    <a href="@(Url.Action("noauthenticationlist"))">
+                        未通过的用户
+                    </a>
+                </li>                 
+            </ul>
+
+            <div class="filter-bar margin-bottom-none">
+                <form method="get">
+
+                    <!-- Filter -->
+                    <div>
+                        <select name="datefiled" style="width: 80px;">
+                            <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>创建时间</option>
+                            <option value="ActivationTime" @(Request["datefiled"] == "ActivationTime" ? "selected" : "")>激活时间</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="numberfiled" style="width: 80px;">
+                            <option value="ID" @(Request["numberfiled"] == "ID" ? "selected" : "")>ID</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberform" class="input-mini" style="width: 30px;" value="@Request["numberform"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberto" class="input-mini" style="width: 30px;" value="@Request["numberto"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="keyfiled" style="width: 80px;">
+                            <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>用户名</option>
+                            <option value="RealName" @(Request["keyfiled"] == "RealName" ? "selected" : "")>姓名</option>
+                            <option value="Mobile" @(Request["keyfiled"] == "Mobile" ? "selected" : "")>手机</option>
+                            <option value="AliPay" @(Request["keyfiled"] == "AliPay" ? "selected" : "")>支付宝</option>
+                            <option value="BankCard" @(Request["keyfiled"] == "BankCard" ? "selected" : "")>银行卡</option>
+                            <option value="Email" @(Request["keyfiled"] == "Email" ? "selected" : "")>邮箱</option>
+                            <option value="RefereeUser" @(Request["keyfiled"] == "RefereeUser" ? "selected" : "")>推荐人</option>
+                            @*<option value="ParentUser" @(Request["keyfiled"] == "ParentUser" ? "selected" : "")>安置人</option>*@
+                            <option value="AgentUser" @(Request["keyfiled"] == "AgentUser" ? "selected" : "")>代理商</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="input-append">
+                            <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                            <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <input type="hidden" name="isactivation" value="@Request["isactivation"]" />
+                        <input type="hidden" name="IsAsc" value="0" />
+                        <input type="hidden" name="OrderFiled" value="ID" />
+                        <input type="hidden" name="IsExport" value="0" />
+                        <input type="submit" onclick="$('input[name=\'IsExport\']').val(0)" value="查询" />
+                        <input type="submit" onclick="$('input[name=\'IsExport\']').val(1)" value="导出" />
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- // Filter END -->
+
+                </form>
+            </div>
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">
+                        </th>
+                        <th>用户名</th>
+                        <th>真实姓名</th>                   
+                        <th>身份证号</th>
+                        <th>身份证照片</th>
+                        <th>是否认证</th>               
+                        <th>
+                            <i class="icon-time bigger-110 hidden-480"></i>
+                            认证时间
+                        </th>                    
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count > 0)
+                    {
+                        for (int i = 0; i < Model.Count; i++)
+                        {
+
+                            <tr>
+                                <td class="center text-muted">
+                                    @(i + 1)
+                                </td>
+                                <td>
+                                    <a href="###" class="@MvcHtmlString.Create((Model[i].IsAgent ?? false) ? "glyphicons parents btn-icon" : "")"><i></i>@Model[i].UserName</a>
+                                </td>
+                                <td>
+                                    @Model[i].RealName
+                                </td>
+
+                                <td>
+                                    @Model[i].IDCard
+                                </td>
+                                <td>                                    
+                                    @*@if (!string.IsNullOrEmpty(Model[i].IDCardPic1))
+                                    {
+                                        string[] images = Model[i].IDCardPic1.Split(';');
+                                        for (int n = 1; n < images.Length; n++)
+                                        {
+                                            <a href="@images[n]" target="_blank"><img src="@images[n]" style="width: 90px; height: 90px;" /></a>
+                                        }
+                                    }*@  
+                                    <a href="@Model[i].IDCardPic1" target="_blank"><img src="@Model[i].IDCardPic1" style="width: 90px; height: 90px;" /></a>     
+                                    <a href="@Model[i].IDCardPic2" target="_blank"><img src="@Model[i].IDCardPic2" style="width: 90px; height: 90px;" /></a>    
+                                    <a href="@Model[i].IDCardPic3" target="_blank"><img src="@Model[i].IDCardPic3" style="width: 90px; height: 90px;" /></a>                              
+                                </td>
+                                
+                                @*<td>
+                                    @Model[i].ReserveDecamal1
+                                </td>
+                                <td>
+                                    @(MvcHtmlString.Create(JN.Services.Manager.Users.GetUserLevelImages(Model[i].Investment)))
+                                </td>*@
+                              
+                                <td>
+                                        @*@(!string.IsNullOrEmpty(Model[i].Mobile) ? "手机认证" : "")  @MvcHtmlString.Create((!string.IsNullOrEmpty(Model[i].IDCard) && (Model[i].ReserveInt2 ?? 0) == 0) ? ((Model[i].IsAuthentication ?? false) ? "实名认证" : "<a href='/" + Url.Action("Authentication",new {ID= Model[i].ID}) + "'>审核实名认证</a>") : "")*@
+                                    @(MvcHtmlString.Create((Model[i].IsAuthentication ?? false) ? "实名认证" : "<a href='" + Url.Action("Authentication", new { ID = Model[i].ID }) + "'>审核</a>&nbsp;<a href='###' class=\"refuse\" data-value=\"" + Model[i].ID+"\">拒绝</a>"))
+                                    </td>
+                                @*<td class="hidden-480">
+                                    @(MvcHtmlString.Create(Model[i].IsLock ? "已冻结" : (Model[i].IsActivation ? "已激活" : "待审核")))
+                                </td>*@
+                                <td class="hidden-480">@Model[i].AuthenticationTime</td>                               
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="12" align="center" style="color:#999; line-height:50px">很抱歉，没有任何记录。</td></tr>
+                    }
+                </tbody>
+            </table>
+
+            <!-- // Table END -->
+            <!-- Options -->
+            <div class="separator top form-inline small">
+
+                <!-- With selected actions -->
+                <div class="pull-left checkboxs_actions hide">
+                    <label class="strong">With selected:</label>
+                    <select class="selectpicker" data-style="btn-default btn-small">
+                        <option>Action</option>
+                        <option>Action</option>
+                        <option>Action</option>
+                    </select>
+                </div>
+                <!-- // With selected actions END -->
+                <!-- Pagination -->
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+                <div class="clearfix"></div>
+                <!-- // Pagination END -->
+
+            </div>
+            <!-- // Options END -->
+
+        </div>
+    </div>
+</div>
+<!-- // Content END -->
+@section scripts{
+    <script type="text/javascript">
+        $(function () {
+            $(".refuse").on("click", function () {
+                var id = $(this).attr("data-value");
+                bootbox.prompt('请输入拒绝原因：', function (result) {
+                    if (result)
+                        $.post('@(Url.Action("NoAuthentication"))', { id: id, reason: result }, function (data) {
+                            if (data == 'ok') location.href = "@Url.Action("NoAuthenticationList")";
+                        });
+                });
+            });
+        });
+
+    </script>
+}
+
+

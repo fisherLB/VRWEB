@@ -1,0 +1,166 @@
+﻿@model List<JN.Data.User>
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<!-- page specific plugin styles -->
+<div class="page-content">
+    <div class="row">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="row">
+                <div class="col-sm-12">
+                    <a href="/user/user/treeview/" class="btn btn-primary">推荐图谱</a>
+
+                    @if (JN.Services.Tool.ConfigHelper.GetConfigString("MemberAtlas") == "double")
+                    {
+                        <a href="/user/user/doubletrack" class="btn btn-danger">安置图谱</a>
+                    }
+
+                    @if (JN.Services.Tool.ConfigHelper.GetConfigString("MemberAtlas") == "three")
+                    {
+                        <a href="/user/user/threetrack" class="btn btn-danger">安置图谱</a>
+                    }
+                    
+                    <div class="widget-box">
+                        <br />
+                        <table width="100%" border="0" cellpadding="0" cellspacing="0">
+                            <tbody>
+                                <tr>
+                                    <td width="23%" bgcolor="#FFFFFF">&nbsp;&nbsp;&nbsp;空位：<img src="/img/Ap3.gif" width="25" height="25"></td>
+                                    <td width="38%" bgcolor="#FFFFFF">
+                                        <strong><span class="style3">用户名称：</span></strong>
+                                        <input name="Nname" type="text" class="inputCN" id="Nname" size="15">
+                                        <input class="buttonCN" onclick="{if(confirm('确定要看这个用戶吗?')){this.document.selform.submit();return true;}return false;}" type="submit" value="跳转" name="action">
+                                    </td>
+                                    <td width="39%" bgcolor="#FFFFFF"><div align="left"><a href="?id=15210">回到上一层</a><a href="?" class="style17" size="12" color="#ffffff">　</a> </div></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <table width="100%" border="0" align="center" cellpadding="0" cellspacing="0">
+                            <tr>
+                                <td colspan="9" align="center" valign="middle">
+                                    @{
+    if (Model[0].ID > 0)
+    {
+        <a href="?parentid=@Model[0].ID"><img src='/img/App@(Model[0].UserLevel).gif' height="32" /><br>@(Model[0].UserName)<br>(@(JN.BLL.users.GetRecordCount("ParentPath like '%," + Model[0].ID + ",%' or ParentID=" + Model[0].ID)))</a>
+    }
+    else
+    {
+                                            <img src="/img/Ap3.gif" height="32"><br /><span>（空）</span>
+                                        }
+                                    }
+                                </td>
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="9">
+                                <img src="/img/t_tree_bottom.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_mid.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_bottom.gif"></td>
+                            </tr>
+                            <tr>
+                                @for (int i = 1; i <= 3; i++)
+                                {
+                                    <td align="center" colspan="3">
+                                        @{
+                                    if (Model[i].ID > 0)
+                                    {
+                                        <a href="?parentid=@Model[i].ID"><img src='/img/App@(Model[i].UserLevel).gif' height="32" /><br>@(Model[i].UserName)<br>(@(JN.BLL.users.GetRecordCount("ParentPath like '%," + Model[i].ID + ",%' or ParentID=" + Model[i].ID)))</a>
+                                    }
+                                    else
+                                    {
+                                        if (Model[i].ParentID > 0 && JN.BLL.users.GetModel(Model[i].ParentID).IsActivation)
+                                        {
+                                         <img src="/img/Ap3.gif" height="32"><br /><span>（<a href="/User/User/Add?ParentID=@Model[i].ParentID&ChildPlace=@i">注册</a>）</span>   
+                                        }
+                                        else
+                                        { 
+                                        <img src="/img/Ap3.gif" height="32"><br /><span>（空）</span>
+                                        }
+                                    }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                            <tr>
+                                <td align="center" colspan="3"><img src="/img/t_tree_bottom.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_mid.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_bottom.gif"></td>
+                                <td align="center" colspan="3"><img src="/img/t_tree_bottom.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_mid.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_bottom.gif"></td>
+                                <td align="center" colspan="3"><img src="/img/t_tree_bottom.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_mid.gif"><img src="/img/t_tree_line2.gif" width="33%" height="15"><img src="/img/t_tree_bottom.gif">></td>
+                            </tr>
+                            <tr>
+                                @for (int i = 4; i <= 12; i++)
+                                {
+                                    <td align="center">
+                                        @{
+                                    if (Model[i].ID > 0)
+                                    {
+                                        <a href="?parentid=@Model[i].ID"><img src='/img/App@(Model[i].UserLevel).gif' height="32" /><br>@(Model[i].UserName)<br>(@(JN.BLL.users.GetRecordCount("ParentPath like '%," + Model[i].ID + ",%' or ParentID=" + Model[i].ID)))</a>
+                                    }
+                                    else
+                                    {
+                                        if (Model[i].ParentID > 0 && JN.BLL.users.GetModel(Model[i].ParentID).IsActivation)
+                                        {
+                                         <img src="/img/Ap3.gif" height="32"><br /><span>（<a href="/User/User/Add?ParentID=@Model[i].ParentID&ChildPlace=@((i-1) % 3 + 1) ">注册</a>）</span>   
+                                        }
+                                        else
+                                        { 
+                                        <img src="/img/Ap3.gif" height="32"><br /><span>（空）</span>
+                                        }
+                                    }
+                                        }
+                                    </td>
+                                }
+                            </tr>
+                            @*<tr>
+                                <td align="center" colspan="4"><div align="center"><img src="/assets/images/line3.gif"></div></td>
+                                <td align="center" colspan="4"><div align="center"><img src="/assets/images/line3.gif"></div></td>
+                                <td align="center" colspan="4"><div align="center"><img src="/assets/images/line3.gif"></div></td>
+                                <td align="center" colspan="4"><div align="center"><img src="/assets/images/line3.gif"></div></td>
+                            </tr>
+                            <tr>
+                                @for (int i = 13; i <= 39; i++)
+                                {
+                                    <td align="center" colspan="2">
+                                        @{
+                                    if (Model[i].ID > 0)
+                                    {
+                                        <a href="?parentid=@Model[i].ID"><img src='/assets/images/@(Model[i].IsActivation ? "b6" : "b1").gif' height="32" /><br>@Model[i].UserName</a>
+                                    }
+                                    else
+                                    {
+                                        if (Model[i].ParentID > 0 && JN.BLL.users.GetModel(Model[i].ParentID).IsActivation)
+                                        {
+                                         <img src="/img/Ap3.gif" height="32"><br /><span>（<a href="/User/User/Add?ParentID=@Model[i].ParentID&ChildPlace=@(i % 2 == 0 ? "2" : "1")">注册</a>）</span>   
+                                        }
+                                        else
+                                        { 
+                                        <img src="/img/Ap3.gif" height="32"><br /><span>（空）</span>
+                                        }
+                                    }
+                                        }
+                                    </td>
+                                }
+                            </tr>*@
+                        </table>
+                        <br /><br /><br /><br /><br /><br /><br /><br /><br /><br />
+                        <table width="100%" height="40" border="0" cellpadding="4" cellspacing="0" style="border-top:2px solid #ccc">
+                            <tbody>
+                                <tr>
+                                    <td align="center">
+                                        <span class="style15">
+                                            <!--include file="bottom.asp"-->
+                                            0级用户：<img src="/img/Ap2.gif" width="25" height="25">&nbsp;&nbsp;&nbsp;1级用户：<img src="/img/App1.gif" width="26" height="26">&nbsp;&nbsp;2级用户：<img src="/img/App2.gif" width="26" height="26">&nbsp;&nbsp;3级用户：<img src="/img/App3.gif" width="26" height="26">&nbsp;&nbsp;4级用户：<img src="/img/App4.gif" width="26" height="26">&nbsp;&nbsp;<br>5级用户：<img src="/img/App5.gif" width="26" height="26">&nbsp;&nbsp;6级用户：<img src="/img/App6.gif" width="26" height="26">&nbsp;&nbsp;7级用户：<img src="/img/App7.gif" width="26" height="26">&nbsp;&nbsp;8级用户：<img src="/img/App8.gif" width="26" height="26">
+                                        </span>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+
+
+                    </div>
+                </div>
+            </div>
+            <div class="space"></div>
+            <!-- PAGE CONTENT ENDS -->
+        </div><!-- /.col -->
+    </div><!-- /.row -->
+</div><!-- /.page-content -->
+<!-- page specific plugin scripts -->

@@ -1,0 +1,149 @@
+﻿
+@model JN.Data.Shop_News
+@{
+    ViewBag.Title = "编辑新闻";
+    var cateList = MvcCore.Unity.Get<JN.Data.Service.IShop_News_CategoryService>().List();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<div id="content">
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <div class="innerLR">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            @using (Ajax.BeginForm("ModifyNew", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "afterPost" }, new { id = "validation-form", @class = "form-horizontal" }))
+            {
+                <div class="control-group">
+                    <label class="control-label" for="cateId"> 新闻类型：</label>
+                    <input type="hidden" name="Id" value="@Model.Id"/>
+                    <div class="controls">
+                        @*@if (cateList.Count() > 0)
+                        {
+                            @Html.DropDownList("cateId", new SelectList(cateList.OrderBy(x => x.Id).ToList(), "Id", "Name", "Id"), new { @class = "form-control m-b", @style = "width:130px" })
+                        }
+                        else
+                        {
+                            <input type="text" id="catelist" name="catelist" value="1" class="form-control" style="width:130px" />
+                        }*@
+                        @Html.DropDownList("cateId", new SelectList(cateList.OrderBy(x => x.Id).ToList(), "Id", "Name", "Id"), new { @class = "form-control m-b", @style = "width:130px" })
+
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="title" class="control-label">新闻标题：</label>
+
+                    <div class="controls">
+                        <span class="block input-icon input-icon-right">
+                            <input type="text" name="title" class="span9" value="@Model.Title" />
+                        </span>
+                    </div>
+                </div>
+                
+                <div class="control-group">
+                    <label for="TitleImageUrl" class="control-label">标题图片：</label>
+                    <div class="controls">
+                        <img style="width: 180px; height: 180px" id="MainPic"src="@Model.TitleImageUrl" />
+                        <input type="button" id="btnUpManiPic" value="选择图片" class="" />
+                        <input type="hidden" name="TitleImageUrl" id="hidMainimgSrc" value="@Model.TitleImageUrl" />
+                    </div>
+                </div>
+                
+               <div class="control-group">
+                    <label class="control-label" for="newsContent">新闻内容：</label>
+
+                    <div class="controls">
+                        <textarea id="newsContent" name="newsContent" cols="100" rows="8" style="width: 800px; height: 500px; visibility: hidden;">@Model.NewsContent</textarea>
+                    </div>
+                </div>
+
+                <div class="clearfix form-actions">
+                    <div class="controls">
+                        <button class="btn btn-info" type="submit">
+                            <i class="icon-ok bigger-110"></i>
+                            保存
+                        </button>
+
+                        &nbsp; &nbsp; &nbsp;
+                        <button class="btn" type="reset">
+                            <i class="icon-undo bigger-110"></i>
+                            返回
+                        </button>
+                    </div>
+                </div>
+
+                <div class="hr hr-24"></div>
+
+            }
+            <div style="clear:both"></div>
+
+        </div>
+    </div>
+</div>
+@section scripts{
+    <link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+    <script src="~/Plugin/Jquery/jquery-1.10.2.min.js"></script>
+    <script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+    <script src="~/Plugin/kindeditor-4.1.9/lang/zh_CN.js"></script>
+    <script src="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.js"></script>
+
+    <script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+
+    <script type="text/javascript">
+        //编辑
+        //function submitForm() { $('#validation-form').submit(); }
+        function afterPost(data) {
+            if (data.Status == 200) {
+                alert("保存成功，即将为您跳转页面!");
+                location.href = "@(Url.Action("Index"))"
+            } else {
+                alert("保存失败！错误信息：" + data.Message);
+            }
+        }
+        //绑定内容编辑器
+        var editor;
+        KindEditor.ready(function (K) {
+            editor = K.create('textarea[name="newsContent"]', {
+                resizeType: 1,
+                pasteType: 1,
+                allowPreviewEmoticons: false,
+                uploadJson: '@Url.Action("UpMainPic")/?ASPSESSID=' + "@Session.SessionID",
+                allowImageUpload: true,
+                items: [
+                    'source', '|', 'undo', 'redo', '|', 'preview', 'template', 'cut', 'copy', 'paste',
+                    'plainpaste', 'wordpaste', '|', 'justifyleft', 'justifycenter', 'justifyright',
+                    'justifyfull', 'insertorderedlist', 'insertunorderedlist', 'indent', 'outdent', 'subscript',
+                    'superscript', 'clearhtml', 'quickformat', 'selectall', '|', 'fullscreen', '/',
+                    'formatblock', 'fontname', 'fontsize', '|', 'forecolor', 'hilitecolor', 'bold',
+                    'italic', 'underline', 'strikethrough', 'lineheight', 'removeformat', '|', 'image', 'multiimage', 'table', 'hr'
+                ]
+            });
+        });
+
+        //上传标题图片
+        KindEditor.ready(function (K) {
+            var editor = K.editor({
+                uploadJson: '@Url.Action("UpMainPic")?ASPSESSID=' + "@Session.SessionID",
+                allowFileManager: true
+            });
+            K('#btnUpManiPic').click(function () {
+                editor.loadPlugin('image', function () {
+                    editor.plugin.imageDialog({
+                        showRemote: false,
+                        imageUrl: K('#UrlMainPic').val(),
+                        clickFn: function (url, title, width, height, border, align) {
+                            K('#MainPic').attr("src", url);
+                            K('#hidMainimgSrc').val(url);
+                            editor.hideDialog();
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+}

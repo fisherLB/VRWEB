@@ -1,0 +1,86 @@
+﻿@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<!-- page specific plugin styles -->
+
+<div class="row">
+    <div class="col-xs-12">
+        <!-- PAGE CONTENT BEGINS -->
+        @using (Ajax.BeginForm("ApplyAgent", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "afterPost" }, new { id = "saveForm", @class = "form-horizontal" }))
+        {
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">@T("商代中心推荐人用户名"):</label>
+
+                <div class="col-xs-12 col-sm-2">
+                    <div class="clearfix">
+                        <input type="text" name="refereename" class="form-control" value="" />
+                    </div>
+                </div>
+            </div>
+
+
+            @*<div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="username">@T("申请用户名"):</label>
+
+                <div class="col-xs-12 col-sm-2">
+                    <div class="clearfix">
+                        <input type="text" name="username" class="form-control" value="" />
+                    </div>
+                </div>
+            </div>*@
+
+            @*<div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="phone">@T("新商代中心编号"):</label>
+
+                <div class="col-xs-12 col-sm-2">
+
+                    <input type="text" name="agentname" class="form-control" value="@ViewBag.CurrentUser" />
+                </div>
+            </div>*@
+            <div class="form-group">
+                    <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="phone"></label>
+
+                    <div class="col-xs-12 col-sm-2" style="color:#f00">
+                        @T("注：申请商代中心必须满足相应的条件资格才能提交申请！")
+                    </div>
+                </div>
+            <div class="form-group">
+                <label class="control-label col-xs-12 col-sm-3 no-padding-right" for="phone">@T("申请备注"):</label>
+
+                <div class="col-xs-12 col-sm-5">
+                    <textarea name="agentremark" class="form-control"></textarea>
+                </div>
+            </div>
+
+            <div class="hr hr-dotted"></div>
+
+            <div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <button class="btn btn-info" type="submit">
+                        <i class="icon-ok bigger-110"></i>
+                        @T("申请")
+                    </button>
+
+                </div>
+            </div>
+        }
+
+        <!-- PAGE CONTENT ENDS -->
+    </div><!-- /.col -->
+</div><!-- /.row -->
+<!-- page specific plugin scripts -->
+<!--[if lte IE 8]>
+<![endif]-->
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<script type="text/javascript">
+    function afterPost(data) {
+        if (data.Status == 200) {
+            alertify.alert("@(T("您已成功申请商代中心，请耐心等待系统审核"))!", function () {
+                location.href = "@(Url.Action("applyagent"))";
+            });
+        } else {
+            alertify.error("@T("申请失败！错误信息：")" + data.Message);
+        }
+    }
+</script>

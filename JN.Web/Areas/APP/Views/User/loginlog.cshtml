@@ -1,0 +1,67 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.ActLog>
+
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax提交表单-->
+<link href="~/theme/app/css/Pager.css" rel="stylesheet" /><!--分页样式-->
+
+<script src="~/Plugin/My97DatePicker/WdatePicker.js"></script><!--日期插件-->
+
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page">
+            @Html.Partial("/Areas/APP/Views/Home/_Security.cshtml")
+            <!-- PAGE CONTENT BEGINS -->
+            <div class="main">
+                @*<div class="main_title" style="margin-bottom: 0;background: none;">
+                    @T("登录记录")
+                </div>*@
+                <p style="font-size:12px;color:#666;font-weight:normal; margin: -15px 0px 10px 0px;">@T("我们通过IP推测出您的大概位置，请通过时间、IP地址和参考地点来判断记录是否正常。")</p>
+                <form class="search-form" method="get">
+                    <select name="df" class="time_sel">
+                        <option value="CreateTime" @(Request["df"] == "CreateTime" ? "selected" : "")>@T("登录时间")</option>
+                    </select>
+                    <div class="date_input">
+                        <label>@T("从"):</label>
+                        <input class="daterange add-ranges" type="text" name="dateform" value="@Request["dateform"]" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'2012-01-01',maxDate:'%y-%M-%d'})" />
+                    </div>
+                    <div class="date_input">
+                        <label>@T("到"):</label>
+                        <input class="daterange add-ranges" type="text" name="dateto" value="@Request["dateto"]" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'2012-01-01',maxDate:'%y-%M-%d'})" />
+                    </div>
+                    <select name="kf" class="time_sel">
+                        <option value="IP" @(Request["kf"] == "IP" ? "selected" : "")>@T("登录IP")</option>
+                        <option value="Source" @(Request["kf"] == "Source" ? "selected" : "")>@T("参考地点")</option>                     
+                    </select>
+                    <div class="search">
+                        <input type="text" name="kv" value="@Request["kv"]" class="search-query" placeholder="@T("请输入要查询的关键字")" />
+                    </div>                  
+                    <button type="submit" class="btn btn-purple btn-sm">
+                        @T("查询")
+                        <i class="icon-search icon-on-right bigger-110"></i>
+                    </button>
+                </form>
+
+                @*<div style="margin:20px 0px 20px;">
+                    <span>@T("请选择年份")：</span>
+                    <select name="year" onchange="self.location.href=options[selectedIndex].value" style="width: 100px;height: 35px">
+                        <option selectedvalue="/App/user/loginlog/2017">2017</option>
+                        <option value="/App/user/loginlog/2016">2016</option>
+                    </select>
+                </div>*@
+                <div class="news_list">
+                    <div class="body" id="_loginlog">
+                        <!--数据开始-->
+                        @Html.Partial("_loginlog", Model)
+                        <!--分页-->
+                    </div>
+                </div>              
+                <br><br><br><br><br><br><br><br><br><br><br>
+            </div>
+            <!-- PAGE CONTENT ENDS -->
+
+        </div>
+    </div>
+</div>

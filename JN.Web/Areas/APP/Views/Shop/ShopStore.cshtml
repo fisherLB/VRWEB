@@ -1,0 +1,128 @@
+﻿@model JN.Data.Shop_Info
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<link href="~/Theme/APP/css/shop.css" rel="stylesheet" />
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+    <input value="@Model.ID" type="hidden" id="sid" />
+    <div class="logo">@Model.ShopName</div>
+</header>
+
+<section class="container">
+    <div class="main_cont">
+        <div class="shop_box">
+            <ul class="clearfix" id="Shoplist">
+
+                @*<li>
+                    <a href="ShopDetail.html">
+                        <div class="s_list_box">
+                            <div class="list_box_pic">
+                                <img src="~/Theme/APP/img/pic_2-2.jpg" />
+                            </div>
+                            <div class="s_text_c">
+                                <p class="s_box_text">2门柜子卧室木质家具组装整体定制移门大衣橱</p>
+                                <p class="price_t">30.00</p>
+                            </div>
+                        </div>
+                    </a>
+                </li>*@
+
+            </ul>
+        </div>
+
+        @*<div class="load-more">
+            <a href="">点击加载更多</a>
+        </div>*@
+
+        <!--<div class="load-no-more">
+            <span>没有更多了</span>
+        </div>-->
+    </div>
+</section>
+
+<script>
+   
+
+    $(function () {
+        Loadsearch();
+    });
+
+    function Loadsearch() {
+        var sid = $("#sid").val();
+        layui.use('flow', function () {
+            //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+            var flow = layui.flow;
+            flow.load({
+                elem: '#Shoplist', //指定列表容器
+                isAuto: false,//是否自动加载
+                done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                    var lis = [];
+                    //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                    $.get('@Url.Action("getShopStore", "shop")?page=' + page + '&sid=' + sid, function (res) {
+                        var strhtml = "";
+                        //假设你的列表返回在data集合中
+                        layui.each(res.data, function (index, item) {
+                            strhtml = "";
+                            strhtml += '<li>';
+                            strhtml += '<a href="/APP/shop/ProductInfo?id=' + item.Id + '">';
+                            strhtml += '<div class="s_list_box">';
+                            strhtml += '<div class="list_box_pic">';
+                            strhtml += '<img src="' + item.ImageUrl + '" />';
+                            strhtml += '</div>';
+                            strhtml += '<div class="s_text_c">';
+                            strhtml += '<p class="s_box_text">' + item.ProductName + '</p>';
+                            strhtml += '<p class="price_t">' + item.RealPrice + '</p>';
+                            strhtml += '</div>';
+                            strhtml += '</div>';
+                            strhtml += '</a>';
+                            strhtml += '</li>';
+                            lis.push(strhtml);
+                        });
+                        //alert(lis);
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.pages);
+                    });
+                }
+            });
+        });
+    }
+
+    //日期格式转换
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return month
+            + "-"
+            + currentDate
+            + ""
+            + " "
+            + currentHours
+            + ":"
+            + currentMinutes;
+    }
+</script>

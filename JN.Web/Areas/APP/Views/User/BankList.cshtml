@@ -1,0 +1,100 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.UserBankCard>
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="/app/User/Personal"></a>
+    </div>
+
+    <div class="logo">@T("我的收款信息")</div>
+
+    @*<div class="header-btn">
+        <a href="../Region/Region.html">中国</a>
+    </div>*@
+</header>
+
+<section class="container">
+    <div class="bankcard-list">
+        <ul id="listcontainer">
+           
+        </ul>
+    </div>
+
+    <div class="add-bankcard">
+        <a href="@Url.Action("banksettings","user")">
+            <i></i>
+            <span>@T("添加收款信息")</span>
+        </a>
+    </div>
+</section>
+@*<script src="~/Plugin/layer/layui/layui.js"></script>
+<link href="~/Plugin/layer/layui/css/layui.css" rel="stylesheet" />*@
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#listcontainer', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getbanklist", "user")?page=' + page, function (res) {
+                    var strhtml = "";
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function (index, item) {
+                        strhtml += '<li>';
+                        strhtml += '<a href="/app/user/BankSettings?bankid=' + item.ID + '" class="bankcard-list-box">';
+                        strhtml += '<h3>' + item.BankName + '</h3>';
+                        strhtml += '<p>' + (item.IsDefault == true ? "<span>@T("默认")</span>" : "") + item.BankCard + '</p>';
+                        strhtml += '</a>';
+                        strhtml += ' <button type="button" onclick="CancelBank(' + item.ID + ')">@T("解绑")</button>';
+                        strhtml += '</li>';
+                    });
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+    //设置默认
+    function SetDefault(id) {
+        layer.confirm('@T("确定设为默认？")', {
+            title: "@T("确认操作")",
+            btn: ['@T("确认")', '@T("取消")'] //按钮
+        }, function () {
+            $.post("@Url.Action("SetDefaultBankCard", "user")", { id, id}, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("操作成功")", { icon: 1 }, function () {
+             location.reload();
+            });
+            } else {
+                    layer.msg(data.Message, { icon: 2 });
+            }
+            });
+            });
+            }
+    //解绑
+    function CancelBank(id) {
+        layer.confirm('@T("确定要解绑该银行卡？")', {
+            title: "@T("确认操作")",
+            btn: ['@T("确认")', '@T("取消")'] //按钮
+        }, function () {
+            $.post("@Url.Action("BankDeleteSubmit", "user")", { id, id}, function (data) {
+            if (data.Status == 200) {
+                 layer.msg("@T("操作成功")", { icon: 1 }, function () {
+             location.reload();
+            });
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+            }
+            });
+            });
+            }
+</script>

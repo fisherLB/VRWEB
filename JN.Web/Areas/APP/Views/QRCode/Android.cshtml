@@ -1,0 +1,342 @@
+﻿@{
+    ViewBag.Title = "扫码支付";
+}
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="HandheldFriendly" content="true" />
+    <meta name="MobileOptimized" content="320" />
+    <title>@T(ViewBag.Title)</title>
+    <script src="~/Theme/APP/js/jquery-1.11.2.min.js"></script>
+    <script src="~/Theme/App/js/mui.min.js"></script><!--mui框架引用-->
+    <script src="~/Theme/App/js/fastclick.js"></script><!--消除点击延时-->
+
+    <script type="text/javascript">
+      $(function() {
+        FastClick.attach(document.body);
+      });
+    </script>
+    <script type="text/javascript">
+        mui.init();
+        var w = null;
+        var url = "/app/home";
+        var ws = null, wo = null;
+        var scan = null, domready = false;
+        // H5 plus事件处理
+        function plusReady() {
+            @*w = plus.webview.create("@(url)/UserCenter/orepool/mining");*@
+            if (ws || !window.plus || !domready) {
+                return;
+            }
+            // 获取窗口对象
+            ws = plus.webview.currentWebview();
+            wo = ws.opener();
+            // 开始扫描
+            setTimeout(function () {
+                scan = new plus.barcode.Barcode('bcid');
+                scan.onmarked = onmarked;
+                scan.start({ conserve: true, filename: "_doc/barcode/" });
+            }, 300);
+            // 显示页面并关闭等待框
+            ws.show("slide-in-right", 300);
+            wo.evalJS("closeWaiting()");
+
+            //滑动白屏  苹果手机自带滑动后退，要禁止它这个操作
+            plus.webview.currentWebview().setStyle({
+                'popGesture': 'none'
+            });
+
+            //检测网络连接
+            if (plus.networkinfo.getCurrentType() == 0 || plus.networkinfo.getCurrentType() == 1) {
+                mui.toast("@T("网络请求失败,请检查您的网络设置")");
+            }
+
+            document.addEventListener("netchange", function () {
+                if (plus.networkinfo.getCurrentType() != 0 && plus.networkinfo.getCurrentType() != 1) {
+                    mui.toast("@T("已开启网络连接")");
+                }
+                else {
+                    mui.toast("@T("网络请求失败,请检查您的网络设置")");
+                }
+            });
+        }
+        if (window.plus) {
+            plusReady();
+        } else {
+            document.addEventListener("plusready", plusReady, false);
+        }
+        // 监听DOMContentLoaded事件
+        document.addEventListener("DOMContentLoaded", function () {
+            domready = true;
+            plusReady();
+        }, false);
+        // 二维码扫描成功
+        function onmarked(type, result, file) {
+            switch (type) {
+                case plus.barcode.QR:
+                    type = "QR";
+                    break;
+                case plus.barcode.EAN13:
+                    type = "EAN13";
+                    break;
+                case plus.barcode.EAN8:
+                    type = "EAN8";
+                    break;
+                default:
+                    type = "其它";
+                    break;
+            }
+            result = result.replace(/\n/g, '');//去掉换行
+            if (type == "QR") {
+                //if (result.indexOf("0302") > 0)
+                //alert(result);
+                //window.location.href = result;
+                //plus.nativeUI.toast(result);
+                //clearVB();
+                //var ws = plus.webview.create(result);
+                //ws.show(); // 显示窗口
+                //if (result.indexOf('/usercenter')==-1) {
+                //    alert("请扫码正确的二维码");
+                //}
+                scan.close(); //关闭扫描scan
+                var gourl = result.replace('"', '').replace('"', '');
+                //alert("1:" + gourl);
+                @*var reg = new RegExp("/App/home/shopcbc_pay", 'i');
+                if (gourl.match(reg)) {
+                    gourl = "@(JN.Services.Tool.ConfigHelper.GetConfigString("QRWebsiteUrl"))" + gourl.substring(gourl.indexOf("A"), gourl.length);
+                    //alert("2:"+gourl);
+                }*@
+
+                location.href = gourl;//result.substring(result.indexOf('/usercenter'), result.length);
+                //location.href = result;
+                //plus.nativeUI.confirm("Are you sure ready?", function (e) {
+                //    window.location.href = result;
+                //}, "nativeUI", ["Yes", "No"]);
+                //
+                //else
+                //    alert(result);
+            }
+
+            //wo.evalJS("scaned('" + type + "','" + result + "','" + file + "');");
+            //back();
+            @*window.location.href = '@(url)' + "/UserCenter/orepool/mining";*@
+            //w.show()
+            //scan.close(); //关闭扫描scan
+            //location.href = url;
+        }
+        // 从相册中选择二维码图片
+        function scanPicture() {
+            plus.gallery.pick(function (path) {
+                plus.barcode.scan(path, onmarked, function (error) {
+                    plus.nativeUI.alert("@T("无法识别此图片")");
+                });
+            }, function (err) {
+                plus.nativeUI.alert("Failed: " + error.message);
+            });
+        }
+        function cancel() {
+            //back(true);
+            @*var w = plus.webview.create("@(url)/UserCenter/orepool/mining");*@
+            //w.show(); // 显示窗口
+
+            try {
+                scan.close(); //关闭扫描scan
+            } catch (e) { }
+            location.href = url;
+            ///window.location.href = syssetting.SiteUrl + "/UserCenter/login";
+
+            //ws.hide('auto');
+            //ws.close('auto');
+            //history.back();
+        }
+        function clearVB() {
+            var all = plus.webview.all();
+            var current = plus.webview.currentWebview().id;
+            for (var i = 0, len = all.length; i < len; i++) {
+                if (all[i].id !== current) {
+                    all[i].close();
+                }
+            }
+        }
+        $(function () {
+            $("#cancel").click(function () {
+                cancel();
+            })
+        })
+        //首页返回键处理
+        mui.back = function () {
+            scan.close(); //关闭扫描scan
+            //w.show(); // 显示窗口
+            location.href = url;
+        };
+    </script>
+    @*    <script src="~/Theme/App/js/common.js"></script>
+        <script type="text/javascript">
+        var ws = null, wo = null;
+        var scan = null, domready = false;
+        // H5 plus事件处理
+        function plusReady() {
+            if (ws || !window.plus || !domready) {
+                return;
+            }
+            // 获取窗口对象
+            ws = plus.webview.currentWebview();
+            wo = ws.opener();
+            // 开始扫描
+            setTimeout(function () {
+                scan = new plus.barcode.Barcode('bcid');
+                scan.onmarked = onmarked;
+                scan.start({ conserve: true, filename: "_doc/barcode/" });
+            }, 300);
+            // 显示页面并关闭等待框
+            ws.show("slide-in-right", 300);
+            wo.evalJS("closeWaiting()");
+        }
+        if (window.plus) {
+            plusReady();
+        } else {
+            document.addEventListener("plusready", plusReady, false);
+        }
+        // 监听DOMContentLoaded事件
+        document.addEventListener("DOMContentLoaded", function () {
+            domready = true;
+            plusReady();
+        }, false);
+        // 二维码扫描成功
+        function onmarked(type, result, file) {
+            switch (type) {
+                case plus.barcode.QR:
+                    type = "QR";
+                    break;
+                    //case plus.barcode.EAN13:
+                    //    type = "EAN13";
+                    //    break;
+                    //case plus.barcode.EAN8:
+                    //    type = "EAN8";
+                    //    break;
+                default:
+                    type = "其它";
+                    break;
+            }
+            result = result.replace(/\n/g, '');
+            //if (type == "QR") {
+            //if (result.indexOf("0302") > 0)
+            //alert(result);
+            //window.location.href = result;
+            //plus.nativeUI.toast(result);
+            if (result.indexOf("http") < 0) {
+                plus.nativeUI.alert(result);
+            }
+            else {
+                //var result = "http://116.31.100.139:8151/App/home/shopcbc_pay/6";
+                var gourl = result.replace('"', '').replace('"', '');
+                //alert("1:" + gourl);
+                var reg = new RegExp("/App/home/shopcbc_pay", 'i');
+                if (gourl.match(reg)) {
+                    gourl = "@(JN.Services.Tool.ConfigHelper.GetConfigString("QRWebsiteUrl"))" + gourl.substring(gourl.indexOf("A"), gourl.length);
+                    //alert("2:"+gourl);
+                }
+                back();
+                var w = plus.webview.create(gourl);
+                w.show(); // 显示窗口
+                //  plus.nativeUI.confirm("Are you sure ready?", function (e) {
+                //    //window.location.href = result;
+                //    var w = plus.webview.create(result);
+                //    w.show(); // 显示窗口
+                //}, "nativeUI", ["Yes", "No"]);
+                ////plus.runtime.openURL(result);
+
+            }
+            //plus.nativeUI.confirm("Are you sure ready?", function (e) {
+            //    window.location.href = result;
+            //}, "nativeUI", ["Yes", "No"]);
+            //
+            //else
+            //    alert(result);
+            //}
+
+            //wo.evalJS("scaned('" + type + "','" + result + "','" + file + "');");
+            // back();
+        }
+        // 从相册中选择二维码图片
+        function scanPicture() {
+            plus.gallery.pick(function (path) {
+                plus.barcode.scan(path, onmarked, function (error) {
+                    plus.nativeUI.alert("无法识别此图片");
+                });
+            }, function (err) {
+                plus.nativeUI.alert("Failed: " + error.message);
+            });
+        }
+        //function goback() {
+        //    window.location.href =
+        //}
+        function cancel() {
+            try {
+                scan.close(); //关闭扫描scan
+            } catch (e) { }
+            location.href = "@Url.Action("index","user")" ;
+        }
+        //$(function () {
+        //    $("#cancel").click(function () {
+        //        cancel();
+        //    })
+        //})
+    </script>*@
+    <link href="~/Theme/App/css/common.css" rel="stylesheet" />
+    <style type="text/css">
+        #bcid {
+            width: 100%;
+            position: absolute;
+            top: 0px;
+            bottom: 44px;
+            text-align: center;
+            left: 0;
+            right: 0;
+        }
+
+        .tip {
+            color: #FFFFFF;
+            font-weight: bold;
+            text-shadow: 0px -1px #103E5C;
+        }
+
+        footer {
+            width: 100%;
+            height: 44px;
+            position: absolute;
+            bottom: 0px;
+            line-height: 44px;
+            text-align: center;
+            color: #FFF;
+            left: 0;
+            right: 0;
+        }
+
+        .fbt {
+            width: 50%;
+            height: 100%;
+            background-color: #FFCC33;
+            float: left;
+        }
+
+            .fbt:active {
+                -webkit-box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
+                box-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.5);
+            }
+    </style>
+
+</head>
+<body style="background-color: #000000;">
+    <div id="bcid">
+        <br /><br /><br /><br /><br />
+        <p class="tip">...@T("载入中")...</p>
+    </div>
+    <footer>
+        <div class="fbt" id="cancel">@T("取　 消")</div>
+        <div class="fbt" onclick="scanPicture();">@T("从相册选择二维码")</div>
+    </footer>
+</body>
+</html>

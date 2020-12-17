@@ -1,0 +1,225 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var Param1600 = cacheSysParam.Where(x => x.PID == 1600).ToList();
+}
+<link href="/Theme/App/css/trade.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return">
+	    <a href="javascript:history.go(-1);"></a>
+	</div>
+	
+	<div class="logo">@T("买入中心")</div>
+	
+	<div class="header-btn">
+        <a href="@Url.Action("BuyRecord", "Market")">@T("记录")</a>
+	</div>
+</header>
+
+<section class="container sell-center">
+	<div class="choose-number">
+		<div class="choose-number-title">
+			<h3>@T("点击选择匹配金额")</h3>
+		</div>
+		
+		<div class="choose-number-form">
+			<form>
+				<ul>
+                    @foreach (var item in Param1600)
+                    {
+                        <li>
+                            <input type="radio" name="type" value="@item.ID">
+                            <label>@item.Value</label>
+                        </li>
+                    }
+				</ul>
+			</form>
+		</div>
+	</div>
+	
+	<!--<div class="buy-records">
+		<div class="no-content">
+			<i></i>
+			<p>暂无记录</p>
+		</div>
+	</div>-->
+    <div id="BuyList" style="position:relative; padding-bottom:2rem;">
+
+
+        @*<div class="sell-list">
+                <div class="sell-list-people">
+                    <img src="/Theme/App/images/member.png">
+                </div>
+
+                <div class="sell-list-info">
+                    <h3>会员名字</h3>
+                    <div class="user-level">
+                        <span>信用</span>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                        <i></i>
+                    </div>
+
+                    <p>支付方式：中国建设银行</p>
+                </div>
+
+                <div class="sell-list-price">
+                    <h3>交易金额：1000</h3>
+                    <p>实付金额：850.00RMB</p>
+
+                    <a href="javascript:void();" class="sell-btn">出售</a>
+                </div>
+            </div>
+            <div class="clr"></div>*@
+
+    </div>
+</section>
+
+<!--支付密码弹窗-->
+@*<div class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title">请输入支付密码</div>
+        
+        <div class="popup-box-content">
+            <div class="enter-password">
+				<form>
+					<input type="password">
+					<input type="password">
+					<input type="password">
+					<input type="password">
+					<input type="password">
+					<input type="password">
+				</form>
+			</div>
+        </div>
+        
+        <div class="popup-submit">
+            <button class="cancle-btn">取消</button>
+			<button type="submit" class="confirm-btn" onclick="confirm()">确认</button>
+        </div>
+    </div>
+</div>*@
+<script>
+    $('input[type=radio][name=type]').change(function () {
+        $("#BuyList").html("");
+        Loadsearch()
+    });
+    $(function () {
+        Loadsearch();
+    });
+    function Loadsearch() {
+        var type = $("input[name='type']:checked").val();
+        layui.use('flow', function () {
+            //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+            var flow = layui.flow;
+            flow.load({
+                elem: '#BuyList', //指定列表容器
+                isAuto: false,//是否自动加载
+                done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                    var lis = [];
+                    //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                    $.get('@Url.Action("GetBuyCenter", "Market")?page=' + page + "&type=" + type, function (res) {
+                        var strhtml = "";
+                        //假设你的列表返回在data集合中
+                        layui.each(res.data, function (index, item) {
+                            strhtml = '';
+                            strhtml += '<div class="sell-list">';
+                            strhtml += '<div class="sell-list-people">';
+                            strhtml += '<img src="' + item.ReserveStr1 + '">';
+                            strhtml += '</div>';
+                            strhtml += '<div class="sell-list-info">';
+                            strhtml += '<h3>' + item.UserName + '</h3>';
+                            strhtml += '<div class="user-level">';
+                            strhtml += '<span>@T("创建时间")：</span>';
+                            strhtml += '' + ChangeDateFormat(item.CreateTime) + '';
+                            strhtml += '</div>';
+                            strhtml += '<p>@T("支付方式")：' + item.PayWay + '</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="sell-list-price">';
+                            strhtml += '<h3>@T("交易金额")：' + item.AcceptAmount + '</h3>';
+                            strhtml += '<p>@T("挂卖金额")：' + (item.AcceptAmount + item.fee) + '</p>';
+                            strhtml += '<a href="javascript:void();" class="sell-btn" onclick="confirm(' + item.ID + ')">@T("购买")</a>';
+                            strhtml += '</div>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="clr"></div>';
+                            lis.push(strhtml);
+                        });
+                        //alert(lis);
+                        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                        next(lis.join(''), page < res.pages);
+                    });
+                }
+            });
+
+        });
+    }
+
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return month
+            + "-"
+            + currentDate
+            + ""
+            + " "
+            + currentHours
+            + ":"
+            + currentMinutes;
+    }
+
+</script>
+<script>
+    function confirm(id) {
+        layer.prompt({ title: '@T("输入交易密码")', formType: 1 }, function (val, index) {
+            $.post('@Url.Action("Buyconfirm", "Market")', { id: id, pwd: val }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("您成功购买订单")！");
+                    setTimeout(function () {  //使用  setTimeout（）方法设定定时2000毫秒
+                        window.location.reload();//页面刷新
+                    }, 2000);
+                } else {
+                    layer.msg("@T("操作失败")：" + data.Message);
+                }
+            });
+        });
+    }
+	////支付密码
+	//$(function(){
+	//	$('.sell-btn').click(function(){
+	//		$('.popup').fadeIn();
+			
+	//		var h = ($(window).height() - $('.popup-box').height())/2;
+	//		$('.popup-box').css('margin-top',h);
+	//	});	
+		
+	//	$('.cancle-btn').click(function(){
+	//		$('.popup').fadeOut();				  
+	//	});
+	//});
+
+</script>

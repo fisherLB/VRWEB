@@ -1,0 +1,693 @@
+﻿@model JN.Data.Currency
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch).ToList();
+
+    int curid = Model.ID;
+
+    //int type = string.IsNullOrEmpty(Request["type"]) ? 1 : Request["type"].ToInt();
+
+    int fromcoid = ViewBag.FromCoid;
+    //JN.Data.Currency cashCurrency = (JN.Data.Currency)ViewBag.CashCurrency;
+
+    string cashName = "现金";
+    JN.Data.Currency cashCurrency;
+    if (fromcoid != 0)
+    {
+        cashCurrency = cmodelList.SingleAndInit(x => x.ID == fromcoid);
+        cashName = cashCurrency.CurrencyName;
+    }
+    else
+    {
+        cashCurrency = cmodelList.SingleAndInit(x => x.ID == 2);
+    }
+
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    decimal high = MvcCore.Unity.Get<JN.Data.Service.IAdvertiseOrderService>().List(x => x.Status >= (int)JN.Data.Enum.AdvertiseOrderStatus.GoodsReceived).Count() > 0 ? MvcCore.Unity.Get<JN.Data.Service.IAdvertiseOrderService>().List(x => x.Status >= (int)JN.Data.Enum.AdvertiseOrderStatus.GoodsReceived).Max(x => x.Price) : 0;
+
+    decimal low = MvcCore.Unity.Get<JN.Data.Service.IAdvertiseOrderService>().List(x => x.Status >= (int)JN.Data.Enum.AdvertiseOrderStatus.GoodsReceived).Count() > 0 ? MvcCore.Unity.Get<JN.Data.Service.IAdvertiseOrderService>().List(x => x.Status >= (int)JN.Data.Enum.AdvertiseOrderStatus.GoodsReceived).Min(x => x.Price) : 0;
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+
+<script src="~/Plugin/highstock/highstock.js"></script>
+<script src="~/Plugin/highstock/exporting.js"></script>
+<script src="~/Plugin/highstock/highcharts-zh_CN.js"></script>
+@*<script src="~/Plugin/highstock/dark-unica.js"></script>*@
+<script src="~/Plugin/highstock/index.js"></script>
+
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="@Url.Action("index", "advertise")"></a>*@
+    </div>
+    <div class="logo header-open-arrow">@T(ViewBag.Title)</div>
+    @*<div class="header-btn">
+            <a href="../Region/Region.html">中国</a>
+        </div>*@
+</header>
+
+<section class="container">
+    <div class="balance">
+        <ul>
+            <li>
+                <span>@T(Model.CurrencyName)</span>
+                <h3>@JN.Services.Manager.Users.WalletCur((int)Model.WalletCurID, Umodel).ToString("F5").ToDouble()</h3>
+            </li>
+
+            <li>
+                <span>@T(cashCurrency.CurrencyName)</span>
+                <h3>@JN.Services.Manager.Users.WalletCur((int)cashCurrency.WalletCurID, Umodel).ToString("F5").ToDouble()</h3>
+            </li>
+        </ul>
+    </div>
+
+    <div class="price-update">
+        <ul>
+            <li>
+                <span>@T("当前价格")</span>
+                <b>@JN.Services.Manager.PriceHelps.getcurrentprice(Model).ToString("F5")</b>
+            </li>
+
+            <li>
+                <span>@T("高")</span>
+                <b>@high.ToString("F5")</b>
+                <i class="price-up"></i>
+            </li>
+
+            <li>
+                <span>@T("低")</span>
+                <b>@low.ToString("F5")</b>
+                <i class="price-down"></i>
+            </li>
+        </ul>
+    </div>
+
+    <div class="trade-order">
+        <ul>
+            <li>
+                <a href="@Url.Action("sell", "Advertise",new {fromcoid= fromcoid,tocoid= Model.ID})" class="trade-order-1">
+                    <i></i>
+                    <span>@T("发布出售订单")</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("buy", "Advertise",new {fromcoid= fromcoid,tocoid= Model.ID})" class="trade-order-2">
+                    <i></i>
+                    <span>@T("发布购买订单")</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("Order", "Advertise", new { Direction = 1,status=1,fromcoid= fromcoid })" class="trade-order-3">
+                    <i></i>
+                    <span>@T("订单")</span>
+                </a>
+            </li>
+
+            <li>
+                <a href="@Url.Action("AdvertiseOrder", "Advertise",new {status= 1,fromcoid= fromcoid})" class="trade-order-4">
+                    <i></i>
+                    <span>@T("交易记录")</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+    <div class="clr"></div>
+
+    <div class="chart">
+        <div class="chart-title">
+            <span class="active">@T("5分钟")</span>
+            <span>@T("5小时")</span>
+            <span>@T("日线")</span>
+        </div>
+        <div class="chart-content"> 
+            <div class="line-chart" style="display: block;">
+                <div id="lineChart"></div>
+            </div>
+            @*<div class="line-chart" id="lineChart"><iframe src="@Url.Action("appkline")?curid=@curid&m=5" style="border:0; width:100%;height:250px;" id="iframecurrency" name="iframecurrency"></iframe></div>*@            
+                <div class="line-chart" >
+                    <div id="lineChart2"></div>
+                </div>
+                <div class="line-chart">
+                    <div id="lineChart3"></div>
+                </div>
+</div>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-list">
+        <div class="trade-list-title">
+            <ul>
+                <li class="active">@T(cashName)@T("购买")</li>
+                <li>@T(cashName)@T("出售")</li>
+            </ul>
+        </div>
+
+        <div class="trade-tab">
+            <div id="listcontainer_buy">
+
+            </div>
+
+            <div id="listcontainer_sell">
+
+            </div>
+        </div>
+    </div>
+</section>
+
+<!--选择币种弹窗-->
+<div id="coin" class="popup">
+    <div class="popup-box">
+        <div class="popup-box-content">
+            <div class="choose-list">
+                <ul>
+                    <li>
+                        <input type="radio">
+                        <label>@T(Model.CurrencyName)</label>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+            <button type="submit" class="confirm-btn">@T("确认")</button>
+        </div>
+    </div>
+</div>
+
+<!--购买弹窗-->
+<div id="buy" class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title">@T("向") [<span id="buyusername"></span>] @T("购买")</div>
+
+        <div class="popup-box-content">
+            <div class="form-widget">
+                <form action="" method="get" id="buyform">
+                    <input type="hidden" name="adid" value="0" id="buyid" />
+                    <div class="form-box">
+                        <div class="form-group">
+                            <label class="form-label">@T("限额")</label>
+
+                            <div class="form-control">
+                                <input value="0" id="buyquantity" readonly>
+
+                                <span class="trade-type">@T(Model.CurrencyName)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T("当前价格")</label>
+
+                            <div class="form-control">
+                                <input value="0" id="buyprice" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T(Model.CurrencyName)</label>
+
+                            <div class="form-control">
+                                <input placeholder="@T("请输入数量")" type="text" name="quantity" id="b_quantity">
+
+                                <span class="trade-all" onclick="allbuy()">@T("全额")</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T("交易密码")</label>
+                            <div class="form-control">
+                                <input type="password" name="tradeinPassword" placeholder="@T("请输入交易密码")">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-tips">@T("请在")3 @T("小时内线下打款到卖家账户")，@T("否则将影响您的信用值")！</div>
+                </form>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+            <button type="button" class="confirm-btn" id="buySubmit">@T("确认")</button>
+        </div>
+    </div>
+</div>
+
+<!--出售弹窗-->
+<div id="sell" class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title">@T("向") [<span id="sellusername"></span>] @T("卖出")</div>
+
+        <div class="popup-box-content">
+            <div class="form-widget">
+                <form action="" method="get" id="sellform">
+                    <input type="hidden" name="adid" value="0" id="sellid" />
+                    <div class="form-box">
+                        <div class="form-group">
+                            <label class="form-label">@T("限额")</label>
+
+                            <div class="form-control">
+                                <input value="0" id="sellquantity" readonly>
+
+                                <span class="trade-type">@T(Model.CurrencyName)</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T("当前价格")</label>
+
+                            <div class="form-control">
+                                <input value="0" id="sellprice" readonly>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T(Model.CurrencyName)</label>
+
+                            <div class="form-control">
+                                <input placeholder="@T("请输入数量")" type="text" name="quantity" id="s_quantity">
+
+                                <span class="trade-all" onclick="allsell()">@T("全额")</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T("交易密码")</label>
+                            <div class="form-control">
+                                <input type="password" name="tradeoutPassword" placeholder="@T("请输入交易密码")">
+                            </div>
+                        </div>
+                    </div>
+
+                    @*<div class="enter-password">
+                            <input type="password">
+                            <input type="password">
+                            <input type="password">
+                            <input type="password">
+                            <input type="password">
+                            <input type="password">
+                        </div>*@
+
+                    <div class="form-tips">@T("请在")3 @T("小时内确认收款")，@T("否则将影响您的信用值")！</div>
+                </form>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+            <button type="button" class="confirm-btn" id="sellSubmit">@T("确认")</button>
+        </div>
+    </div>
+</div>
+
+
+<script src="/Theme/app/js/echarts-all.js"></script>
+
+<script type="text/javascript">
+
+    function onloadLine(m){
+        var pricedata = [];
+        var pricetime = [];
+        //获取委托数据
+        $.post('@Url.Action("GetKLine")', { curid: @curid ,m : 5}, function (d) {          
+            for (var i = 0; i < d.Data.length; i++) {
+                pricedata.push(d.Data[i].Close);
+                pricetime.push(d.Data[i].Time);
+            }
+            var myChart = echarts.init(document.getElementById('lineChart'));
+            var option = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 35,
+                    x2: 10,
+                    y: 30,
+                    y2: 25,
+                    borderWidth:'0'//设置外围边框为0
+                },
+                legend: {
+                    data:['@T(Model.CurrencyName)']
+                },
+                color: ['#529ad2'],
+                toolbox: {
+                    show : false,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : false,//去边框
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,//占满全图？
+                        data : pricetime,
+                        splitLine : {show : false}//保留网格区域
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        splitLine: {
+                            show: false //去除网格线
+                        }
+
+                    }
+                ],
+                series : [
+                    {
+                        name:'@T(Model.CurrencyName)',
+                        type:'line',
+                        smooth:true,
+                        itemStyle: {normal: {areaStyle: {color:'#cce7fb'}}},//type: 'default'
+                        data:pricedata,
+                        //normal:{color:'#80c1f9'}
+                    }
+                ]
+            };
+
+            // 为echarts对象加载数据
+            myChart.setOption(option);
+
+        });
+
+        //获取委托数据
+        $.post('@Url.Action("GetKLine")', { curid: @curid ,m : 300}, function (d) {
+            var pricedata2 = [];
+            var pricetime2 = [];
+            for (var i = 0; i < d.Data.length; i++) {
+                pricedata2.push(d.Data[i].Close);
+                pricetime2.push(d.Data[i].Time);
+            }
+
+            var myChart2 = echarts.init(document.getElementById('lineChart2'));
+            var option2 = {
+                tooltip : {
+                    trigger: 'axis'
+                },
+                grid: {
+                    x: 35,
+                    x2: 10,
+                    y: 30,
+                    y2: 25,
+                    borderWidth:'0'//设置外围边框为0
+                },
+                legend: {
+                    data:['@T(Model.CurrencyName)']
+                },
+                color: ['#529ad2'],
+                toolbox: {
+                    show : false,
+                    feature : {
+                        mark : {show: true},
+                        dataView : {show: true, readOnly: false},
+                        magicType : {show: true, type: ['line', 'bar', 'stack', 'tiled']},
+                        restore : {show: true},
+                        saveAsImage : {show: true}
+                    }
+                },
+                calculable : false,//去边框
+                xAxis : [
+                    {
+                        type : 'category',
+                        boundaryGap : false,//占满全图？
+                        data : pricetime2,
+                        splitLine : {show : false}//保留网格区域
+                    }
+                ],
+                yAxis : [
+                    {
+                        type : 'value',
+                        splitLine: {
+                            show: false //去除网格线
+                        }
+
+                    }
+                ],
+                series : [
+                    {
+                        name:'@T(Model.CurrencyName)',
+                        type:'line',
+                        smooth:true,
+                        itemStyle: {normal: {areaStyle: {color:'#cce7fb'}}},//type: 'default'
+                        data:pricedata2,
+                        //normal:{color:'#80c1f9'}
+                    }
+                ]
+            };
+
+            // 为echarts对象加载数据
+            myChart2.setOption(option2);
+
+        });
+
+    }
+
+</script>
+
+<script>
+    //购买弹窗
+    function openbuy(id, username, havequantity, price) {
+        $('#buy.popup').fadeIn();
+        var h = ($(window).height() - $('#buy .popup-box').height()) / 2;
+        $('#buy .popup-box').css('margin-top', h);
+        $('#sell .popup-box').css('margin-top', h);
+        $('#buyid').val(id);
+        $('#buyusername').text(username);
+        $('#buyquantity').val(havequantity);
+        $('#buyprice').val(price);
+        //alert(id)
+    }
+
+    //出售弹窗
+    function opensell(id, username, havequantity, price) {
+        $('#sell.popup').fadeIn();
+        var h = ($(window).height() - $('#sell .popup-box').height()) / 2;
+        $('#sellid').val(id);
+        $('#sellusername').text(username);
+        $('#sellquantity').val(havequantity);
+        $('#sellprice').val(price);
+        //alert(id)
+    }
+    //全额卖出
+    function allsell() {
+        $("#s_quantity").val($('#sellquantity').val());
+    }
+    //全额买入
+    function allbuy() {
+        $("#b_quantity").val($('#buyquantity').val());
+    }
+    //关闭操作
+    $('.cancle-btn').click(function () {
+        $('#buy.popup').fadeOut();
+        $('#sell.popup').fadeOut();
+    });
+
+    $("#sellSubmit").click(function () {
+        $('#sellSubmit').attr("disabled", "disabled");
+        $.post("@Url.Action("SellSubmit", "Advertise")", $('#sellform').serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("出售成功")！", { icon: 1 });
+                window.location.href = "@Url.Action("AdvertiseOrderDetail", "Advertise")/" + data.Message;
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+                $('#sellSubmit').removeAttr("disabled");
+            }
+        });
+    });
+
+    $("#buySubmit").click(function () {
+        $('#buySubmit').attr("disabled", "disabled");
+        $.post("@Url.Action("buySubmit", "Advertise")", $('#buyform').serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("购买成功")！", { icon: 1 });
+                window.location.href = "@Url.Action("AdvertiseOrderDetail", "Advertise")/" + data.Message;
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+                $('#buySubmit').removeAttr("disabled");
+            }
+        })
+    });
+
+
+
+    $(function(){
+        onloadLine(5);//加载k图
+        getKline("@Url.Action("GetKLine")", @curid ,1440,"#lineChart3");
+        Highcharts.setOptions({
+            lang: {
+                rangeSelectorZoom: ''
+            }
+        });
+        //选择币种弹窗
+        $('.header-open-arrow').click(function(){
+            $('#coin.popup').fadeIn();
+
+            var h = ($(window).height() - $('#coin .popup-box').height())/2;
+            $('#coin .popup-box').css('margin-top',h);
+        });
+
+        $('.cancle-btn').click(function(){
+            $('#coin.popup').fadeOut();
+        });
+
+        var w = $(".line-chart:first-child").width();
+        $(".line-chart>div").width(w);
+
+        //折线图选项卡
+        $(".chart-title span").click(function(){
+
+           
+
+            var _index = $(this).index();
+
+            $(".line-chart").eq(_index).fadeIn().siblings().fadeOut();
+            $(this).addClass("active").siblings().removeClass("active");
+        });
+
+        //交易列表选项卡
+        $(".trade-list-title li").click(function(){
+
+            //通过 .index()方法获取元素下标，从0开始，赋值给某个变量
+            var _index = $(this).index();
+
+            //让内容框的第 _index 个显示出来，其他的被隐藏
+            $(".trade-tab>div").eq(_index).show().siblings().hide();
+
+            //改变选中时候的选项框的样式，移除其他几个选项的样式
+            $(this).addClass("active").siblings().removeClass("active");
+        });
+
+    });
+
+</script>
+<script src="~/Plugin/layer/layui/layui.js"></script><!--layui插件js-->
+<link href="~/Plugin/layer/layui/css/layui.css" rel="stylesheet" />
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#listcontainer_buy', //指定列表容器
+            isAuto: true,//是否自动加载
+            end: ' ',
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getAdvertiseList")?page=' + page + "&type=0&curid=@(curid)&coinid=@(fromcoid)", function (res) {
+                    var strhtml = "";
+                    if (res.data.length > 0) {
+                        //假设你的列表返回在data集合中
+                        layui.each(res.data, function (index, item) {
+                            //判断在时间范围内才展示
+                            //if (item.StartLimitedTime == null || item.EndLimitedTime == null || checkTime(item.StartLimitedTime, item.EndLimitedTime) == true) {
+                            strhtml += '<div class="trade-list-content" onclick="openbuy(' + item.ID + ',\'' + item.UserName + '\',' + (item.Quantity - item.HaveQuantity).toFixed(5) + ',' + item.Price + ')">';
+                            strhtml += '<img src="' + (item.OutTable_User.HeadFace == null ? "/Theme/app/images/member.png" : item.OutTable_User.HeadFace) + '">';
+                            strhtml += '<div class="trade-list-item">';
+                            strhtml += '<h3>' + item.UserName + '</h3>';
+                            strhtml += '<p>@T("限额")<span>' + (item.Quantity - item.HaveQuantity).toFixed(5) + '</span></p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="trade-list-btn">';
+                            strhtml += '<h3>' + item.Price.toFixed(5) + '</h3>';
+                            strhtml += '<span class="open-buy">' + (item.Direction == 0 ?"@T("购买")":"@T("卖出")") + '</span>';
+                            strhtml += '</div>';
+                            strhtml += '</div>';
+                            //}
+                        });
+                    } else {
+                        strhtml += '<div class="load-no-more">';
+                        strhtml += '<span>@T("没有更多了")</span>';
+                        strhtml += '</div>';
+                    }
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+
+        flow.load({
+            elem: '#listcontainer_sell', //指定列表容器
+            isAuto: true,//是否自动加载
+            end: ' ',
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getAdvertiseList")?page=' + page + "&type=1&curid=@(curid)&coinid=@(fromcoid)", function (res) {
+                    var strhtml = "";
+                    if (res.data.length > 0) {
+                        //假设你的列表返回在data集合中
+                        layui.each(res.data, function (index, item) {
+                            //判断在时间范围内才展示
+                            //if (item.StartLimitedTime == null || item.EndLimitedTime == null || checkTime(item.StartLimitedTime, item.EndLimitedTime) == true) {
+                            strhtml += '<div class="trade-list-content" onclick="opensell(' + item.ID + ',\'' + item.UserName + '\',' + (item.Quantity - item.HaveQuantity).toFixed(5) + ',' + item.Price + ')">';
+                            strhtml += '<img src="' + (item.OutTable_User.HeadFace == null ? "/Theme/app/images/member.png" : item.OutTable_User.HeadFace) + '">';
+                            strhtml += '<div class="trade-list-item">';
+                            strhtml += '<h3>' + item.UserName + '</h3>';
+                            strhtml += '<p>@T("限额")<span>' + (item.Quantity - item.HaveQuantity).toFixed(5) + '</span></p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="trade-list-btn">';
+                            strhtml += '<h3>' + item.Price.toFixed(5) + '</h3>';
+                            strhtml += '<span class="open-buy">' + (item.Direction == 0 ?"@T("购买")":"@T("卖出")") + '</span>';
+                            strhtml += '</div>';
+                            strhtml += '</div>';
+                            //}
+                        });
+                    } else {
+                        strhtml += '<div class="load-no-more">';
+                        strhtml += '<span>@T("没有更多了")</span>';
+                        strhtml += '</div>';
+                    }
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+
+    //判断时间范围
+    function checkTime(beginTime, endTime) {
+        var strb = beginTime.split(":");
+        if (strb.length != 2) {
+            return false;
+        }
+
+        var stre = endTime.split(":");
+        if (stre.length != 2) {
+            return false;
+        }
+
+        var b = new Date();
+        var e = new Date();
+        var n = new Date();
+
+        b.setHours(strb[0]);
+        b.setMinutes(strb[1]);
+        e.setHours(stre[0]);
+        e.setMinutes(stre[1]);
+
+        if (n.getTime() - b.getTime() > 0 && n.getTime() - e.getTime() < 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+</script>

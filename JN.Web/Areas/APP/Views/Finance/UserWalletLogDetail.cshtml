@@ -1,0 +1,61 @@
+﻿@model JN.Data.WalletLog
+@{
+    ViewBag.Title = "财务流水详情";
+    //Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T(ViewBag.Title)</div>
+</header>
+
+<section class="container">
+    <div class="trade-people">
+        <div class="trade-people-photo">
+            <img src="@(Umodel.HeadFace ?? "/Theme/app/images/member.png") ">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@(Umodel.UserName)@(!string.IsNullOrWhiteSpace(Umodel.RealName) ? "(" + Umodel.RealName + ")" : "")</h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-order-details">
+        <h3>@T("流水信息")</h3>
+        <ul>
+            <li>
+                <label>@T("时间")</label>
+                <span>@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+            </li>
+
+            <li>
+                <label>@T("金额")</label>
+                @*<span  class="order-details-price">@(Model.ChangeMoney > 0 ? ("+" + Model.ChangeMoney.ToDouble()) : ("" + Model.ChangeMoney.ToDouble()))</span>*@
+                <span class="order-details-price">@(Model.ChangeMoney > 0 ? ("+" + Model.ChangeMoney.ToString("F5")) : ("" + Model.ChangeMoney.ToString("F5")))</span>
+            </li>
+
+            <li>
+                <label>@T("币种")</label>
+                <span class="order-details-status">@T(Model.CoinName)</span>
+            </li>
+
+            <li>
+                <label>@T("余额")</label>
+                <span>@*@Model.Balance.ToDouble()*@ @Model.Balance.ToString("F5")</span>
+            </li>
+
+            <li>
+                <label>@T("描述")</label>
+                <span>@Model.Description</span>
+            </li>         
+        </ul>
+    </div>
+</section>
+

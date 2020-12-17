@@ -1,0 +1,28 @@
+﻿@{ 
+    string curl = Request.Url.ToString().ToLower();
+}
+
+
+<footer class="aui-footer-default aui-footer-fixed">
+    <a href="~/APP/Home/Index" class="nouseopen @(curl.Contains("/app/home") ? "current" : "")">
+        <span class="icon icon-1"></span>
+        <span class="aui-footer-item-text">@T("资金")</span>
+    </a>
+    <a href="/APP/User/Miner" class="nouseopen @(curl.Contains("/app/user/miner") ? "current" : "")">
+        <span class="icon icon-2"></span>
+        <span class="aui-footer-item-text"> @T("矿机")</span>
+    </a>
+    <a href="/APP/Shop/Index" class="nouseopen @(curl.Contains("/app/shop/index") ? "current" : "")">
+        <span class="icon icon-3"></span>
+        <span class="aui-footer-item-text"> @T("商城")</span>
+    </a>
+    <a href="/APP/Finance/Transaction" class="nouseopen @(curl.Contains("/app/finance/transaction") ? "current" : "")">
+        <span class="icon icon-4"></span>
+        <span class="aui-footer-item-text">@T("交易")</span>
+    </a>
+    <a href="/APP/User/Personal" class="nouseopen @(curl.Contains("/app/user/personal") ? "current" : "")">
+        <span class="icon icon-5"></span>
+        <span class="aui-footer-item-text">@T("个人")</span>
+    </a>
+    
+</footer>

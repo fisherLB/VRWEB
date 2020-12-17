@@ -1,0 +1,162 @@
+﻿@model JN.Data.ExchangeCurrency
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="col-xs-12">
+            <!-- PAGE CONTENT BEGINS -->
+            <form id="validation-form" class="form-horizontal" enctype="multipart/form-data" method="post">
+                <div class="control-group">
+                    <label class="control-label"></label>
+
+                
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="username">规则名称</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="ExchangeName" value="@Model.ExchangeName" class="form-control" style="width:350px" />
+                            <input type="hidden" name="ID" value="@Model.ID" />
+                        </div>
+                    </div>
+                </div>
+
+                @{
+                    if (Model.ID > 0)
+                    {
+                        <div class="control-group">
+                            <label class="control-label" for="email">兑换币种</label>
+
+                            <div class="controls">
+                                <div class="clearfix">
+                                    @Html.DropDownList("FromCoinID", new SelectList(MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch).OrderBy(x => x.ID).ToList(), "ID", "CurrencyName", Model.ID), new { @class = "form-control" })
+                                                                @*<input type="text" name="FromCoinName" value="@Model.FromCoinName" disabled readonly class="form-control" style="width:350px" />*@
+                                                            </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">目标币种</label>
+
+                            <div class="controls">
+                                <div class="clearfix">
+                                    @Html.DropDownList("ToCoinID", new SelectList(MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch).OrderBy(x => x.ID).ToList(), "ID", "CurrencyName", Model.ID), new { @class = "form-control" })
+                                                                @*<input type="text" name="ToCoinName" value="@Model.ToCoinName" disabled readonly class="form-control" style="width:350px" />*@
+                                                            </div>
+                            </div>
+                        </div>
+                    }
+                    else
+                    {
+                        <div class="control-group">
+                            <label class="control-label" for="email">兑换币种</label>
+
+                            <div class="controls">
+                                <div class="clearfix">
+                                    @Html.DropDownList("FromCoinID", new SelectList(MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch).OrderBy(x => x.ID).ToList(), "ID", "CurrencyName", Model.ID), new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="control-group">
+                            <label class="control-label" for="email">目标币种</label>
+
+                            <div class="controls">
+                                <div class="clearfix">
+                                    @Html.DropDownList("ToCoinID", new SelectList(MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch).OrderBy(x => x.ID).ToList(), "ID", "CurrencyName", Model.ID), new { @class = "form-control" })
+                                </div>
+                            </div>
+                        </div>
+                    }
+                }
+
+                
+                <div class="control-group" style="display:none;">
+                    <label class="control-label" for="idcard">使用汇率自动计算比例</label>
+                    <div class="controls">
+                        <div class="clearfix">
+                            <select name="ISEchangeRate">
+                                <option value="False" @(!(Model.ISEchangeRate ?? false) ? "selected" : "")>否</option>
+                                <option value="True" @((Model.ISEchangeRate ?? false) ? "selected" : "")>是</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="idcard">兑换比例</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="Rate" value="@Model.Rate.ToDouble()" class="form-control" style="width:350px" /><span style="color:red;">&nbsp; *最高5位小数</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="idcard">兑换倍数</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="MinNumber" value="@Model.MinNumber.ToDouble()" class="form-control" style="width:350px" /><span style="color:red;">&nbsp; *最高5位小数</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label class="control-label" for="idcard">兑换上限</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <input type="text" name="MaxNumber" value="@Model.MaxNumber.ToDouble()" class="form-control" style="width:350px" /><span style="color:red;">&nbsp; *最高5位小数</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="hr hr-dotted"></div>
+
+                @*<div class="control-group">
+                    <label class="control-label" for="bankcard">矿机介绍</label>
+
+                    <div class="controls">
+                        <div class="clearfix">
+                            <textarea id="doccontent" name="content" class="wysihtml5 span9" rows="15">@Model.Content</textarea>
+                        </div>
+                    </div>
+                </div>*@
+
+                <div class="hr hr-dotted"></div>
+                <div class="control-group">
+                    <label class="control-label">&nbsp;</label>
+                    <div class="controls">
+                        <button class="btn btn-primary" type="submit">
+                            保存
+                        </button>
+
+                        <a href="javascript:history.go(-1);" class="btn btn-grey">
+                            <i class="icon-arrow-left"></i>
+                            返 回
+                        </a>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+@section scripts{
+    <!-- page specific plugin styles -->
+   
+}

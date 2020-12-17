@@ -1,0 +1,135 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000);
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return mui-action-back">
+	    @*<a href="javascript:history.go(-1);"></a>*@
+	</div>
+	
+	<div class="logo">@T("投诉留言")</div>
+</header>
+
+<section class="container">
+	<div class="feedback-form">
+		<form action="" method="get" id="addWrite">
+            <div class="message-phone colorfont">
+                @T("留言电话")：<span class="colorfont">13978988888</span>
+            </div>
+
+			<h3 class="white">@T("请选择反馈问题类型")</h3>
+			<div class="region-list feedback-type">
+				<ul>
+                    @foreach (var item in cacheSysParam.Where(x => x.PID == 5100 && x.IsUse).ToList())
+                    {
+                        <li>
+                            <input type="radio" name="messagetype" value="@T(item.Name)" class="colorfont">
+                            <label class="colorfont">@T(item.Name)</label>
+                        </li>
+                    }				
+				</ul>
+			</div>
+			<div class="clr"></div>
+			
+			<div class="textarea-group">
+                <textarea placeholder="@T("描述一下您的问题")" name="content" id="content"></textarea>
+				
+				<div class="textarea-group-tips">
+					<span class="fl colorfont"><em>*</em>@T("问题反馈最少输入5个字")</span>
+					<span class="fr colorfont"><label id="WordCount" class="colorfont">0</label>/200</span>
+				</div>
+			</div>
+			<div class="clr"></div>
+			
+			<div class="upload-photo">
+				<h3 class="colorfont">@T("请上传相关问题截图")</h3>
+				<ul>
+                    <li id="imgDisplay" style="display:none">
+                        <div class="upload-photo-box">
+                            <a href="" class="delete-photo" onclick="deleteimages()"></a>
+                            <div class="loaded-photo-thumbnail">
+                                <img src="/Theme/App/img/sample1.jpg" id="img">
+                            </div>
+                        </div>
+                    </li>
+					@*<li>
+						<div class="upload-photo-box">
+							<div class="loading-photo">上传中</div>
+							<div class="loaded-photo-thumbnail">
+                                <img src="/Theme/App/img/p1.jpg">
+							</div>
+						</div>
+					</li>*@
+                    <li id="fileDisplay" style="display:block">
+                        <div class="upload-photo-box">
+                            <div class="add-photo-btn">
+                                <input type="file" name="imgurl" accept="image/jpg,image/jpeg,image/png,image/gif" onchange="checkinfo(this)">
+                            </div>
+                        </div>
+                    </li>
+				</ul>
+			</div>
+			
+			<div class="form-submit">
+				<button type="button" class="form-submit-btn" onclick="Submission()" id="btnEdit">@T("提交")</button>
+			</div>
+		</form>
+	</div>
+</section>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    var subsumt = false;
+    $("#content").keyup(function () {//输入商家描述
+        var buyPrice = $("#content").val().length;
+        $("#WordCount").html($("#content").val().length);
+    })
+    function Submission() {
+        $('#btnEdit').attr("disabled", "disabled");
+        if (subsumt) return;
+        subsumt = !subsumt;
+        $("#addWrite").ajaxSubmit({
+            url: "@Url.Action("Write", "Mail")",
+            type: "post",
+        success: function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("提交成功")", { icon: 1 }, function () {
+                    window.location.reload();
+                });
+            } else {
+                layer.msg("@T("提交失败")：" + data.Message, { icon: 2 });
+                $('#btnEdit').removeAttr("disabled");
+                subsumt = !subsumt;
+            }
+        },
+        error: function (error) {
+            alert(error);
+            subsumt = !subsumt;
+        }
+    });
+    }
+</script>
+<script type="text/javascript">
+    if (window.FileReader) {
+        function checkinfo(obj) {
+            var len = obj.files.length;
+            console.log(obj.files);
+            for (var i = 0 ; i < len ; i++) {
+                showimg(obj.files[i]);
+            }
+        }
+        function showimg(imges) {
+            var a = new FileReader();
+            a.readAsDataURL(imges);
+            a.onload = function () {
+                $("#img").attr("src", a.result);
+                $("#imgDisplay").css("display", "block");
+                $("#fileDisplay").css("display", "none");
+            }
+        }
+        function deleteimages() {
+            $("#imgDisplay").css("display", "none");
+            $("#fileDisplay").css("display", "block");
+        }
+    }
+</script>

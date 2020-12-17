@@ -1,0 +1,197 @@
+﻿@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">@T("完善资料")</div>
+</header>
+
+<section class="container">
+    <div class="setting-form">
+        <div class="setting-panel">
+            <div class="tips-area">
+                <span class="icon-warning-1"></span>
+                @T("为确保交易安全，保障您的合法权益，请您完成身份验证！我们提供安全高效实时联网的官方身份认证服务，具有更高级别的安全保护。身份验证一旦成功，不予修改和解除认证。建议您谨慎选择，真实填写。")
+            </div>
+            <form method="post" id="form">
+                <div class="real-name-cont">
+                    <div class="head">
+                        @*@if ((Model.AuthenticationStatus ?? 0) == 0)
+                            {
+                                <div class="expand">
+                                    <span class="text-expand">展开</span><span class="text-close">收起</span><span class="icon-expand"></span>
+                                </div>
+                            }*@
+                        <span class="icon-id-card @(!(Model.IsAuthentication ?? false) ? "" : "active")"></span>
+                        <div class="head-title">
+                            <div class="title-1">
+                                @T("中国大陆身份验证")
+                                <span class="status-tag">
+                                    @T((Model.IsAuthentication ?? false) ? "已认证" : (Model.AuthenticationStatus ?? 0) == 1 ? "审核中" : "未认证")
+                                </span>
+                            </div>
+                            <div class="decs">@T("适用于大多数中国大陆用户")</div>
+                        </div>
+                    </div>
+
+                    <div class="content normal-form form-cont clear-float" style="padding-top:25px;">
+
+                        @if ((Model.AuthenticationStatus ?? 0) == 0 && !(Model.IsAuthentication ?? false))
+                        {
+                            <div class="form-item input-cont">
+                                <div class="input-name">@T("姓名:")</div>
+                                <input type="text" name="realname" class="input" placeholder='@T("请输入真实姓名")'>
+                                <div class="form-tips"></div>
+                                <div class="error-msg">@T("请输入真实姓名")</div>
+                            </div>
+                            <div class="form-item input-cont">
+                                <div class="input-name">@T("身份证号码:")</div>
+                                <input type="tel" name="idcard" class="input" placeholder='@T("请输入身份证号码")'>
+                                <div class="form-tips"></div>
+                                <div class="error-msg">@T("请输入正确的身份证号码，15位或18位")</div>
+                            </div>
+                            <div class="content upload-pic">
+                                <div id="MainPic">
+                                    @*<img style="width: 250px; height: 180px" src="~/theme/app/images/id-card-front-side.jpg" />
+                                        <img style="width: 250px; height: 180px" src="~/theme/app/images/id-card-back-side.jpg" />
+                                        <img style="width: 250px; height: 180px" src="~/theme/app/images/selfie-holding-id-card.jpg" />*@
+                                    <img style="width: 250px; height: 180px" src="~/theme/app/images/id-card-front-side.png" />
+                                    <img style="width: 250px; height: 180px" src="~/theme/app/images/id-card-back-side.png" />
+                                    <img style="width: 250px; height: 180px" src="~/theme/app/images/selfie-holding-id-card.png" />
+                                </div>
+
+                                <div class="upload-area">
+                                    <div class="square" style="margin-top:10px;">
+                                        <span class="defalt-img"></span>
+                                        <input type="hidden" name="imagesurl" id="hidMainimgSrc" value="" />
+                                        <div class="link" id="btnUpManiPic">+@T("上传图片")</div>
+                                    </div>
+                                    <div class="text">@T("请上传您的护照，图片小于")<span class="link">2M</span></div>
+                                    <div class="btn btn-save-pic" onclick="changeSubmit()">@T("提交")</div>
+                                </div>
+                                <div class="upload-decs"><p>@T("上传图片注意事项：")</p><p>@T("您上传的护照图片是")<span class="link">@T("真实")</span>@T("有效的")</p><p>@T("您的护照图片的信息")<span class="link">@T("清晰")</span>@T("可见")</p><p>@T("您上传的图片没有反光或是折痕情况")</p><p>@T("您上传的图片为")<span class="link">@T("彩色")</span>@T("图像")</p></div>
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="form-item input-cont">
+                                <div class="input-name">@T("姓名:")</div>
+                                <input type="text" class="input" readonly value="@Model.RealName">
+                                <div class="form-tips"></div>
+                            </div>
+                            <div class="form-item input-cont">
+                                <div class="input-name">@T("身份证号码:")</div>
+                                <input type="tel" class="input" readonly value="@JN.Services.Tool.StringHelp.IdCardHid(Model.IDCard)  ">
+                                <div class="form-tips"></div>
+                            </div>
+                        }
+                    </div>
+                </div>
+
+            </form>
+        </div>
+    </div>
+
+</section>
+    <script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+
+    <!--上传图片-->
+    <link href="~/Plugin/kindeditor-4.1.9/themes/default/default.css" rel="stylesheet" />
+    <link href="~/Plugin/kindeditor-4.1.9/plugins/code/prettify.css" rel="stylesheet" />
+
+    <script src="~/Plugin/kindeditor-4.1.9/kindeditor.js"></script>
+    <script src="~/Plugin/kindeditor-4.1.9/lang/en.js"></script>
+
+    <script>
+    function changeSubmit() {
+        $.post("/App/user/nameauth", $("#form").serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("提交成功，请您等待审核")", { icon: 1 });
+                location.reload();
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+            }
+        });
+    }
+
+    //上传主图
+    KindEditor.ready(function (K) {
+        //var hidId = $("#hidmodelId").val();
+        var editor = K.editor({
+            uploadJson: '/App/User/UpMainPic?uid=' + "@Model.ID",
+            allowFileManager: true
+        });
+        K('#btnUpManiPic').click(function () {
+            editor.loadPlugin('image', function () {
+                editor.plugin.imageDialog({
+                    showRemote: false,
+                    imageUrl: K('#UrlMainPic').val(),
+                    clickFn: function (url, title, width, height, border, align) {
+                        if (K('#hidImgCount').val() == "0") {
+                            K("#MainPic").html("");
+                        }
+                        @*if (K('#hidImgCount').val() == "3") {
+
+                            M.dialog2 = jqueryAlert({
+                                'content': "@T("最多可上传2张图片")",
+                                'modal': true,
+                                'buttons': {
+                                    '@T("确定")': function () {
+                                        M.dialog2.close();
+                                        editor.hideDialog();
+                                        return false;
+                                    }
+                                }
+                        })
+                                        }*@
+                        //.attr("src", url);
+                        var newImageHtml = "<img id=\"tmpImg" + parseInt(K('#hidImgCount').val()) + "\" style=\"width: 180px; height: 180px\" src=\"" + url + "\" />";
+                //var delHtml =" <i class=\"iLeft\" ><a href=\"javascript:\" >×</a></i>";
+                var delHtml = "<input type=\"image\" onclick=\"funDelImg(" + parseInt(K('#hidImgCount').val()) + ",this,'" + url + "')\" src=\"/Theme/17081501/images/a_close.png\"  title=\"\" />";
+
+                K("#MainPic").append(newImageHtml);
+                K("#MainPic").append(delHtml);
+
+                K('#hidMainimgSrc').val(K('#hidMainimgSrc').val() + "|" + url);
+                var count = parseInt(K('#hidImgCount').val()) + 1;
+                K('#hidImgCount').val(count);
+                editor.hideDialog();
+            }
+            });
+    });
+    });
+    });
+
+    //显示主图
+    function funDelImg(index, obj, url) {
+        //删除点击的图片
+        var objName = "#tmpImg" + index;
+        var MainimgSrc = $('#hidMainimgSrc').val();
+        MainimgSrc = MainimgSrc.replace(url, "");
+        $('#hidMainimgSrc').val(MainimgSrc);
+        //修改当前图片的数量
+        var count = parseInt($('#hidImgCount').val()) - 1;
+        $('#hidImgCount').val(count);
+
+        //当删除所有图片时重新显示默认图片
+        if (count == 0) {
+            $('#hidMainimgSrc').val("");
+            var defImg = " <img style=\"width: 180px; height: 180px\" src=\"/Theme/17081501/images/nopictures.jpg\" />";
+            $('#MainPic').append(defImg);
+        }
+
+        //删除当前图片和x图片
+        $(objName).remove();
+        $(obj).remove();
+    }
+    </script>
+
+
+    <script src="/theme/app/js/setting-user-verification_82ef12d0ea.js" charset="utf-8"></script>
+
+

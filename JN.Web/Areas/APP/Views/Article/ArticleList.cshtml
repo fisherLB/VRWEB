@@ -1,0 +1,66 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Article>
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    int cId = Request["cId"].ToInt();
+  
+}
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax-->
+<link href="~/theme/app/css/Pager.css" rel="stylesheet" /><!--分页样式-->
+<link rel="stylesheet" href="/theme/app/css/notice_84a334d49a.css">
+
+
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page notice">
+            <div class="aside notice-cont all">
+                <div class="subnav">
+                    <div class="head">
+                        @{
+
+    var classList = MvcCore.Unity.Get<JN.Data.Service.ArticleClassService>().List(x => x.Pid >0 && (x.IsNotice??false)).ToList();
+    if (classList != null && classList.Count > 0)
+    {
+        int num = 1;
+        foreach (var item in classList)
+        {
+
+            <a href="@((item.IsShowBottom ?? false)==true ? "/App/article/readarticle" : "/App/article/articlelist")?cId=@item.ID"><h5 class="@(item.ID == cId ? "h5-on" : "")"> <li class="@(item.ID ==cId ? "selected" :"") ">@(num).@T(item.ClassName)<span class="file-icon @(item.ID == cId ? "file-icon-on" : "")"></span></h5></a>
+            num++;
+        }
+
+    }
+}
+                       
+                    </div>
+                   
+                </div>
+            </div>
+
+            <script>
+                _czc.push(["_trackEventw", '首页', "/chongzhi.help.html"]);
+            </script>
+            <div class=" notice-cont main">
+
+                <div class="news_detail">
+                    <div class="detail-tit">
+                        <strong>@ViewBag.ArticleTitle</strong> @T("类别下的信息列表")
+                    </div>
+                    <div class="news_list">
+                        <ul id="_ArticleList">
+                            @Html.Partial("_ArticleList", Model)
+                        </ul>
+                    </div>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+

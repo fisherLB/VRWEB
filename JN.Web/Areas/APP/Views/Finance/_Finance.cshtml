@@ -1,0 +1,46 @@
+﻿@{
+    string curl = Request.Url.ToString().ToLower();
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+}
+
+<div class="aside" id="sidebar">
+    <div class="subnav">
+        <div class="head">
+            <a href="/App/finance/Finance"><i class="lefticon financial"></i>@T("财务中心")</a>
+        </div>
+        <div class="body">
+            <ul id="subbox">
+                @*<li class="@(curl.Contains("/App/finance/partakesettlement") ? "selected" : "")">
+                    <strong><a href="/App/finance/partakesettlement" data-target="/App/finance/partakesettlement">@T("参与分红")</a></strong>
+                </li>*@
+
+                <li class="@(curl.Contains("/App/rechargetrans/rmbrecharge") ? "selected" : curl.Contains("/App/rechargetrans/curtransferenter") ? "selected" : "")">
+                    <strong><a href="/App/rechargetrans/RMBRecharge" data-target="/App/rechargetrans/RMBRecharge">@T("用户充值")</a></strong>
+                </li>
+                <li class="@(curl.Contains("/App/cashtransfer/rmbcash") ? "selected" : curl.Contains("/App/cashtransfer/curtransferout") ? "selected" : "")">
+                    <strong><a href="/App/cashtransfer/RMBCash">@T("用户提币")</a></strong>
+                </li>
+                <li class="@(curl.Contains("/App/finance/accountdetail") ? "selected" : "")">
+                    <strong><a href="/App/finance/accountdetail?coin=2001">@T("账户明细")</a></strong>
+                </li>
+                <li class="@(curl.Contains("/App/finance/bonusdetail") ? "selected" : "")">
+                    <strong><a href="/App/finance/bonusdetail?bid=1102">@T("奖金明细")</a></strong>
+                </li>
+                <li class="@(curl.Contains("/App/finance/bank") ? "selected" : "")">
+                    <strong><a href="/App/finance/bank" data-target="/App/finance/bank">@T("银行卡项")</a></strong>
+                </li>
+                <li class="@(curl.Contains("/App/mail/inbox") ? "selected" : "")">
+                    <strong><a href="/App/mail/inbox" data-target="/App/mail/inbox">@T("我的消息")</a></strong>
+                </li>
+           
+                <li class="@(curl.Contains("/App/finance/order") ? "selected" : "")">
+                    <strong><a href="/App/finance/Order" data-target="/App/finance/Order">@T("委托管理")</a></strong>
+                </li>
+
+                <li class="@(curl.Contains("/App/finance/transaction") ? "selected" : "")">
+                    <strong><a href="/App/finance/Transaction" data-target="/App/finance/Transaction">@T("全部成交")</a></strong>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>

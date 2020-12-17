@@ -1,0 +1,121 @@
+﻿@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<link rel="stylesheet" type="text/css" href="/theme/global/plugins/jstree/dist/themes/default/style.css" />
+<!-- page specific plugin styles -->
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header treeview-top">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">
+        <a href="@Url.Action("TreeView")" class="btn btn-primary">@T("推荐图谱")</a>
+        @if (JN.Services.Tool.ConfigHelper.GetConfigString("MemberAtlas") == "double")
+            {
+            <a href="@Url.Action("DoubleTrack")" class="btn btn-danger">@T("安置图谱")</a>
+        }
+
+        @if (JN.Services.Tool.ConfigHelper.GetConfigString("MemberAtlas") == "three")
+            {
+            <a href="@Url.Action("ThreeTrack")" class="btn btn-danger">@T("安置图谱")</a>
+        }
+    </div>
+</header>
+<section class="container treeview-main">
+    <!-- PAGE CONTENT BEGINS -->
+    <div class="row">
+        <div class="col-sm-12">
+            @*<a href="/@(JN.Services.Tool.ConfigHelper.GetConfigString("AdminPath"))/User/TreeView/@Model.ID" class="btn btn-primary">推荐图谱</a> <a href="/@(JN.Services.Tool.ConfigHelper.GetConfigString("AdminPath"))/User/DoubleTrack/@Model.ID" class="btn btn-danger">安置图谱</a>*@
+            <div class="widget-box">
+                <div class="widget-header header-color-blue2">
+                    <h4 class="lighter smaller colorfont">@Model.UserName</h4>
+                </div>
+                <div class="widget-body">
+                    <div class="widget-main padding-8">
+                        @{
+                            if (MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => x.RefereeID == Model.ID).Count() > 0)
+                            {
+                                <div id="tree1" class="tree-demo colorfont">
+                                </div>
+                            }
+                            else
+                            {
+                                <span class="colorfont">@(Model.UserName) @T("下没有推荐用户").</span>
+                            }
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="space"></div>
+    <div class="center">
+        @*<a href="javascript:history.go(-1);" class="btn btn-grey colorfont">
+            <i class="icon-arrow-left"></i>
+            @T("返回")
+        </a>*@
+
+        <a href="/APP/User/Personal" class="btn btn-primary colorfont">
+            <i class="icon-dashboard"></i>
+            @T("返回个人")
+        </a>
+    </div>
+
+    <!-- PAGE CONTENT ENDS -->
+</section>
+<!-- /.row -->
+<!-- page specific plugin scripts -->
+<!--[if lte IE 8]>
+<![endif]-->
+<!-- BEGIN PAGE LEVEL SCRIPTS -->
+<link href="~/common/theme/scripts/plugins/jstree/dist/themes/default/style.css" rel="stylesheet" />
+<script src="~/common/theme/scripts/plugins/jstree/dist/jstree.min.js"></script>
+<script type="text/javascript">
+    jQuery(function ($) {
+        //$('#tree1').tree({
+        //    dataSource: new DataSourceTree({ url: '/User/User/GetTreeJson' }),
+        //    multiSelect: false,
+        //    loadingHTML: '<div class="tree-loading"><i class="icon-refresh icon-spin blue"></i></div>',
+        //    'open-icon': 'icon-minus',
+        //    'close-icon': 'icon-plus',
+        //    'selectable': false
+        //});
+
+        $("#tree1").jstree({
+            "core": {
+                "themes": {
+                    "responsive": false
+                },
+                // so that create works
+                //"check_callback": true,
+                "check_callback": false,
+                'data': {
+                    'url': function (node) {
+                        if (node.id > 0)
+                            return '@(Url.Action("GetTreeJson"))?id=' + node.id;
+                        else
+                            return '@(Url.Action("GetTreeJson"))?id=@Model.ID';
+                    },
+                    'data': function (node) {
+                        return { 'parent': node.id };
+                    }
+                }
+            },
+            //"types" : {
+            //    "default" : {
+            //        "icon" : "fa fa-folder icon-state-warning icon-lg"
+            //    },
+            //    "file" : {
+            //        "icon" : "fa fa-file icon-state-warning icon-lg"
+            //    }
+            //},
+            "state": { "key": "demo3" },
+            //"plugins": ["dnd", "state", "types"]
+            "plugins": ["state", "types"]
+        });
+
+
+    });
+</script>

@@ -1,0 +1,177 @@
+﻿
+@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.Shop_Product>
+@{
+    ViewBag.Title = "未审核商品列表";
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+    var goodsClassId = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List();
+}
+
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!--商品搜索-->
+    <div class="filter-bar margin-bottom-none">
+        <form method="get">
+            <div>
+                <select name="datefiled" style="width: 70px;">
+                    <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>发布时间</option>
+                </select>
+            </div>
+            <div>
+                <label>从:</label>
+                <div class="input-append">
+                    <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                    <span class="add-on glyphicons calendar"><i></i></span>
+                </div>
+            </div>
+            <div>
+                <label>到:</label>
+                <div class="input-append">
+                    <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                    <span class="add-on glyphicons calendar"><i></i></span>
+                </div>
+            </div>
+            <div>
+                <div class="input-append" >
+                    <label>商品分类：</label>
+                    <select id="cateid" name="cateid">
+                        <option value="0">全部</option>
+                        @{
+                            if (goodsClassId != null && goodsClassId.Any())
+                            {
+                                foreach (var cate in goodsClassId.ToList())
+                                {
+                                    var childList = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List(x => x.ParentId == cate.Id);
+                                    <option value="@cate.Id">@cate.Name</option>
+                                    if (childList != null && childList.Count() > 0)
+                                    {
+                                        foreach (var childcate in childList.ToList())
+                                        {
+                                            var childList2 = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List(x => x.ParentId == cate.Id);
+                                            <option value="@childcate.Id">&nbsp;﹄@childcate.Name</option>
+                                            if (childList2 != null && childList2.Count() > 0)
+                                            {
+                                                foreach (var childcate2 in childList2.ToList())
+                                                {
+                                                    <option value="@childcate2.Id">&nbsp;&nbsp;&nbsp;﹄@childcate2.Name</option>
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    </select>
+                 </div>
+            </div>
+            <div style="margin-left:10px">
+                <select name="keyfiled" style="width: 80px;">
+                    <option value="ProductName" @(Request["keyfiled"] == "ProductName" ? "selected" : "")>商品名称</option>
+                </select>
+            </div>
+            <div>
+                <div class="input-append">
+                    <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                    <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                </div>
+            </div>
+            <div>
+                <div class="input-append">
+                    <input type="submit" value="查询" />
+                </div>
+            </div>
+            <div class="clearfix"></div>
+        </form>
+    </div>
+
+    <!--商品页面-->
+    <div class="innerLR">
+        <div class="tab-content">
+            <div class="table-responsive">
+                <table id="sample-table-1" class="table table-striped table-bordered table-hover" style="margin-bottom:10px">
+                    <tr>
+                        <th>&nbsp;&nbsp;&nbsp;&nbsp;图  片</th>
+                        <th style="width: 80px; text-align: center">商品名称</th>
+                        <th style="width: 80px; text-align: center">商铺名称</th>
+                        <th style="width: 80px; text-align: center">类  别</th>
+                        <th style="text-align:center">价  格</th>
+                        <th style="text-align:center">创建时间</th>
+                        <th style="text-align:center">库  存</th>
+                        <th style="text-align:center">操  作</th>
+                    </tr>
+                    @if (Model != null && Model.Count() > 0)
+                    {
+                        var pctList = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().List().ToList();
+                        foreach (var item in Model)
+                        {
+                            <tr class="table02-con">
+                                <td style="height: 90px; text-align: center">
+                                    <a href="@JN.Services.Tool.StringHelp.GetFirstStr(item.ImageUrl)" target="_blank" style="color: #2286C9;">
+                                        <img width="80px" src="@JN.Services.Tool.StringHelp.GetFirstStr(item.ImageUrl)" style="width:90px; height:90px;">
+                                    </a></td>
+                                <td style="text-align:center">
+                                    <a href="@Url.Action("ModifyProduct")/@item.Id" class="blue">@item.ProductName</a>
+                                </td>
+                                <td style="text-align:center">
+                                    @item.ShopName
+                                </td>
+                                <td style="text-align:center">
+                                    @(pctList.Where(x => x.Id == item.GoodsClassId).FirstOrDefault().Name)
+                                </td>                             
+                              
+                                <td style="text-align:center">
+                                    ￥@item.RealPrice
+                                </td>
+                                <td style="text-align:center">
+                                    <p>@(string.Format("{0:d}", item.CreateTime))</p>
+                                </td>
+                                <td style="text-align:center">
+                                    @(item.Stock)
+                                </td>
+                                <td style="text-align:center">
+                                    <a href="@Url.Action("ModifyProduct")/@item.Id" class="blue">编辑</a>&nbsp;|&nbsp;
+                                    <a  href="javascript:;" onclick="ProductPass(this)" data-value="@item.Id"  class="blue">审核</a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                </table>
+                <div class="separator top form-inline small">
+
+                    <!-- Pagination -->
+                    @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+
+                    @*<div class="clearfix"></div>*@
+                    <!-- // Pagination END -->
+
+                </div><!-- /.table-responsive -->
+            </div>
+        </div><!-- /.table-responsive -->
+    </div>
+</div>
+
+@section scripts{
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        //审核
+        function ProductPass(obj) {
+            var pid = $(obj).attr("data-value");
+            $.post("@Url.Action("ProductPass")", { pid: pid }, function (data) {
+                if (data.Status == 200) {
+                    window.location.reload();
+                } else {
+                    alert("操作失败！");
+                }
+            });
+        }
+    </script>
+}

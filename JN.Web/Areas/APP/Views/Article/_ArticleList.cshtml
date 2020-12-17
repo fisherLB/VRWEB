@@ -1,0 +1,56 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Article>
+          
+                    <!--数据开始-->
+           @if (Model.Count > 0)
+           {
+               for (int i = 0; i < Model.Count; i++)
+               {
+                   
+                   
+                    <div class="detail-cont">
+                        <div class="detail-cont-left">
+                            <div class="datail-times">
+                                <h5>@Model[i].CreateTime.ToString("yyyy-MM-dd")</h5>
+                                <h1>@Model[i].CreateTime.ToString("HH:mm")</h1>
+                            </div>
+                            <div class="time-axis">
+                                <div class="circle-box">
+                                    <img src="~/theme/app/picture/pen.png" alt="pen" />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="detail-cont-right">
+                            <div class="trigon-box"></div>
+                          
+                            <div class="detail-title">
+                                <h4>@T(Model[i].Title)</h4>                             
+                            </div>
+                          
+                            <div class="detail-more">
+                                <div>@T(Model[i].SubTitle)....</div>
+                                <a href="/App/article/ReadArticle?cId=@Model[i].ID">@T("查看详情")>></a>
+                            </div>
+                        </div>
+                    </div>
+               }
+           }
+          <!--分页-->
+        
+
+<div class="row">
+    <div class="col-xs-8" style="margin:0" id="page-box">
+        @Ajax.Pager(Model, new Webdiyer.WebControls.Mvc.PagerOptions
+   {
+       PageIndexParameterName = "Page",
+       FirstPageText = "首页",
+       LastPageText = "尾页",
+       NextPageText = "下一页",
+       PrevPageText = "上一页"
+      , CurrentPagerItemTemplate = "<span class=\"current\">{0}</span>", DisabledPagerItemTemplate = "<span class=\"disabled\">{0}</span>", Id = "badoopager" 
+   },
+       new MvcAjaxOptions { UpdateTargetId = "_ArticleList", HttpMethod = "Post" })
+      
+    </div>
+</div>

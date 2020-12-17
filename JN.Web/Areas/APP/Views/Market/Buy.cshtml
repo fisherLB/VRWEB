@@ -1,0 +1,165 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var Param1600 = cacheSysParam.Where(x => x.PID == 1600).ToList();
+}
+<link href="/Theme/App/css/trade.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return">
+	    <a href="javascript:history.go(-1);"></a>
+	</div>
+	<div class="logo">@T("买入")</div>
+</header>
+
+<section class="container">
+	<div class="column">
+        @Html.Partial("/Areas/APP/Views/Market/Ul.cshtml")
+	</div>
+	<div class="clr"></div>
+	
+	<div class="bankcard-info">
+		<div class="bankcard-info-title">@T("绑定的银行卡")</div>
+        @{ 
+            var bankDefault = MvcCore.Unity.Get<JN.Data.Service.IUserBankCardService>().Single(x => x.UID == Umodel.ID && x.IsDefault);
+        }
+		
+		<div class="bankcard-info-content">
+            @if (bankDefault != null)
+{
+    <input value="@bankDefault.ID" type="hidden" id="bankDefaultID" />
+                <h3>@bankDefault.BankName</h3>
+                <p>@T("用户名")：@bankDefault.BankUser</p>
+                <p>@T("账号")：@bankDefault.BankCard</p>
+            }
+            else
+            {
+                <p class="no-card"><a href="@Url.Action("BankList", "user")">@T("您还没有设置默认银行卡，去设置")</a></p>
+            }
+		</div>
+	</div>
+	<div class="clr"></div>
+    <form id="frmAdd">
+        <div class="choose-number">
+            <div class="choose-number-title">
+                <h3>@T("请选择买入金额")</h3>
+            </div>
+
+            <div class="choose-number-form">
+                    <ul>
+                        @foreach (var item in Param1600)
+                        {
+                            <li>
+                                <input type="radio" name="type" value="@item.ID">
+                                <label>@item.Value</label>
+                            </li>
+                        }
+                    </ul>
+            </div>
+            @*<input name="tradepassword" placeholder="@T("请输入支付密码")" type="password" />*@
+        </div>
+        
+    </form>
+	<div class="form-submit">
+		<button id="PW" type="submit" class="form-submit-btn">@T("创建订单")</button>
+	</div>
+</section>
+
+<!--支付密码弹窗-->
+<div class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title">@T("请输入交易密码")</div>
+        
+        <div class="popup-box-content">
+            <div class="enter-password">
+				<form>
+                    <input type="password" maxlength="1" tabindex="1">
+                    <input type="password" maxlength="1" tabindex="2">
+                    <input type="password" maxlength="1" tabindex="3">
+                    <input type="password" maxlength="1" tabindex="4">
+                    <input type="password" maxlength="1" tabindex="5">
+                    <input type="password" maxlength="1" tabindex="6">
+				</form>
+			</div>
+        </div>
+        
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+			<button type="submit" class="confirm-btn">@T("确认")</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    var subsumt = false;
+    $("#PW").click(function () {
+        var type = $("input[name='type']:checked").val();
+        var bankDefaultID = $("#bankDefaultID").val();
+        if (bankDefaultID == undefined) {
+            return false;
+            layer.msg("@T("请先设置默认银行卡")！", function () {
+                window.location.href = '@Url.Action("banklist", "User")';
+            });
+        }
+
+        layer.prompt({ title: '@T("输入交易密码")', formType: 1 }, function (val, index) {
+            if (subsumt) return;
+            subsumt = !subsumt;
+            $.post('@Url.Action("SupplyHelp", "Market")', { type: type, pwd: val }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("您成功创建买入订单")！", { icon: 1 }, function () {
+                        window.location.reload();//页面刷新
+                    });
+                } else {
+                    if (data.Message == "请先设置默认银行卡") {
+                        layer.msg("@T("请先设置默认银行卡")！", { icon: 2 }, function () {
+                            window.location.href = '@Url.Action("banklist", "User")';
+                        });
+                    }
+                    else {
+                        layer.msg("@T("操作失败")：" + data.Message, { icon: 2 });
+                    }
+                    subsumt = !subsumt;
+                }
+            });
+        });
+    });
+    @*$("#PW").click(function () {
+        $.post('@Url.Action("SupplyHelp", "Market")', $('#frmAdd').serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("您成功创建买入订单！");
+                setTimeout(function () {  //使用  setTimeout（）方法设定定时2000毫秒
+                    window.location.reload();//页面刷新
+                }, 2000);
+            } else {
+
+                layer.msg("操作失败：" + data.Message);
+            }
+        });
+    });*@
+    //支付密码
+    //$(function(){
+    //    $('#PW').click(function(){
+    //        $('#PW').click(function () {
+    //            $('.popup').fadeIn();
+
+    //            var h = ($(window).height() - $('.popup-box').height()) / 2;
+    //            $('.popup-box').css('margin-top', h);
+    //        });
+
+    //        $('.cancle-btn').click(function () {
+    //            $('.popup').fadeOut();
+    //        });
+    //    })
+    //});
+</script>

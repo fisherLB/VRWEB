@@ -1,0 +1,173 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.Card>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="@((action == "list" && String.IsNullOrEmpty(Request["isactivation"])) ? "active" : "")">
+                    <a href="@(Url.Action("list"))">
+                        所有用户
+                    </a>
+                </li>
+               </ul>
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">
+                        </th>
+
+                        <th>ID</th>
+                        <th>卡密</th>
+                        <th>剩余时间</th>
+                        @*<th>状态</th>*@
+
+                        <th>
+                            <i class="icon-time bigger-110 hidden-480"></i>
+                            注册时间
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count > 0)
+                    {
+                        for (int i = 0; i < Model.Count; i++)
+                        {
+
+                            <tr>
+                                <td class="center text-muted">
+                                    @Model[i].Id
+                                </td>
+
+
+                                <td>
+                                    @Model[i].Number
+                                </td>
+                                <td>
+                                    <a>@(Model[i].Number)</a>
+                                </td>
+
+
+
+                                @*<td class="hidden-480">
+                                        @(MvcHtmlString.Create(Model[i].IsLock ? "已冻结" : (Model[i].IsActivation ? "已激活" : "待审核")))
+                                    </td>*@
+
+                                <td class="hidden-480">@Model[i].Number</td>
+                                <td>
+                                    <div class="btn-group">
+
+                                        <a href="@(Url.Action("Modify", new {ID = Model[i].Id}))" class="btn-action glyphicons edit btn-info" data-rel="tooltip" title="编辑">
+                                            <i></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="###" class="btn-action glyphicons chuserlevel magic btn-info" data-value="@Model[i].Id" data-rel="tooltip" title="设置用户级别">
+                                            <i></i>
+                                        </a>
+                                        &nbsp;
+                                        <a href="###" class="btn-action glyphicons remove btn-info" data-value="@Model[i].Id" data-rel="tooltip" title="删除">
+                                            <i></i>
+                                        </a>
+
+                                    </div>
+                                </td>
+                            </tr>
+
+                        }
+                    }
+                    else
+                    {
+                        <tr><td colspan="12" align="center" style="color:#999; line-height:50px">很抱歉，没有任何记录。</td></tr>
+                    }
+                </tbody>
+            </table>
+            <!-- // Table END -->
+            <!-- Options -->
+            <div class="separator top form-inline small">
+                <!-- With selected actions -->
+                <div class="pull-left checkboxs_actions hide">
+                    <label class="strong">With selected:</label>
+                    <select class="selectpicker" data-style="btn-default btn-small">
+                        <option>Action</option>
+                        <option>Action</option>
+                        <option>Action</option>
+                    </select>
+                </div>
+                <!-- // With selected actions END -->
+                <!-- Pagination -->
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                   JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+                <div class="clearfix"></div>
+                <!-- // Pagination END -->
+            </div>
+            <!-- // Options END -->
+        </div>
+    </div>
+</div>
+<!-- // Content END -->
+@section scripts{
+    <script type="text/javascript">
+            $(function () {
+                $(".locksell").on("click", function () {
+                    var id = $(this).attr("data-value");
+                    bootbox.confirm('您确定要锁定该用户出售功能吗?', function (result) {
+                        if (result) {
+                            location = '@(Url.Action("doCommand"))' + "?commandtype=locksell&ID=" + id;
+                        }
+                    });
+                });
+                $(".lockbuy").on("click", function () {
+                    var id = $(this).attr("data-value");
+                    bootbox.confirm('您确定要锁定该用户购买功能吗?', function (result) {
+                        if (result) {
+                            location = '@(Url.Action("doCommand"))' + "?commandtype=lockbuy&ID=" + id;
+                        }
+                    });
+                });
+
+                $(".lock").on("click", function () {
+                    var id = $(this).attr("data-value");
+                    bootbox.prompt('请输入冻结帐号原因：', function (result) {
+                        if (result)
+                            $.post('@(Url.Action("MakeLock"))', { id: id, reason: result }, function (data) {
+                                if (data == 'ok') location.reload();
+                            });
+                    });
+                });
+
+                $(".remove").on("click", function () {
+                    var id = $(this).attr("data-value");
+                    bootbox.confirm('您确定要删除该用户吗?', function (result) {
+                        if (result) {
+                            location = '@(Url.Action("Delete"))/' + id;
+                        }
+                    });
+                });
+                $(".chuserlevel").on("click", function () {
+                    var id = $(this).attr("data-value");
+                    bootbox.prompt('请输入用户级别：输入(1-8)级', function (result) {
+                        if (result)
+                            $.post('@(Url.Action("MakeLevel"))', { id: id, level: result }, function (data) {
+                                if (data == 'ok') location.reload();
+                            });
+                    });
+                });
+            });
+
+    </script>
+}
+

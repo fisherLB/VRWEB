@@ -1,0 +1,48 @@
+﻿@{ 
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO);
+    double tocount = 0;
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000).ToList();
+    var USD = JN.Services.Manager.Stocks.ExchangePrice("USD").ToDecimal();
+}
+
+<div class="wallet-box">
+    <div class="top">
+        <p>@T("账户总资产")</p>
+        <p><span class="assetNum text-primary" id="D_canAsset">--</span>CNY</p>
+    </div>
+    <ul class="sub-bar-top">
+        <li class="bizhong">@T("币种")</li>
+        <li class="geshu">@T("个数")</li>
+        <li class="keyong">@T("估值")$</li>
+    </ul>
+    <ul class="sub-bar-top">
+        @foreach (var item in cmodelList)
+        {
+            //var d = ((MvcCore.Unity.Get<JN.Data.Service.IAdvertiseService>().List(x => x.CurID == item.ID && x.Status > 0).Count() > 0 ? MvcCore.Unity.Get<JN.Data.Service.IAdvertiseService>().List(x => x.CurID == item.ID && x.Status > 0).Min(x => x.Price) : 0) * JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel).ToDecimal()).ToString("F5");
+            var d = (USD * JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel).ToDecimal()).ToString("F5");
+            //tocount += d.ToDouble();
+            tocount = JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel).ToDouble();
+            <li class="bizhong color02d8f3">@(item.CurrencyName)</li>
+            <li class="geshu color02d8f3">@(tocount.ToString("F5"))</li>
+            <li class="geshu">
+                <input type="hidden" value="@(tocount.ToString("F5"))" id="total" />
+                <span>@d</span>
+            </li>
+        }
+    </ul>
+</div>
+<script>
+    $(function () {
+        $("#D_canAsset").html($("#total").val());//总资产
+    })
+
+</script>

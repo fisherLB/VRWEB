@@ -1,0 +1,4 @@
+﻿@{
+    //Layout = "~/Areas/APP/Views/Shared/_Layout.cshtml";
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}

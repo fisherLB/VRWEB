@@ -1,0 +1,26 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Message>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax-->
+<link href="~/theme/app/css/Pager.css" rel="stylesheet" /><!--分页样式-->
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page">
+            @Html.Partial("/Areas/APP/Views/Finance/_Finance.cshtml")
+            <div class="main">        
+                    <div class="main_title">
+                        @T("我的消息")
+                    </div>
+                    <div class="news_list"  id="_Message"> 
+                        <div class="body">
+                            @Html.Partial("_Message", Model)
+                        </div>
+                    </div>                   
+               
+            </div>
+        </div>
+    </div>
+</div>      

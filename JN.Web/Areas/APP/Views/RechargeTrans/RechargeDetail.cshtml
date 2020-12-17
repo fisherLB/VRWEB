@@ -1,0 +1,74 @@
+﻿@model JN.Data.Remittance
+@{
+    Layout = "~/Areas/App/Views/Shared/_Layout.cshtml";
+}
+
+<header class="header backHeader">
+    <i class="backIcon"></i>
+
+    <h2 class="tit" id="tit">@T("充值详情")</h2>
+     
+    <div class="choose-skin">
+        <div class="choose-skin-btn" onclick="showskin('skin');"></div>
+
+        <div id="skin" class="skin-panel" onclick="hideskin(this.id);">
+            <div class="choose-skin-panel">
+                <span onClick="javascript:changeWhite();" class="skin-white"></span>
+                <span onClick="javascript:changeDark();" class="skin-dark"></span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<section>
+    <div class="billingMain" style="padding-bottom:0;">
+        <table width="100%" id="slidecontentbox">
+            <tbody>
+                <tr>
+                    <td class="td_tips" style="width: 20%;">@T("时间")</td>
+                    <td class="td_tips" style="width: 80%;">@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+
+                <tr>
+                    <td class="td_tips">@T("充值ID")</td>
+                    <td class="td_tips">@Model.ChongNumber</td>
+                </tr>
+
+                <tr>
+                    <td class="td_tips">@T("方式")</td>
+                    <td class="td_tips"> @(Model.RechargeWay)</td>
+                </tr>
+
+                <tr>
+                    <td class="td_tips">@T("币种")</td>
+                    <td class="td_tips">@Model.CoinName</td>
+                </tr>
+
+                <tr>
+                    <td class="td_tips">@T("金额")</td>
+                    <td class="td_tips">@Model.RechargeAmount</td>
+                </tr>
+                <tr>
+                    <td class="td_tips">@T("实付")</td>
+                    <td class="td_tips">@Model.ActualAmount</td>
+                </tr>
+                <tr>
+                    <td class="td_tips">@T("状态")</td>
+                    <td class="td_tips"><span class="text-danger">@T(typeof(JN.Data.Enum.RechargeSatus).GetEnumDesc(Model.Status))</span></td>
+                </tr> 
+                <tr>
+                    <td class="td_tips">@T("备注")</td>
+                    <td class="td_tips">@Model.Remark</td>
+                </tr>         
+                <tr>
+                    <td class="td_tips">@T("凭证")</td>
+                    <td class="td_tips"> 
+                    <span class="text-danger">
+                        <a href="@Model.PayImg" target="_blank"><img src="@Model.PayImg" style="width:90px;height:90px" /></a>
+                        </span>
+                    </td>
+                </tr>        
+            </tbody>
+        </table>
+    </div>
+</section>

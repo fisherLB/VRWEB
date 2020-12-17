@@ -1,0 +1,83 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.BonusDetail>
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax提交表单-->
+<link href="~/theme/app/css/Pager.css" rel="stylesheet" /><!--分页样式-->
+
+<script src="~/Plugin/My97DatePicker/WdatePicker.js"></script><!--日期插件-->
+@{Html.RegisterMvcPagerScriptResource();}
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page">
+            @Html.Partial("/Areas/APP/Views/Finance/_Finance.cshtml")
+            <div class="main">
+                <div class="main_title">
+                    @T("账户明细")
+                </div>
+                <div class="news_list">
+                    <!-- PAGE CONTENT BEGINS -->
+                    <form class="search-form" method="get">
+                        <select name="df" class="time_sel">
+                            <option value="BalanceTime" @(Request["df"] == "BalanceTime" ? "selected" : "")>@T("结算时间")</option>
+                        </select>
+                        <div class="date_input">
+                            <label>@T("从"):</label>
+                            <input class="daterange add-ranges" type="text" name="dateform" value="@Request["dateform"]"  onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'2012-01-01',maxDate:'%y-%M-%d'})"  />                          
+                        </div>
+                        <div class="date_input">
+                            <label>@T("到"):</label>
+                            <input class="daterange add-ranges" type="text" name="dateto" value="@Request["dateto"]" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'2012-01-01',maxDate:'%y-%M-%d'})" />
+                        </div>
+                        <select name="kf" class="time_sel">
+                            <option value="UserName" @(Request["kf"] == "UserName" ? "selected" : "")>@T("用户名")</option>
+                            <option value="BonusName" @(Request["kf"] == "BonusName" ? "selected" : "")>@T("奖金类型")</option>
+                            <option value="Description" @(Request["kf"] == "Description" ? "selected" : "")>@T("描述")</option>
+                        </select>
+                        <div class="search">
+                            <input type="text" name="kv" value="@Request["kv"]" class="search-query" placeholder="@T("请输入要查询的关键字")" />
+                        </div>
+                        <input type="hidden" name="bid" value="@Request["bid"]" />
+                        <button type="submit" class="btn btn-purple btn-sm">
+                            @T("查询")
+                            <i class="icon-search icon-on-right bigger-110"></i>
+                        </button>
+                    </form>
+                    <ul class="nav nav-tabs" style="margin-bottom:0px;">
+                        @{
+                            int bid = Request["bid"].ToInt();
+                            if (bid == 0)
+                            {
+                                bid = 1102;
+                            }
+                            var paramList = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.PID == 1100 && x.IsUse).OrderBy(x => x.Sort).ToList();
+                            foreach (var param in paramList)
+                            {
+                                <li class="@(bid == param.ID ? "active" : "")">
+                                    <a href="@Url.Action("BonusDetail", "Finance")?bid=@param.ID">
+                                        @T(param.Name)
+                                    </a>
+                                </li>
+                            }
+                        }
+                    </ul>
+                    <div class="body" id="_BonusDetail">
+                        <!--数据开始-->
+                        @Html.Partial("_BonusDetail", Model)
+                        <!--分页-->
+                    </div>
+                </div>
+            </div>
+
+
+
+        </div>
+
+        <div class="clearfix"></div>
+    
+
+    </div><!-- /.table-responsive -->
+</div><!-- /span -->
+

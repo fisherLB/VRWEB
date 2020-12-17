@@ -1,0 +1,308 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.RaCoin>
+@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+    var curList = JN.Services.Manager.CacheHelp.GetCurrencyList().Where(x => x.TranSwitch).OrderBy(x => x.Sort).ToList();
+    string curid = Request["curid"];
+    int status = Request["status"].ToInt();
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <ul class="nav nav-tabs" id="myTab">
+            <li class="@((string.IsNullOrEmpty(curid)) ? "active" : "")">
+                <a href="@(Url.Action("TakeCashRa",new {status= status}))">
+                    全部
+                </a>
+            </li>
+            @foreach (var item in curList)
+            {
+                <li class="@((item.ID.ToString() == curid)  ? "active" : "")">
+                    <a href="@(Url.Action("TakeCashRa",new {curid=item.ID,status= status}))">
+                        @(item.EnSigns)
+                    </a>
+                </li>
+            }
+        </ul>
+
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="@(status == 0 ? "active" : "")">
+                    <a href="?status=0&curid=@curid">
+                        待审核的转出提币
+                    </a>
+                </li>
+                <li class="@(status == 3 ? "active" : "")">
+                    <a href="?status=3&curid=@curid">
+                        已审核的转出提币
+                    </a>
+                </li>
+                <li class="@(status == -2 ? "active" : "")">
+                    <a href="?status=-2&curid=@curid">
+                        已拒绝的转出提币
+                    </a>
+                </li>
+                <li class="@(status == -1 ? "active" : "")">
+                    <a href="?status=-1&curid=@curid">
+                        已取消的转出提币
+                    </a>
+                </li>
+            </ul>
+            @if (Request["status"] == "3" && !string.IsNullOrWhiteSpace(curid) && curList.SingleAndInit(x => x.ID.ToString() == curid).NetworkType == (int)JN.Data.Enum.CurrencyNetworkType.EthereumContract)
+            {
+                <div class="row">
+                    <div class="col-xs-12" style="padding:20px 20px">
+                        <h4 id="rwtitle">同步获取以太坊API服务器提币代理结果(同步结束后手动刷新本页面) <input type="button" id="btnSync" value="开始同步数据" /></h4>
+                        <div class="widget">
+                            <div class="widget-head progress progress-primary" id="widget-progress-bar">
+                                <div class="bar" style="width: 0%;"><strong class="steps-info"></strong> - <strong class="steps-percent">0%</strong></div>
+                            </div>
+                        </div>
+                        @*<p id="info"></p>*@
+                    </div><!-- /span -->
+                </div><!-- /row -->
+            }
+            @if (Request["status"] == "3" && !string.IsNullOrWhiteSpace(curid) && curList.SingleAndInit(x => x.ID.ToString() == curid).NetworkType == (int)JN.Data.Enum.CurrencyNetworkType.Ripple)
+            {
+                <div class="row">
+                    <div class="col-xs-12" style="padding:20px 20px">
+                        <h4 id="rwtitle">同步获取Xrp提币结果(同步结束后手动刷新本页面) <input type="button" id="btnSync1" value="开始同步数据" /></h4>
+                        <div class="widget">
+                            <div class="widget-head progress progress-primary" id="widget-progress-bar">
+                                <div class="bar" style="width: 0%;"><strong class="steps-info"></strong> - <strong class="steps-percent">0%</strong></div>
+                            </div>
+                        </div>
+                        @*<p id="info"></p>*@
+                    </div><!-- /span -->
+                </div><!-- /row -->
+            }
+            <div class="filter-bar margin-bottom-none">
+                <form method="get">
+
+                    <!-- Filter -->
+                    <div>
+                        <select name="datefiled" style="width: 80px;">
+                            <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>申请时间</option>
+                            <option value="PassTime" @(Request["datefiled"] == "PassTime" ? "selected" : "")>审核时间</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="numberfiled" style="width: 80px;">
+                            <option value="DrawMoney" @(Request["numberfiled"] == "ChangeMoney" ? "selected" : "")>金额</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberform" class="input-mini" style="width: 30px;" value="@Request["numberform"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberto" class="input-mini" style="width: 30px;" value="@Request["numberto"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="keyfiled" style="width: 80px;">
+                            <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>用户名</option>
+                            <option value="CurrencyName" @(Request["keyfiled"] == "CurrencyName" ? "selected" : "")>币种</option>
+                            <option value="WalletAddress" @(Request["keyfiled"] == "WalletAddress" ? "selected" : "")>钱包地址</option>
+                            <option value="Remark" @(Request["keyfiled"] == "Remark" ? "selected" : "")>描述</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="input-append">
+                            <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                            <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <input type="hidden" name="status" value="@status" />
+                        <input type="submit" value="查询" />
+                        <input type="hidden" name="IsExport" value="0" />
+                        <input type="submit" onclick="$('input[name=\'IsExport\']').val(0)" value="查询" />
+                        <input type="submit" onclick="$('input[name=\'IsExport\']').val(1)" value="导出" />
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- // Filter END -->
+
+                </form>
+
+            </div>
+
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">
+                            ID
+                        </th>
+                        <th>用户名</th>
+                        <th>币种</th>
+                        <th>钱包地址</th>
+                        <th>提币金额</th>
+                        <th>手续费</th>
+                        <th>实付金额</th>
+                        <th>状态</th>
+                        <th>API回传状态</th>
+                        <th>API回传Hash</th>
+                        <th>API回传备注</th>
+                        <th>
+                            <i class="icon-time bigger-110 hidden-480"></i>
+                            申请时间
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count > 0)
+                    {
+                        int cid = 0;
+                        for (int i = 0; i < Model.Count; i++)
+                        {
+                            cid = Model[i].CurID;
+                            <tr>
+                                <td class="center">
+                                    @Model[i].ID
+                                </td>
+                                <td>
+                                    @Model[i].UserName
+                                </td>
+                                <td>
+                                    @Model[i].OutTable_Currency.CurrencyName
+                                </td>
+                                <td>
+                                    @Model[i].WalletAddress
+                                </td>
+                                <td>
+                                    @Model[i].DrawMoney.ToString("F6")
+                                </td>
+                                <td>
+                                    @Model[i].Poundage.ToString("F6")
+                                </td>
+                                <td>
+                                    @Model[i].ActualDrawMoney.ToString("F6")
+                                </td>
+                                <td class="hidden-480">
+                                    @(typeof(JN.Data.Enum.TakeCaseStatus).GetEnumDesc(Model[i].Status))
+                                </td>
+                                <td>
+                                    @Model[i].ReserveStr1
+                                </td>
+                                <td>
+                                    @if (!string.IsNullOrEmpty(Model[i].ReserveStr2))
+                                    {
+                                        <a href="https://etherscan.io/tx/@(Model[i].ReserveStr2)" target="_blank">查看</a>
+                                    }
+                                </td>
+                                <td>@Model[i].Remark</td>
+                                <td class="hidden-480">@Model[i].CreateTime.ToString("yyyy-MM-dd")</td>
+                                <td>
+                                    @if (Model[i].Status < (int)JN.Data.Enum.TakeCaseStatus.Payed && Model[i].Status >= 0)
+                                    {
+                                        <a href="@(Url.Action("TakeCashRaCommand", new { commandtype = "docancel", ID = Model[i].ID }))" class="btn-action glyphicons remove_2 btn-info" data-rel="tooltip" title="拒绝提币">
+                                            <i></i>
+                                        </a>
+                                    }
+                                    @if (Model[i].Status == (int)JN.Data.Enum.TakeCaseStatus.Wait)
+                                    {
+                                        <a href="@(Url.Action("TakeCashRaCommand", new { commandtype = "dopass", ID = Model[i].ID }))" class="btn-action glyphicons ok_2 btn-info" data-rel="tooltip" title="审核">
+                                            <i></i>
+                                        </a>
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    }
+                </tbody>
+            </table>
+
+            <div class="separator top form-inline small">
+                <!-- Pagination -->
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+
+                <div class="clearfix"></div>
+                <!-- // Pagination END -->
+
+            </div><!-- /.table-responsive -->
+        </div><!-- /span -->
+    </div><!-- /row -->
+</div><!-- /.page-content -->
+@section scripts{
+    <script type="text/javascript">
+        // setTimeout('checkProgress()', 1000);
+        function checkProgress() {
+            $.getJSON("@(Url.Action("getproc_getsynctakecash"))", function (data, textStatus) {
+                // data 是该请求返回的数据(可能经过处理)
+                // textStatus 可能是"success"、 "notmodified"等
+                // jqXHR 是经过jQuery封装的XMLHttpRequest对象(保留其本身的所有属性和方法)
+                var sc = parseInt(data.data.CurrentRow / data.data.TotalRow * 100);
+                $('#widget-progress-bar .steps-info').html(sc + "% " + data.data.CurrentRow + "/" + data.data.TotalRow);
+                //$(".progress-bar").attr("style", "width:" + sc + "%")
+                $('#widget-progress-bar .steps-percent').html(sc + "%");
+                $('#widget-progress-bar .bar').width(sc + "%");
+                //$("#tbname").html(data.data.CurrentTable);
+                $("#rwtitle").html(data.data.TransInfo);
+                setTimeout('checkProgress()', 1000);
+
+            });
+        };
+
+        $("#btnSync").on("click", function () {
+            $(this).attr("disabled", "disabled");
+            $.post('@(Url.Action("StartSyncTakeCash"))', {}, function (data) {
+                checkProgress();
+                if (data == 'ok') {
+                    $("#rwtitle").html(data);
+                }
+            });
+        });
+        $("#btnSync1").on("click", function () {
+            $(this).attr("disabled", "disabled");
+            $.post('@(Url.Action("StartSyncTakeCash_xpr"))', {}, function (data) {
+                checkProgress();
+                if (data == 'ok') {
+                    $("#rwtitle").html(data);
+                }
+            });
+        });
+
+    </script>
+}

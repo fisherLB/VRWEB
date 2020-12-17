@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title></title>
+</head>
+<body>
+	     <script src="js/mui.min.js"></script><!--mui框架引用-->
+        <script type="text/javascript" charset="utf-8">
+        mui.init();
+		mui.plusReady(function(){
+			
+			//检测网络连接
+			if (plus.networkinfo.getCurrentType()==0 || plus.networkinfo.getCurrentType()==1)
+			{
+				mui.toast("网络请求失败,请检查您的网络设置");
+					mui.openWindow({
+						url: 'wait.html'
+					});
+			}
+			else
+			{
+				mui.openWindow({
+						url: 'http://47.52.104.33:2702/'
+				});
+			}
+			
+			document.addEventListener("netchange",function(){
+				if (plus.networkinfo.getCurrentType()!=0 && plus.networkinfo.getCurrentType()!=1)
+				{
+					mui.toast("已开启网络连接");
+				}
+				else
+				{
+					mui.toast("网络请求失败,请检查您的网络设置");
+				}
+			});
+		});
+	    mui('body').on('tap', 'a', function(e) {
+				var href = this.getAttribute('href');
+				if (href) {
+					mui.openWindow({
+							url: 'http://47.52.104.33:2702' + href
+						});
+				} 
+		});
+    </script>
+</body>
+</html>

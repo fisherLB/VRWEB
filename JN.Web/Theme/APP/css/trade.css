@@ -1,0 +1,342 @@
+﻿@charset "utf-8";
+/* CSS Document */
+
+
+/**********交易模块样式**********/
+/**************************/
+/******子栏目列表******/
+.column{ width: 100%; background: #fff; overflow: hidden; padding: .2rem;}
+.column li{ width: 33.3333333%; overflow: hidden; float: left; padding: .15rem .2rem;}
+.column li a{ width: 100%; height: 1.3rem; line-height: 1.3rem; text-align: center; color: #999; background: #f1f1f1; border-radius: .15rem; display: block;}
+
+.column li a.active{ color: #46adfc;}
+
+
+/******买入/卖出******/
+/*------银行卡信息------*/
+.bankcard-info{ width: 100%; background: #fff; border-bottom: #f1f1f1 1px solid; overflow: hidden;}
+.bankcard-info .bankcard-info-title{ color: #999; border-bottom: #f1f1f1 1px solid; overflow: hidden; padding: .3rem .5rem;}
+
+.bankcard-info .bankcard-info-content{ width: 100%; overflow: hidden; padding: .5rem;}
+.bankcard-info .bankcard-info-content h3{ line-height: .8rem; font-size: .6rem; padding: 0 0 .2rem 1.3rem; position: relative;}
+.bankcard-info .bankcard-info-content h3:after{ width: .8rem; height: .8rem; content: ''; background: url(../images/bank_card.png) no-repeat center; background-size: .8rem auto; position: absolute; left: 0; top: 0;}
+.bankcard-info .bankcard-info-content p{ color:#777; text-indent: 1.3rem;}
+
+.bankcard-info .bankcard-info-content p.no-card { width:100%; text-align:center; text-indent:0; padding:.3rem;}
+.bankcard-info .bankcard-info-content p.no-card a { color:#f80;}
+
+/*------选择购买数量------*/
+.choose-number{ width: 100%; background: #fff; border-bottom: #f1f1f1 1px solid; overflow: hidden;}
+.choose-number .choose-number-title{ color: #999; border-bottom: #f1f1f1 1px solid; overflow: hidden; padding: .3rem .5rem;}
+.choose-number .choose-number-title h3{ font-size: .52rem; float: left;}
+.choose-number .choose-number-title a{ font-size: .48rem; color: #fff; background: #18c481; border-radius: .1rem; padding: .02rem .22rem; display: block; float: right;}
+
+.choose-number .choose-number-form{ overflow: hidden; padding: .3rem .2rem;}
+.choose-number .choose-number-form li{ width: 33.333333%; overflow: hidden; float: left; padding: .2rem .75rem; position: relative;}
+.choose-number .choose-number-form input, .choose-number .choose-number-form label{ width: 100%; height: 1.1rem; line-height: 1.1rem;}
+.choose-number .choose-number-form input{ opacity: 0; position: absolute; left: 0; top: .2rem; z-index: 2;}
+.choose-number .choose-number-form label{ text-align: center; color: #46adfc; border: #46adfc 1px solid; border-radius: .1rem; display: block;}
+
+.choose-number .choose-number-form input:checked+label{ color: #fff; background: #46adfc;}
+
+
+/******买入/卖出订单******/
+/*------订单列表------*/
+.buy-order .trade-order-info a{ min-height: 2.4rem; padding: .3rem .5rem .3rem 3.4rem;}
+.buy-order .trade-order-info .trade-order-people{ left: .5rem; top: .3rem;}
+.buy-order .trade-order-info .trade-order-content h3{ padding: 0;}
+.buy-order .trade-order-info .trade-order-number{ top: .5rem;}
+
+
+/******买入/卖出中心******/
+/*------页面主体------*/
+.sell-center{ padding: 7.1rem 0 0 0;}
+.sell-center .choose-number{ position: fixed; left: 0; top: 1.66rem; z-index: 999;}
+
+/*------列表------*/
+.sell-list{ width: 100%; min-height: 3.5rem; background: #fff; border-bottom: #eee 1px solid; overflow: hidden; padding: .5rem .5rem .5rem 2.6rem; position: relative;}
+
+/*------会员信息------*/
+.sell-list .sell-list-people{ width:1.66rem; height: 1.66rem; border-radius: 50%; overflow: hidden; position: absolute; left: .5rem; top: .6rem;}
+.sell-list .sell-list-people img{ width: 1.66rem; height: 1.66rem;}
+
+.sell-list .sell-list-info{ width:100%; overflow: hidden;}
+.sell-list .sell-list-info h3{ font-size: .56rem; color: #333;}
+.sell-list .sell-list-info p{ font-size: .45rem; color: #999;}
+
+/*------信用等级------*/
+.sell-list .user-level{ width: 100%; overflow: hidden; padding: .1rem 0 .22rem 0;}
+.sell-list .user-level span, .sell-list .user-level i{ height: .6rem; display: block; float: left;}
+.sell-list .user-level span{ line-height: .6rem; font-size: .45rem; color: #999; margin-right: .1rem;}
+.sell-list .user-level i{ width:.55rem; background: url(../images/icon_level.png) no-repeat center; background-size: .46rem auto;}
+
+/*------金额------*/
+.sell-list .sell-list-price{ text-align: right; position: absolute; top: .5rem; right: .5rem;}
+.sell-list .sell-list-price h3{ font-size: .52rem; color: #333;}
+.sell-list .sell-list-price p{ font-size: .45rem; color: #999;}
+
+.sell-list .sell-list-price a{ width: 2rem; height: .85rem; line-height: .85rem; font-size: .45rem; text-align: center; color: #fff; background: #f44; border-radius: .1rem; display: block; float: right; margin-top: .2rem;}
+
+
+
+/**********转入/转出**********/
+/**************************/
+/******交易表单******/
+/*------主体------*/
+.trade-form{ padding: .5rem 0;}
+.trade-form .form-group:last-child{ border-bottom:none;}
+
+/*------记录列表数字------*/
+.transfer-number{ width: 100%; color: #777; background: #fff3dc; overflow: hidden; padding: .3rem;}
+.transfer-number h3{ color: #333; display: inline;}
+
+
+/******交易余额******/
+/*------列表------*/
+.balance{ width: 100%; background: linear-gradient(90deg,#091831,#091831); background: -webkit-linear-gradient(left,#091831,#091831); overflow: hidden; padding: 1rem 0 .6rem 0;}
+.balance ul{ width: 100%; table-layout: fixed; border-collapse: collapse; display: table;}
+.balance li{ color: #0092b1; text-align: center; overflow: hidden; position: relative; display: table-cell;}
+.balance li h3{color:#fff;}
+.balance li:after{ width:1px; height: 1rem; content: ''; background: rgba(255, 255, 255, .5); position: absolute; right: 0; top: .5rem;}
+.balance li:last-child:after{ background: none;}
+
+.balance li a{ width: 100%; color: #fff; display: block;}
+.balance li span{ font-size: .56rem; display: block;}
+.balance li h3{ font-size: .88rem;}
+
+/*------数字资产------*/
+.balance-logo{ width: 2.2rem; overflow: hidden; margin: 0 auto;}
+.balance-logo img{ width: 100%;}
+
+.balance-current{ width: 100%; font-size: .52rem; color: #fff; text-align: center; margin-top: .5rem;}
+.balance-current h3{ display: inline;}
+
+
+/******交易伙伴******/
+/*------主体------*/
+.trade-people{ width: 100%; background: url(../images/user_bg.jpg) no-repeat center top; background-size: cover; overflow: hidden; padding: 1.5rem 0 1rem 0;}
+
+/*------头像和名字------*/
+.trade-people .trade-people-photo{ width: 2.5rem; height: 2.5rem; border: rgba(255, 255, 255, .7) 2px solid; border-radius: 50%; overflow: hidden; margin: 0 auto;}
+.trade-people .trade-people-photo img{ width: 100%; height:100%;}
+
+.trade-people .trade-people-name{ font-size: .56rem; color: #fff; text-align: center; overflow: hidden; padding: .5rem;}
+
+
+/******转入******/
+/*------背景------*/
+.transfer{ background: linear-gradient(90deg,#030a18,#030a18); background: -webkit-linear-gradient(left,#030a18,#030a18); padding: 0; position: fixed; top: 1.66rem; left: 0; right: 0; bottom: 0;}
+
+/*------二维码------*/
+.transfer-box{ width: 80%; background: #fff; border-radius: .5rem; overflow: hidden; padding: 1rem; margin: 0 auto; margin-top: 2rem;}
+.transfer-box h3{ font-size: .56rem; text-align: center;}
+
+.transfer-box .transfer-code{ width: 100%; margin-top: .8rem;word-wrap: break-word; word-break: normal; }
+.transfer-box .transfer-code img{ width: 100%;}
+
+/*------转入记录链接------*/
+.transfer-record-link{ width: 100%; text-align: center; overflow: hidden; padding: 0 0 1rem 0; position: absolute; left: 0; bottom: 0;}
+    .transfer-record-link a {
+        font-size: .48rem;
+        color: #def9ff;
+    }
+
+
+
+/**********数字资产**********/
+/**************************/
+/******数字资产操作******/
+/*------主体------*/
+.digital-toolbar{ width: 100%; background: #fff; border-bottom: #f1f1f1 1px solid; overflow: hidden; padding: 0 .5rem .3rem .5rem;}
+
+/*------资产地址------*/
+.digital-address{ width: 100%;}
+.digital-address p{ font-size: .52rem; color: #999; padding: .4rem 0;}
+.digital-address b{ font-size: .56rem; color: #333; margin-left: .2rem;}
+
+.digital-address-input{ width: 100%; border: #feb940 1px solid; border-radius: .15rem; overflow: hidden; position: relative; padding: 0 3.6rem 0 0;}
+.digital-address-input:after{ width: 1px; height: .6rem; content: ''; background: #feb940; position: absolute; right: 3.6rem; top: .4rem;}
+
+.digital-address-input input{ width: 100%; height: 1.3rem; float: left; padding: .3rem;}
+.digital-address-input button{ width: 3.6rem; height: 1.3rem; color: #f80; position: absolute; right: 0; top: 0;}
+
+/*------操作------*/
+.digital-toolbar-list{ width: 100%; overflow: hidden; padding: .3rem 0 0 0;}
+.digital-toolbar-list li{ width:25%; overflow: hidden; float: left;}
+.digital-toolbar-list li a, .digital-toolbar-list li i, .digital-toolbar-list span{ display: block;}
+.digital-toolbar-list li i{ width: 1.5rem; height: 1.5rem; background-repeat: no-repeat; background-position: center; background-size: 1rem auto; margin: 0 auto;}
+.digital-toolbar-list li span{ font-size: .52rem; color: #777; text-align: center;}
+
+.digital-toolbar-list li .digital-toolbar-1 i{ background-image: url(../images/trade/asset_icon_1.png);}
+.digital-toolbar-list li .digital-toolbar-2 i{ background-image: url(../images/trade/asset_icon_2.png);}
+.digital-toolbar-list li .digital-toolbar-3 i{ background-image: url(../images/trade/asset_icon_3.png);}
+.digital-toolbar-list li .digital-toolbar-4 i{ background-image: url(../images/trade/asset_icon_4.png);}
+
+
+/******数字资产列表******/
+/*------主体------*/
+.digital-assets{ width: 100%; background: #fff; overflow: hidden;}
+
+.digital-assets-list{ width:100%; border-bottom: #f1f1f1 1px solid; overflow: hidden; padding: .3rem .5rem .5rem .5rem;}
+.digital-assets-list h3{ line-height: 1rem; font-size: .6rem; color: #111; position: relative; padding: 0 0 0 .5rem;}
+.digital-assets-list h3:after{ width: .12rem; height: .6rem; content: ''; background: #f80; border-radius: .05rem; position: absolute; left: 0; top: .2rem;}
+
+/*------内容------*/
+.digital-assets-details{ width: 100%; overflow: hidden; margin-top: .3rem;}
+.digital-assets-details span{ font-size: .46rem; color: #999;}
+.digital-assets-details h5{ font-size: .56rem; color: #333;}
+
+.digital-assets-details .digital-assets-account{ width: 4.6rem; float: left; padding-left: .5rem;}
+.digital-assets-details .digital-assets-price{ float: left;}
+
+/*------按钮------*/
+.digital-assets-details .digital-assets-btn{ float: right;}
+.digital-assets-details .digital-assets-btn a{ font-size: .48rem; color: #fff; border-radius: .1rem; padding: .15rem .2rem; display: block; float: left;}
+.digital-assets-details .digital-assets-btn a:first-child{ background: #18c481;}
+.digital-assets-details .digital-assets-btn a:last-child{ background: #ffcb18; margin-left: .2rem;}
+
+
+/**********现金/余额交易**********/
+/**************************/
+/******页头弹框******/
+.header-open-arrow:after{ width: 0; height: 0; content: ''; border-left:.2rem solid transparent; border-right:.2rem solid transparent; border-top:.2rem solid #fff; display: block; position: absolute; left:48.5%; bottom: .2rem; }
+
+
+/******当前价格******/
+/*------主体------*/
+.price-update{ width: 100%; background: #fff; overflow: hidden; padding: .4rem 0;}
+.price-update li{ width: 33.3333333%; text-align: center; float: left;}
+
+.price-update span, .price-update b, .price-update i{ height: .6rem; line-height: .6rem; font-size: .45rem; display: inline-block; vertical-align: middle;}
+.price-update span{ color: #aaa;}
+.price-update b{ font-weight: normal; color: #333;}
+
+/*------小箭头------*/
+.price-update i.price-up{ width:.5rem; background: url(../images/trade/arrow_up.svg) no-repeat center; background-size: .4rem auto;}
+.price-update i.price-down{ width:.5rem; background: url(../images/trade/arrow_down.svg) no-repeat center; background-size: .4rem auto;}
+
+
+/******交易订单******/
+/*------主体------*/
+.trade-order{ width: 100%; background: #fff; border-top: #eee 1px solid; overflow: hidden;}
+.trade-order li{ width: 25%; float: left;}
+.trade-order li a{ width: 100%; text-align: center; overflow: hidden; display: block; padding: .5rem 0;}
+
+.trade-order li span, .trade-order li i{ display: block;}
+.trade-order li span{ font-size: .45rem; color: #555; margin-top: .15rem;}
+.trade-order li i{ width: 1.4rem; height: 1.4rem; background-repeat: no-repeat; background-position: center; background-size: 1.1rem auto; margin: 0 auto;}
+
+/*------图标------*/
+.trade-order li .trade-order-1 i{ background-image: url(../images/trade/trade_icon_1.png);}
+.trade-order li .trade-order-2 i{ background-image: url(../images/trade/trade_icon_2.png);}
+.trade-order li .trade-order-3 i{ background-image: url(../images/trade/trade_icon_3.png);}
+.trade-order li .trade-order-4 i{ background-image: url(../images/trade/trade_icon_4.png);}
+
+
+/******折线图******/
+.chart { width: 100%; height: 10rem; background: #fff; overflow: hidden; padding: .5rem;}
+.line-chart{ width: 100%; height: 100%;}
+
+
+/******交易列表******/
+/*------主体------*/
+.trade-list{ width: 100%; overflow: hidden;}
+
+/*------标题------*/
+.trade-list-title{ width: 100%; overflow: hidden; position:relative;}
+.trade-list-title ul{ width: auto; height: 1.1rem; border: #ff5a5a 1px solid; border-radius: .55rem; overflow: hidden; position: relative; margin: .2rem 2rem .4rem 2rem;}
+.trade-list-title li{ width: 50%; height: 1.1rem; line-height: 1.1rem; font-size: .5rem; color: #ff5a5a; text-align: center; float: left; z-index:2; position:relative;}
+.trade-list-title li.active{ color: #fff; background: #ff5a5a;}
+
+/*------列表------*/
+.trade-tab{ width: 100%; overflow: hidden; position: relative;}
+.trade-tab>div{ display: none;}
+.trade-tab>div:first-child{ display: block;}
+
+.trade-list-content{ width:100%; min-height: 2.6rem; background: #fff; border-bottom: #f1f1f1 1px solid; overflow: hidden; padding: .5rem .5rem .5rem 3rem; position: relative;}
+.trade-list-content img{ width: 1.6rem; height: 1.6rem; position: absolute; top: .5rem; left: .3rem;}
+
+.trade-list-item{ width: 100%;}
+.trade-list-item h3{ font-size: .56rem; color: #333;}
+.trade-list-item p{ font-size: .5rem; color: #999;}
+.trade-list-item span{ margin: 0 .3rem;}
+
+.trade-list-btn{ position: absolute; right: .5rem; top: .3rem;}
+.trade-list-btn h3{ font-size: .6rem; color: #18c481;}
+.trade-list-btn span{ width: 1.7rem; line-height: .7rem; font-size: .48rem; color: #ffcb18; text-align: center; border-radius: .4rem; border: #ffcb18 1px solid; display: block; float: right; margin-top: .1rem;}
+
+
+/******发布出售/购买******/
+.release-form{ width: auto; background:#091831; border-radius:0; overflow: hidden; padding:0.5rem;}
+
+
+/******交易订单******/
+/*------主体------*/
+.trade-order-list{ width: 100%; background:#091831; border-bottom:#142b50 1px solid; overflow: hidden;}
+
+/*------标题：时间/状态------*/
+.trade-order-title{ width: 100%; border-bottom:#142b50 1px solid; overflow: hidden; padding: .3rem .5rem;}
+.trade-order-title span{ font-size: .52rem; color:#0092b1; display: block;}
+
+.trade-order-title span.trade-order-status{ color:#00d2ff;}
+
+/*------订单内容------*/
+.trade-order-info{ width: 100%;}
+.trade-order-info a{ width: 100%; min-height: 3.6rem; overflow: hidden; display: block; padding: .6rem .5rem .6rem 4rem; position: relative;}
+
+.trade-order-info .trade-order-people{ width: 2.4rem; position: absolute; left: .5rem; top: .6rem;}
+.trade-order-info .trade-order-people img{ width: 1.8rem; height: 1.8rem; border-radius: 50%; display: block; margin: 0 auto;}
+.trade-order-info .trade-order-people span{ width: 100%; height: .6rem; font-size: .45rem; color: #46adfc; text-align: center; text-overflow: ellipsis; overflow: hidden; display: block; margin-top: .2rem;}
+
+.trade-order-info .trade-order-content{ width: 6rem;}
+.trade-order-info .trade-order-content h3{ font-size: .56rem; color:#00d2ff; padding-bottom: .3rem;}
+.trade-order-info .trade-order-content p{ font-size: .5rem; color:#0092b1;}
+
+/*------订单总价------*/
+.trade-order-info .trade-order-number{ text-align: right; position: absolute; right: .5rem; top: 1rem;}
+.trade-order-info .trade-order-number h1{ font-size: .68rem; color: #00d2ff;}
+.trade-order-info .trade-order-number span{ font-size: .45rem; color:#0092b1; display: block;}
+
+/*------订单操作------*/
+.trade-order-operate{ width: 100%; border-top:#142b50 1px solid; overflow: hidden; padding: .2rem .5rem;}
+.trade-order-operate li{ float: right;}
+.trade-order-operate li a{ height: 1.1rem; line-height: 1.1rem; font-size: .52rem; color: #999; border: #00d2ff 1px solid; border-radius: .55rem; display: block; float: left; margin-left: .3rem; padding: 0 .6rem;}
+.trade-order-operate li a.active{ color:#00d2ff;}
+
+
+/******交易订单详情******/
+/*------主体------*/
+.trade-order-details{ width: 100%; background:#091831; overflow: hidden;}
+.trade-order-details h3{ font-size: .56rem; color:#fff; padding: .3rem .5rem;}
+
+/*------详情------*/
+.trade-order-details li{ width: 100%; border-bottom: #142b50 1px solid; overflow: hidden; padding: .35rem .5rem; display: table;}
+    .trade-order-details label {
+        width: 4rem;
+        color: #def9ff;
+        display: table-cell;
+    }
+    .trade-order-details span {
+        color: #def9ff;
+        display: table-cell;
+    }
+.trade-order-details span.order-details-status{}
+.trade-order-details span.order-details-price{ }
+.trade-order-toolbar{width: 100%;background:none;}
+.transaction-btn-ul{display:inline-block;width:100%;padding:0.5rem 0.5rem;}
+.transaction-btn-ul li{display:inline-block;width:100%;padding:0;float:left;}
+.transaction-btn-ul li span{display:block;width:100%;padding:0.2rem 0.5rem;font-size:0.54rem;color:#0092b1; border:solid 1px #0092b1;text-align:center;margin-bottom:0.5rem;}
+.transaction-btn-ul li input{display:block;width:100%;padding:0.2rem 0.5rem;font-size:0.54rem;color:#fff; background:#00d2ff;text-align:center;}
+
+
+/******发布出售/购买******/
+/*------价格滑动条------*/
+.sell-price{ width: 100%; overflow:hidden; border-bottom:#142b50 1px solid; padding: 0 0 .3rem 0;}
+.sell-price-bar{ width: 100%; height:.8rem; padding: 0 0 0 10.6rem; position:relative;}
+
+.sell-price .rangeslider, .sell-price .rangeslider__fill{ width: 10rem; height:.5rem; background: -webkit-linear-gradient(left,#42e3fb,#46adfc); box-shadow: none; -webkit-box-shadow: none; border-radius: .25rem; position:absolute; left:.3rem; top:.15rem;}
+.sell-price .rangeslider__fill{ background: none; left:0; top:0;}
+.sell-price .rangeslider__handle{ width:.8rem; height:.8rem; box-shadow: none; -webkit-box-shadow: none; top:-.15rem;}
+
+.sell-price .sell-price-text, .sell-price span{ line-height:.8rem; font-size:.56rem; color:#00d2ff; display: block; float:left;}
+.sell-price .sell-price-text{ margin-left:.5rem;}

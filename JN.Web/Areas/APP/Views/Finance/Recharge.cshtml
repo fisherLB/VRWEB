@@ -1,0 +1,178 @@
+﻿
+@{
+    ViewBag.Title = "Recharge";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000).ToList();
+    var param = cacheSysParam.Single(x => x.ID == 3111);
+    var url = param.Value;
+}
+
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="/APP/User/Personal"></a>*@
+    </div>
+    <div class="logo text-l">@T("买商")</div>
+</header>
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<section class="container recharge-main">
+    <div class="form-box">
+        <div class="receivables">
+            <h3>USDT @T("二维码")</h3>
+            <div class="qr-code">
+                <img src="@MvcCore.Extensions.QRCodeExtensions.ToQRCode(url, 5, 5).GetImgBase64String(System.Drawing.Imaging.ImageFormat.Png)" />
+                @*<p>@url</p>*@
+            </div>
+        </div>
+        <form id="frmSubmit">
+            <input type="hidden" id="rate" value="@param.Value2" />
+            @*<div class="pay-code">
+                <img src="@sysSet.QRUrl1" />
+                <img src="@sysSet.QRUrl2" />
+            </div>*@
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("充值地址")</label>
+                <textarea class="form-control form-textarea" readonly rows="2">@url</textarea>
+                <button class="copy-btn" type="button" data-clipboard-action="copy"  data-clipboard-text="@url" id="clip_button">@T("复制地址")</button>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("充值金额")</label>
+                <input type="text" class="form-control " name="rechargeNumbers" id="rechargeNumbers" placeholder="@T("请输入买商数量")" onkeyup="change()">
+                <p>1 USDT＝@param.Value2 @T("个商务钱包")</p>
+            </div>
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("获得商务钱包")</label>
+                <input type="text" class="form-control " id="money" readonly placeholder="@T("获得商务钱包")" >
+            </div>
+            @*<div class="form-group">
+                <label for="exampleInputEmail1">@T("平台收款方式")</label>
+                <select class="form-control">
+                    <option>@T("银行卡")：8888</option>
+                    <option>@T("微信")：aadfdd</option>
+                    <option>@T("支付宝")：139789266</option>
+                </select>
+            </div>*@
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("充值到")</label>
+                <select class="form-control">
+                    @*<option>@T("总资产")</option>*@
+                    <option>@T("商务钱包")</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputEmail1">@T("备注")</label>
+                <input type="text" name="remark" class="form-control " placeholder="@T("请您输入备注")">
+            </div>
+
+            <div class="form-group">
+                <label for="exampleInputPassword1">@T("交易密码")</label>
+                <input type="password" name="tradeinPassword" class="form-control" placeholder="@T("请输入交易密码")">
+            </div>
+
+            <div class="upload-photo">
+                <h3>@T("请上传付款截图")</h3>
+                <ul>
+                    <li id="imgDisplay" style="display:none">
+                        <div class="upload-photo-box">
+                            <a href="###" class="delete-photo" onclick="deleteimages()"></a>
+                            <div class="loaded-photo-thumbnail">
+                                <img src="/Theme/App/img/sample1.jpg" id="img">
+                            </div>
+                        </div>
+                    </li>
+                    <li id="fileDisplay" style="display:block">
+                        <div class="upload-photo-box">
+                            <div class="add-photo-btn">
+                                <input type="file" name="PayImg" accept="image/jpg,image/jpeg,image/png,image/gif" onchange="checkinfo(this)">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <button type="button" class="form-submit-btn border1 bgf40" id="btnSubmit">@T("确认充值")</button>
+
+           
+
+        </form>
+    </div>
+</section>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script src="~/Plugin/clipboard/js/clipboard.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        var clipboard = new Clipboard('#clip_button');
+        clipboard.on('success', function (e) {
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            alert("@T("复制成功")");
+            e.clearSelection();
+        });
+    });
+
+    if (window.FileReader) {
+        function checkinfo(obj) {
+            var len = obj.files.length;
+            console.log(obj.files);
+            for (var i = 0 ; i < len ; i++) {
+                showimg(obj.files[i]);
+            }
+        }
+        function showimg(imges) {
+            var a = new FileReader();
+            a.readAsDataURL(imges);
+            a.onload = function () {
+                $("#img").attr("src", a.result);
+                $("#imgDisplay").css("display", "block");
+                $("#fileDisplay").css("display", "none");
+            }
+        }
+        function deleteimages() {
+            $("#imgDisplay").css("display", "none");
+            $("#fileDisplay").css("display", "block");
+        }
+    }
+
+    var subsumt = false;
+    $("#btnSubmit").click(function () {
+        $('#btnSubmit').attr("disabled", "disabled");
+        if (subsumt) return;
+        subsumt = !subsumt;
+        $("#frmSubmit").ajaxSubmit({
+            url: "@Url.Action("ApplyRemittance", "Finance")",
+            type: "post",
+        success: function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("操作成功！")", { icon: 1 }, function () {
+                    location.reload();
+                });
+
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+                subsumt = !subsumt;
+                $('#btnSubmit').removeAttr("disabled");
+            }
+        },
+        error: function (error) {
+            layer.msg(error);
+            subsumt = !subsumt;
+            $('#btnSubmit').removeAttr("disabled");
+        }
+    })
+    })
+
+    function change() {
+        var money = (parseFloat($("#rechargeNumbers").val()) * parseFloat($("#rate").val())).toFixed(2);
+        if (isNaN(money)) {
+            money = 0;
+        }
+        $("#money").val(money);
+    }
+
+</script>
+
+

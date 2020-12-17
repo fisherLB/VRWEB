@@ -1,0 +1,64 @@
+﻿@{
+    ViewBag.Title = "行情";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+
+    var curPriceList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List().OrderBy(x => x.Sort).ToList();
+    Newtonsoft.Json.Linq.JArray prices = ViewBag.CoinPrices;
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 4000).ToList();
+    var hl = cacheSysParam.SingleAndInit(x => x.ID == 3801).Value.ToDecimal();
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T("行情")</div>
+</header>
+<section class="container transaction-main">
+
+    <ul class="table-view" id="listcontainer_sell">
+        @foreach (var item in curPriceList)
+        {
+            if (item.TranSwitch)
+            {
+                var price = prices == null ? null : prices.FirstOrDefault(x => (string)x["id"] == item.English.ToLower());
+                var percent = (price == null) ? 0 : ((string)price["percent_change_1h"]).ToDecimal();
+    
+                <li class="table-view-cell mui-media">
+                    <a href="###" class="">
+                        <div class="pull-left">
+                            <img src="@(item.CurrencyLogo)" />
+                        </div>
+                        <div class="media-body">
+                            <div class="media-body-top">
+                                <h3>@T("名称") @(item.EnSigns)</h3>
+                            </div>
+                            <p class="ellipsis">@T("实时价")</p>
+                            <p class="ellipsis">$@((price == null) ? "0.00" : ((decimal)price["price_usd"]).ToString("F2"))</p>
+                            <p class="ellipsis">&yen;@((price == null) ? "0.00" : ((decimal)price["price_usd"] * hl).ToString("F2"))</p>
+                        </div>
+                        <div class="right-content">
+                            <p> <span>@T("涨跌幅")</span></p>
+                            <input type="button" value="@(percent)%" style="background:@(percent >= 0 ? "#4b5" : "#f55") ;">
+                        </div>
+                    </a>
+                </li>
+            }
+        }
+
+    </ul>
+
+</section>
+<!--底部导航-->
+
+@Html.Partial("~/Areas/APP/Views/Shared/_Footer.cshtml")
+
+
+@*<script>
+    $(".swiper-container").swiper({
+        loop: true,
+        autoplay: 3000
+    });
+</script>*@
+

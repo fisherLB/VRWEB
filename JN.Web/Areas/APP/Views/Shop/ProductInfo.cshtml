@@ -1,0 +1,263 @@
+﻿@model JN.Data.Shop_Product
+@{
+    ViewBag.Title = "商品详情";
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    string categoryName = MvcCore.Unity.Get<JN.Data.Service.IShop_Product_CategoryService>().Single(Model.GoodsClassId).Name;
+    //int plCount = 0;
+    //var clist = MvcCore.Unity.Get<JN.Data.Service.IShop_CommentsService>().List(x => x.pid == Model.Id && x.IsLock == false).OrderByDescending(x => x.CreateTime).ToList();//评论
+    //if (clist != null && clist.Count() > 0)
+    //{
+    //    plCount = clist.ToList().Count();
+    //}
+    //int odCount = 0;//月销量
+    //int cdAllCount = 0;//累计销量
+    //var odlist = MvcCore.Unity.Get<JN.Data.Service.IShop_Order_DetailsService>().List(x => x.GoodsId == Model.Id && x.Status > 0);//销量
+    //if (odlist != null && odlist.Count() > 0)
+    //{
+    //    DateTime time = DateTime.Now.AddMonths(-1);
+    //    odCount = odlist.Where(x => x.CreateTime > time).ToList().Count();
+    //    cdAllCount = odlist.ToList().Count();
+    //}
+    string[] strUrls = Model.ImageUrl.Split(';');//商品图片
+    var SpecificationsModel = MvcCore.Unity.Get<JN.Data.Service.IShop_SPECService>().Single(x => x.PID == Model.Id);
+    var Specifications = "";
+    if (SpecificationsModel != null)
+    {
+        Specifications = SpecificationsModel.Value;
+    }
+    var shopinfo = MvcCore.Unity.Get<JN.Data.Service.IShop_InfoService>().Single(x => x.ID == Model.SId);
+}
+<link href="/Theme/APP/css/swiper.min.css" rel="stylesheet">
+<link href="/Theme/APP/css/shop.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T("商品详情")</div>
+</header>
+
+<section class="container">
+    <div class="swiper-container det_pic swiper-container-horizontal">
+        <div class="swiper-wrapper det_p_cont">
+            @{
+                for (int i = 0; i < strUrls.Length; i++)
+                {
+                    if (strUrls[i].Length == 0)
+                    {
+                        continue;
+                    }
+                    <div class="swiper-slide det_list">
+                        <img src="@strUrls[i]" alt="">
+                    </div>
+                }
+            }
+        </div>
+        <div class="swiper-pagination pageList swiper-pagination-clickable swiper-pagination-bullets">
+        </div>
+    </div>
+    <div class="main_bg">
+        <div class="s_t_cont">
+            <p class="price_t">@Model.RealPrice</p>
+            <p class="box_t_del">@Model.ProductName</p>
+        </div>
+    </div>
+    <!--<div class="main_bg" style="margin: 0.3rem 0;">
+        <p class="shop_del_t">
+            除螨吸尘机
+        </p>
+    </div>-->
+    <div class="main_bg" style="margin: 0.4rem 0;">
+        <div class="shop_bd_t">
+            <p>@T("产品参数")</p>
+        </div>
+        <div class="shop_describe">
+            <ul id="J_AttrUL">
+                <li title="">@T("产品名称"):&nbsp;@Model.ProductName</li>
+                <li title="">@T("商铺名称")：&nbsp;@Model.ShopName</li>
+                <li title="">@T("产品类型"):&nbsp;@categoryName</li>
+                <li title="">@T("上架时间")：&nbsp;@Model.CreateTime</li>
+                <li title="">@T("剩余库存")：&nbsp;@Model.Stock</li>
+                @*<li title="">运费：&nbsp;@Model.CreateTime</li>*@
+                <li title="@Specifications">@T("产品规格"):&nbsp;@Specifications</li>
+            </ul>
+        </div>
+    </div>
+    <div class="main_bg" style="margin: 0.4rem 0;">
+        <div class="shop_bd_t">
+            <p>@T("商品详情")</p>
+        </div>
+        <div class="shop_describe">
+            <p>
+                @MvcHtmlString.Create(Model.InfoMation)
+            </p>
+        </div>
+    </div>
+</section>
+
+<div style="height: 1.8rem;"></div>
+
+<footer class="botton_box">
+    <div class="foot_cont clearfix">
+        <div class="font_menu">
+            <ul class="clearfix">
+                <li>
+                    <a href="/APP/shop/ShopStore?sid=@shopinfo.ID" class="foot-icon-1">
+                        <i></i>
+                        <p>@T("店铺")</p>
+                    </a>
+                </li>
+
+                <li>
+                    <div class="foot-icon-2" id="KF">
+                        <i></i>
+                        <p>@T("客服")</p>
+                    </div>
+                </li>
+            </ul>
+        </div>
+        <div class="buy_btn">
+            <a href="/APP/Shop/OrderInfo?pid=@Model.Id">@T("立即购买")</a>
+        </div>
+    </div>
+</footer>
+<!--客服弹窗-->
+<div class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title">@T("客服QQ")</div>
+
+        <div class="popup-box-content">
+            <div class="enter-password">
+                <span>@shopinfo.ShopQQ</span>
+            </div>
+        </div>
+
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("关闭")</button>
+            @*<button class="confirm-btn" data-clipboard-action="copy" data-clipboard-text="@shopinfo.ShopQQ" id="d_clip_button">@T("复制")</button>*@ 
+            <button type="submit" class="confirm-btn" data-clipboard-action="copy" data-clipboard-text="@shopinfo.ShopQQ" id="clip_button">@T("复制")</button>
+        </div>
+    </div>
+</div>
+<script src="~/Plugin/clipboard/js/clipboard.min.js"></script>
+<script>
+    //客服弹窗
+    $(function(){
+        $('#KF').click(function () {
+            $('.popup').fadeIn();
+            var h = ($(window).height() - $('.popup-box').height()) / 2;
+            $('.popup-box').css('margin-top', h);
+        });
+
+        $('.cancle-btn').click(function () {
+            $('.popup').fadeOut();
+        });
+    })
+
+    $(document).ready(function () {
+        var clipboard = new Clipboard('#clip_button');
+        clipboard.on('success', function (e) {
+            console.info('Action:', e.action);
+            console.info('Text:', e.text);
+            console.info('Trigger:', e.trigger);
+            layer.msg("@T("复制成功")");
+            e.clearSelection();
+        });
+    });
+</script>
+<script src="/Theme/APP/js/swiper.min.js"></script>
+<script>
+    //商品详情轮播图
+    var swiper = new Swiper('.det_pic', {
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: 2500,
+        autoplayDisableOnInteraction: false
+    });
+</script>
+
+<script>
+    @*//添加收藏
+    function AddFavorites(Id) {
+        $.post("@Url.Action("AddFavorites")", { pid: Id }, function (data) {
+            if (data.Status = "200") {
+                $.toast(data.Message,function () {
+                    console.log('close');
+                });
+                window.location = "@Url.Action("MyKeep")";
+            } else {
+                alert(data.Message);
+                window.location = "@Url.Action("MyKeep")";
+                //window.history.back();
+            }
+        });
+    }
+    //添加购物车
+    function ShowDiv(id) {
+        $.post('@Url.Action("AddMyShopCart")', { pid: id }, function (d) {
+            if (d.Status == 200) {
+                M.dialog2 = jqueryAlert({
+                    'content': "成功加入购物车",
+                    'modal': true,
+                    'buttons': {
+                        '@T("确定")': function () {
+                            M.dialog2.close();
+                            location.reload();
+                        }
+                    }
+                })
+            }
+            else {
+                M.dialog2 = jqueryAlert({
+                    'content': d.Message,
+                    'modal': true,
+                    'buttons': {
+                        '@T("确定")': function () {
+                            M.dialog2.close();
+                        }
+                    }
+                })
+            }
+        }, 'json');
+    };
+    //商品数量加
+    function addUpdate(add) {
+        var c = $("#pCount").val();//当前数量值
+        c = parseInt(c) + 1;
+        $("#pCount").val(c);
+        var totalAmount = parseFloat($("#price").val()) * parseInt(c);
+        $(".J_ItemSum").text(totalAmount.toFixed(2));
+    }
+    //商品数量减
+    function subUpdate(sub) {
+        var c = $("#pCount").val();
+        if (c == 1) {
+            c = 1;
+        } else {
+            c = parseInt(c) - 1;
+            $("#pCount").val(c);
+        }
+        var totalAmount = parseFloat($("#price").val()) * parseInt(c);
+        $(".J_ItemSum").text(totalAmount.toFixed(2));
+    }
+
+    //主题2立刻购买
+    function funBuyNow2(pids) {
+        if (pids == "") {
+            alert("购买失败");
+            return false;
+        }
+        window.location = "/APP0916/Shop/OrderInfo?pids=" + pids + "&pCounts=" + $("#pCount").val();
+    };*@
+</script>

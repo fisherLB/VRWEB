@@ -1,0 +1,137 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+    <header class="header">
+        <div class="header-return">
+            <a href="javascript:history.go(-1);"></a>
+        </div>
+
+        <div class="logo">@T("地址管理")</div>
+    </header>
+
+    <section class="container">
+        <!--<div class="no-address">
+            <i></i>
+            <p>您暂时没有添加任何收货地址</p>
+        </div>-->
+        <div id="addresslist">
+
+        </div>
+        <div class="add-address">
+            <a href="@Url.Action("ModifyMyAddress")">
+                <i></i>
+                <span>@T("新建地址")</span>
+            </a>
+        </div>
+    </section>
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#addresslist', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getMyAddress", "shop")?page=' + page, function (res) {
+                    var strhtml = "";
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function (index, item) {
+                        strhtml += '<div class="address-list">';
+                        strhtml += '<div class="address-list-content">';
+                        strhtml += '<h3>' + item.Addressee + '</h3>';
+                        strhtml += '<span>' + item.Phone + '</span>';
+                        strhtml += '<p>' + item.Province + item.City + item.Detail + '</p>';
+                        strhtml += '</div>';
+                        strhtml += '<div class="address-list-toolbar">';
+                        strhtml += '<div class="default-address">';
+                        strhtml += '<div class="set-default">';
+                        if (item.IsDefault == true) {
+                            strhtml += '<input type="radio" name="type" checked="checked" onclick="setDefault(' + item.ID + ')">';
+                        }
+                        else {
+                            strhtml += '<input type="radio" name="type" onclick="setDefault(' + item.ID + ')">';
+                        }
+                        strhtml += '<span>@T("设为默认收货地址")</span>';
+                        strhtml += '</div>';
+                        strhtml += '</div>';
+                        strhtml += '<div class="address-operate">';
+                        strhtml += '<a href="/APP/shop/ModifyMyAddress?id=' + item.ID + '">@T("编辑")</a>';
+                        strhtml += '<a class="delete" href="###" onclick="funDelete(' + item.ID + ')">@T("删除")</a>';
+                        strhtml += '</div>';
+                        strhtml += '</div>';
+                        strhtml += '</div>';
+                    });
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+    //日期格式转换
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return month
+            + "-"
+            + currentDate
+            + ""
+            + " "
+            + currentHours
+            + ":"
+            + currentMinutes;
+    }
+    //删除地址
+    function funDelete(id) {
+        layer.confirm('@T("确定要删除该地址吗？")', {
+            btn: ['@T("确认删除")', '@T("不，留着")'] //按钮
+        }, function () {
+            $.post('@Url.Action("DelReceiptAddress", "shop")', { id: id }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("成功删除")！");
+                    setTimeout(function () {  //使用  setTimeout（）方法设定定时2000毫秒
+                        window.location.reload();//页面刷新
+                    }, 2000);
+                } else {
+                    layer.msg("@T("操作失败")：" + data.Message);
+                }
+            });
+        }, function () {
+
+        });
+    }
+    //设置默认地址
+    function setDefault(id) {
+        $.post('@Url.Action("SetDefaultDeliveryAddress", "shop")', { id: id }, function (data) {
+            if (data.Status != 200) {
+                layer.msg("@T("操作失败")：" + data.Message);
+            }
+        });
+    }
+</script>

@@ -1,0 +1,81 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.WalletLog>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax提交表单-->
+<link href="~/theme/app/css/Pager.css" rel="stylesheet" /><!--分页样式-->
+<script src="~/Plugin/My97DatePicker/WdatePicker.js"></script><!--日期插件-->
+@{Html.RegisterMvcPagerScriptResource();}
+    <!-- PAGE CONTENT BEGINS -->
+    <div class="wrapper">
+        <div class="page_wrap">
+            <div class="page">
+                @Html.Partial("/Areas/APP/Views/Finance/_Finance.cshtml")
+                <div  class="main">
+                    <div class="main_title">
+                       @T("账户明细")
+                    </div>
+                    <form class="search-form" method="get">
+                        <select name="df" class="time_sel">
+                            <option value="BalanceTime" @(Request["df"] == "BalanceTime" ? "selected" : "")>@T("发生时间")</option>
+                        </select>
+                        <div class="date_input">
+                            <label>@T("从"):</label>
+                            <input class="daterange add-ranges" type="text" name="dateform" value="@Request["dateform"]" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'2012-01-01',maxDate:'%y-%M-%d'})" />
+                        </div>
+                        <div class="date_input">
+                            <label>@T("到"):</label>
+                            <input class="daterange add-ranges" type="text" name="dateto" value="@Request["dateto"]" onfocus="WdatePicker({skin:'whyGreen',dateFmt:'yyyy-MM-dd',minDate:'2012-01-01',maxDate:'%y-%M-%d'})" />
+                        </div>
+                        <select name="kf" class="time_sel">                        
+                            <option value="CoinName" @(Request["kf"] == "CoinName" ? "selected" : "")>@T("币种")</option>
+                            <option value="Description" @(Request["kf"] == "Description" ? "selected" : "")>@T("描述")</option>
+                        </select>
+                        <div class="search">
+                            <input type="text" name="kv" value="@Request["kv"]" class="search-query" placeholder="@T("请输入要查询的关键字")" />
+                        </div>
+                        <input type="hidden" name="bid" value="@Request["bid"]" />
+                        <button type="submit" class="btn btn-purple btn-sm">
+                            @T("查询")
+                            <i class="icon-search icon-on-right bigger-110"></i>
+                        </button>
+                    </form>
+                    <div class="news_list">
+                        <div class="body" id="_AccountDetail">
+                            <!--数据开始-->
+                            @Html.Partial("_AccountDetail", Model)
+                            <!--分页-->
+                        </div>
+                    </div>
+                </div>
+
+                        </div>
+
+                  
+
+
+                        <div class="clearfix"></div>
+                        <!-- // Pagination END -->
+
+                    </div><!-- /.table-responsive -->
+                </div><!-- /span -->
+         
+            <!-- PAGE CONTENT ENDS -->
+
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('table th input:checkbox').on('click', function () {
+            var that = this;
+            $(this).closest('table').find('tr > td:first-child input:checkbox')
+            .each(function () {
+                this.checked = that.checked;
+                $(this).closest('tr').toggleClass('selected');
+            });
+        });
+        $('[data-rel=tooltip]').tooltip({ container: 'body' });
+        bootbox.setDefaults({ locale: "zh_CN" });
+
+    })
+</script>

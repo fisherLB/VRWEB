@@ -1,0 +1,97 @@
+﻿@model JN.Data.Shop_ReceiptAddress
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+
+    var curList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().ListCache("coinList").Where(x => x.LineSwitch && !x.IsICO).OrderByDescending(x => x.ID).Take(2).ToList();
+}
+<script src="~/Theme/APP/js/distpicker.js"></script>@*地址下拉框*@
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T("新建地址")</div>
+</header>
+
+<section class="container">
+    <div class="setting-form">
+        <div class="form-widget bankcard-form">
+            <form id="form" method="post">
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>@T("收货人姓名")</label>
+                        <input class="form-control" placeholder="@T("请输入收货人姓名")" name="Addressee" value="@Model.Addressee">
+                    </div>
+
+                    <div class="form-group">
+                        <label>@T("手机")</label>
+                        <input class="form-control" placeholder="@T("请输入手机号码")" name="Phone" value="@Model.Phone">
+                    </div>
+                    <div class="form-group" data-toggle="distpicker">
+                        <label>@T("所在地区")</label>
+                        <select class="form-control m-b3" data-province="@Model.Province" name="Province"></select>
+                        <select class="form-control m-b3" data-city="@Model.City" name="City"></select>
+                        <select class="form-control m-b3" data-district="@Model.County" name="County"></select>
+                        @*<div class="form-control" data-toggle="distpicker">
+                            <div class="select-group">
+                                <select data-province="@Model.Province" name="Province"></select>
+                            </div>
+                            <div class="select-group">
+                                <select data-city="@Model.City" name="City"></select>
+                            </div>
+                            <div class="select-group">
+                                <select data-district="@Model.County" name="County"></select>
+                            </div>
+                        </div>*@
+                    </div>
+
+                    <div class="form-group">
+                        <label>@T("详细地址")</label>
+                        <input class="form-control" placeholder="@T("请输入您的详细地址")" name="Detail" value="@Model.Detail">
+                    </div>
+                </div>
+
+                <div class="set-default">
+                    <input type="hidden" id="hidId" name="id" value="@Model.ID" />
+                    <input type="checkbox" name="che" @(Model.IsDefault ? "checked='checked'" : "")>
+                    <span>@T("设为默认收货地址")</span>
+                </div>
+
+                <div class="form-submit padding5">
+                    <button type="button" class="form-submit-btn" onclick="funSubmit()">@T("确定")</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+<script>
+    var subsumt = false;
+    function funSubmit() {
+        if (subsumt) return;
+        subsumt = !subsumt;
+        $.post('@Url.Action("ModifyMyAddress", "shop")', $("form").serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("您成功创建收货地址")！");
+                setTimeout(function () {  //使用  setTimeout（）方法设定定时2000毫秒
+                    window.location.href = "/APP/shop/MyAddress";//页面刷新
+                }, 2000);
+            } else {
+                layer.msg("@T("操作失败")：" + data.Message);
+                subsumt = !subsumt;
+            }
+        });
+    };
+</script>

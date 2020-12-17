@@ -1,0 +1,228 @@
+﻿@{
+    JN.Data.User Umodel = JN.Services.UserLoginHelper.CurrentUser();
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    string status = Request["status"];
+    int direction = Request["Direction"].ToInt();
+    int fromcoid = Request["fromcoid"].ToInt();
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+        @*<a href="/APP/User/Personal"></a>*@
+    </div>
+
+    <div class="logo">@T(ViewBag.Title)@*@T("卖出")@T("交易订单")*@</div>
+</header>
+
+<section class="container tab-container">
+    @*<div class="tab-title">
+        <div class="tab-item">
+            <div class="lava"></div>
+            <span class="@(direction==1 ? "active":"")">@T("买入")</span>
+            <span @(direction==0 ? "active" : "")>@T("卖出")</span>
+        </div>
+    </div>*@
+
+    <div class="tab-content">
+        <div id="listcontainer1">
+
+        </div>
+        <div id="listcontainer2">
+
+        </div>
+    </div>
+</section>
+
+<script src="~/Plugin/layer/layui/layui.js"></script><!--layui插件js-->
+<link href="~/Plugin/layer/layui/css/layui.css" rel="stylesheet" />
+@*<script>
+    //Tab控制选项卡
+    $(function () {
+        //下划线初始位置
+        $('.lava').css({ left: $('.tab-item span:first').position()['left'] });
+
+        $('.tab-item span').mouseover(function () {
+            //下划线滚动
+            $('.lava').stop().animate({ left: $(this).position()['left'] }, { duration: 200 });
+
+            //改变颜色
+            $(this).addClass('active').siblings().removeClass("active");
+
+            //内容切换
+            $('.tab-content').stop().animate({ left: $(this).position()['left'] * (-2) }, { duration: 200 });
+        });
+    });
+</script>*@
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        @*flow.load({
+            elem: '#listcontainer1', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getOrderList")?page=' + page + "&direction=1&fromcoid=@fromcoid", function (res) {
+                    var strhtml = "";
+                    if (res.data.length > 0) {
+                        layui.each(res.data, function (index, item) {
+                            strhtml += '<div class="trade-order-list">';
+                            strhtml += '<div class="trade-order-title">';
+                            strhtml += '<span class="fl">' + ChangeDateFormat(item.CreateTime) + '</span>';
+                            strhtml += '<span class="trade-order-status fr">' + (item.Status == 1 ? "@T("进行中")" : item.Status == 2 ? "@T("已完成")" : "@T("已下架")") + '</span>';
+                            strhtml += '</div>'
+                            strhtml += '<div class="trade-order-info">';
+                            strhtml += '<a href="###">';
+                            strhtml += '<div class="trade-order-people">';
+                            strhtml += '<img src="@(Umodel.HeadFace ?? "/Theme/app/images/member.png")">';
+                            strhtml += '<span>@Umodel.UserName</span>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="trade-order-content">';
+                            strhtml += ' <h3> ' + item.OrderID + '@T("订单")</h3>';
+                            strhtml += '<p>@T("价格")：' + item.Price + '</p>';
+                            strhtml += '<p>@T("数量")：' + item.Quantity + item.CurName + '</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="trade-order-number">';
+                            strhtml += '<h1>' + (item.Quantity * item.Price).toFixed(4) + '</h1>';
+                            strhtml += '<span>@T("金额")</span>';
+                            strhtml += '</div>';
+                            strhtml += '</a>';
+                            strhtml += '</div>';
+
+                            strhtml += '<div class="trade-order-operate">';
+                            strhtml += '<ul>';
+                            strhtml += '<li>';
+                            strhtml += '<a href="@Url.Action("orderDetail", "Advertise")?id=' + item.ID + '" class="active">@T("详情")</a>';
+                            if (item.Status == 1) {
+                                strhtml += '<a href="###" onclick="Cancel(' + item.ID + ')">@T("取消")</a>';
+                            }
+                            strhtml += '</li>';
+                            strhtml += '</ul>';
+                            strhtml += '</div>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="clr"></div>';
+                        });
+                    }
+                
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });*@
+
+        flow.load({
+            elem: '#listcontainer2', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getOrderList")?page=' + page + "&direction=0&fromcoid=@fromcoid", function (res) {
+                    var strhtml = "";
+                    if (res.data.length > 0) {
+                        layui.each(res.data, function (index, item) {
+                            strhtml += '<div class="trade-order-list">';
+                            strhtml += '<div class="trade-order-title">';
+                            strhtml += '<span class="fl">' + ChangeDateFormat(item.CreateTime) + '</span>';
+                            strhtml += '<span class="trade-order-status fr">' + (item.Status == 1 ? "@T("进行中")" : item.Status == 2 ? "@T("已完成")" : "@T("已下架")") + '</span>';
+                            strhtml += '</div>'
+                            strhtml += '<div class="trade-order-info">';
+                            strhtml += '<a href="###">';
+                            strhtml += '<div class="trade-order-people">';
+                            strhtml += '<img src="@(Umodel.HeadFace ?? "/Theme/app/images/member.png")">';
+                            strhtml += '<span>@Umodel.UserName</span>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="trade-order-content">';
+                            strhtml += ' <h3> ' + item.OrderID + '@T("订单")</h3>';
+                            strhtml += '<p>@T("价格")：' + item.Price + '</p>';
+                            strhtml += '<p>@T("数量")：' + item.Quantity + item.CurName + '</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="trade-order-number">';
+                            strhtml += '<h1>' + (item.Quantity * item.Price).toFixed(4) + '</h1>';
+                            strhtml += '<span>@T("金额")</span>';
+                            strhtml += '</div>';
+                            strhtml += '</a>';
+                            strhtml += '</div>';
+
+                            strhtml += '<div class="trade-order-operate">';
+                            strhtml += '<ul>';
+                            strhtml += '<li>';
+                            strhtml += '<a href="@Url.Action("orderDetail", "Advertise")?id=' + item.ID + '" class="active">@T("详情")</a>';
+                            if (item.Status == 1) {
+                                strhtml += '<a href="###" onclick="Cancel(' + item.ID + ')">@T("取消")</a>';
+                            }
+
+                            strhtml += '</li>';
+                            strhtml += '</ul>';
+                            strhtml += '</div>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="clr"></div>';
+                        });
+                    }
+                    @*else {
+                        strhtml += '<div class="load-no-more"><span>@T("没有更多了")</span></div>';
+                    }*@
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+    function goUrl(id) {
+        window.location.href = "@Url.Action("orderDetail")?id=" + id;
+    }
+
+    //判断时间范围
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return month
+            + "-"
+            + currentDate
+            + ""
+            + " "
+            + currentHours
+            + ":"
+            + currentMinutes;
+    }
+</script>
+
+<script>
+    function Cancel(id) {
+        layer.confirm("@T("您确定要取消这条记录么？")", {
+        title: "@T("取消确认")", //标题
+        btn: ['@T("确定")', '@T("取消")']  //按钮
+    },
+    function (index) {
+        layer.close(index);
+        $.post("@Url.Action("CancelAdvertise", "Advertise")", { adid: id }, function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("取消成功")", { icon: 1 }, function () {
+                    location.reload()
+                });
+            } else {
+                layer.msg(data.Message, { icon: 2 })
+            }
+
+        })
+    });
+}
+</script>

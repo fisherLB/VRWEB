@@ -1,0 +1,154 @@
+﻿@{
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() != null)
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    
+    string curl = Request.Url.ToString().ToLower();
+    string lang = Request["lang"];
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>@sysSet.SysName|@T(ViewBag.Title)</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="renderer" content="webkit">
+    <meta name="keywords" content="@sysSet.SiteKeywords">
+    <meta name="description" content="@sysSet.SiteDescription">
+    <script src="~/Plugin/Jquery/jquery-2.0.3.min.js"></script>
+    <script src="~/Plugin/layer/layer.js"></script>
+    <link rel="stylesheet" href="/Theme/17112702/css/common_b0a143bbc2.css">
+    <link rel="stylesheet" href="/Theme/17112702/css/buy_2a0acc48d5.css">
+    <link rel="stylesheet" href="/Theme/17112702/css/index_28204ac65c.css">
+</head>
+<body class="zh-HK">
+    <div class="header zh-HK">
+        <div class="clear-float">
+            <a class="" href="/home/index"><div class="logo sp1 img" style="background:url(@(sysSet.LogoPic));height:46px;background-repeat: no-repeat;background-size:contain; background-position: 0;"></div></a>
+            @Html.Partial("~/Views/Shared/menu.cshtml")
+
+            @if(Umodel==null)
+            { 
+            <div class="clear-float fr login-panel" >
+                <a class="user-action" href="/usercenter/reg"><span class="sp sp-register" ></span><span class="va-middle">@T("注册")</span></a>
+                <a class="user-action btn-login" href="/usercenter/login"><span class="sp sp-login"></span><span class="va-middle">@T("登录")</span></a>
+            </div>
+            }
+            else { 
+                
+                
+                  
+            <div class="clear-float fr my-panel" >
+                <div class="item">
+                    <a href="/usercenter/trade/AdvertiseOrder" class="item-label"><span class="header-order"></span> <span>@T("订单")</span> <span class="message-count" style="display: none"></span> <span class="header-spread"></span></a>
+                    @*<div class="item-more item-message"></div>*@
+                </div>
+                <div class="item">
+                    <a href="javascript:" class="item-label">
+                        <span class="header-wallet"></span> <span class="va-mid">@T("钱包")</span>
+                        <span class="header-spread"></span>
+                    </a>
+                    <div class="item-more item-wallet">
+
+                        <div class="wallet-item pt-10">
+                            <span class="sanjiao"></span>
+                            <p style="margin-left:12px;">@T("账户总资产")：<span class="assetNum text-primary" id="D_canAsset">--</span> USD</p>
+                            <ul class="sub-bar-top">
+                                <li class="bizhong">@T("币种")</li>
+                                <li class="geshu">@T("个数")</li>
+                                <li class="keyong">@T("估值")</li>
+                            </ul>
+
+                            <ul class="sub-bar-top sub-bar-cont">
+                                @{   var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO).ToList();
+                                    double tocount = 0;
+                                    decimal curvalue = 0;//币种估值
+                                    decimal walletcur = 0;//钱包余额
+                                }
+                                @foreach (var item in cmodelList)
+                                {
+                                    curvalue = 0;//币种估值
+                                    walletcur = 0;//钱包余额
+                                                  //计算市值
+                                    if ((item.GetPriceType ?? 0) == 1)
+                                    {
+                                        curvalue = JN.Services.Manager.Stocks.getcurrentprice(item);
+                                    }
+                                    else
+                                    {
+                                        curvalue = JN.Services.Tool.StringHelp.GetPrice("https://api.coinmarketcap.com/v1/ticker/" + item.English, item.English, "usd", true).ToDecimal();
+                                    }
+                                    walletcur = JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel);//余额
+                                    tocount += (walletcur * curvalue).ToDouble();//计算总资产
+                                    <li class="bizhong">
+                                        @(item.CurrencyName)
+                                    </li>
+                                    <li class="geshu">
+                                        @(walletcur.ToDouble())
+                                    </li>
+                                    <li class="geshu">
+                                        $<span>
+                                             @((walletcur * curvalue).ToDouble())
+                                        </span>
+                                    </li>
+                                }
+
+                            </ul>
+                            <div class="btn-box">
+                                <input type="hidden" value="@(tocount)" id="total" />
+                                <a href="/usercenter/RechargeTrans/CurTransferEnter" class="btn ml-20 btn-red">@T("充值")</a>
+                                <a href="/usercenter/CashTransfer/CurTransferout" class="btn ml-10 mb-10 btn-green">@T("提币")</a>
+                                <a href="/usercenter/finance/applytransfer?curid=@cmodelList.FirstOrDefault().ID" class="btn ml-20 btn-red">@T("转账")</a>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+                   
+                <div class="item">
+                    <a href="/usercenter/user/myinfo" class="item-label  width-110"><span class="header-user"></span> <span class="username">@Umodel.UserName</span> <span class="header-spread"></span></a>
+                    <div class="item-more item-my width-110 right-navbar">
+                        <span class="sanjiao"></span>
+                        <a class="link" href="/usercenter/user/myinfo">@T("用戶中心")</a>
+                        <!-- <a class="link" href="order-sell">我的交易</a> -->
+                        <a class="link" href="/usercenter/Trade/orderbuy">@T("我的广告")</a>
+                        @*<a class="link" href="/usercenter/user/invite">邀请好友</a>*@
+                        @*<a class="link" href="/usercenter/user/Rewardcenter">礼品中心</a>*@
+                        <a class="link" id="logout" href="/usercenter/home/Logout">@T("退出")</a>
+                    </div>
+                </div>
+               
+            </div>
+            }
+            <div class="yuyan">
+                <ul>
+                    <li class="@((lang == "zh-CN") ? "cur" : "")"><a onclick="changelang(1)">@T("中文")</a></li>
+                    <li class="@((lang == null || lang == "" || lang == "en-US") ? "cur" : "")">
+                        <a onclick="changelang(0)">@T("英文")</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="opt">
+                <div class="opt-line"></div>
+                <div class="opt-line"></div>
+                <div class="opt-line"></div>
+            </div>
+        </div>
+    </div>
+    @RenderBody()
+
+    @Html.Partial("/Views/Shared/footer.cshtml")
+</body>
+</html>
+<script src="/Theme/17112702/js/common_b40ec6e20b_2.js" charset="utf-8"></script>
+<script src="/Theme/17112702/js/rongimlib-2.2.5.min.js"></script>
+<script src="/Theme/17112702/js/nav-drop.js"> </script>
+<script>
+    $(function () {
+        $("#D_canAsset").html($("#total").val());//总资产
+    })
+</script>

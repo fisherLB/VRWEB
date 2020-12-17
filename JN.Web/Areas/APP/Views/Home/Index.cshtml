@@ -1,0 +1,320 @@
+﻿
+@{
+
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    //var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+
+    var curList = JN.Services.Manager.CacheHelp.GetCurrencyList().Where(x => x.LineSwitch && (x.IsEthereum??false)).OrderByDescending(x => x.ID).ToList();
+
+    var userLevel = 0;
+    decimal userMONum = 0;
+    var MOlist = MvcCore.Unity.Get<JN.Data.Service.IMachineOrderService>().List(x => x.IsBalance).OrderBy(x => x.ID).ToList();
+    if (MOlist.Count > 0)
+    {
+        userLevel = MOlist.Where(x => x.UID == Umodel.ID).Max(x => x.ShopID) ?? 0;
+        userMONum = MOlist.Where(x => x.UID == Umodel.ID).Sum(x => x.ApplyInvestment);
+    }
+
+    Newtonsoft.Json.Linq.JArray prices = JN.Services.Tool.StringHelp.GetCurInfo("https://api.coinmarketcap.com/v1/ticker/");
+    //var refererList = JN.Services.Manager.Users.GetAllRefereeChild(Umodel, 0);  //获得用户所有子用户用户集合
+    //string ids = ",";
+    //foreach (var team in refererList)
+    //{
+    //    ids += team.ID + ",";
+    //}
+    var bonusList = MOlist.Where(x => x.UID == Umodel.ID && x.ShopID != 1).ToList();
+    decimal QXtop = 0;
+    decimal QXday = 0;
+    int thisHour = DateTime.Now.Hour;
+    decimal thisQX = 0;
+    if (bonusList.Count > 0)
+    {
+        QXtop = bonusList.Sum(x => x.TopBonus);
+        QXday = bonusList.Sum(x => x.TimesType);
+        thisQX = QXday / 24 * thisHour;
+    }
+
+    //decimal bonusMoney = 0;//G1矿机预计产矿量
+    //var morder = MOlist.SingleAndInit(x => x.UID == Umodel.ID && x.ShopID == 1);
+    //if (morder.ID > 0)
+    //{
+    //    bonusMoney = morder.TimesType / morder.Duration * morder.TodayMiningTime;
+    //}
+
+}
+<link href="/Theme/App/css/swiper.min.css" rel="stylesheet">
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<link href="~/Theme/APP/css/recert.css" rel="stylesheet" />
+<header id="fixedBg" class="header user-header">
+    <div class="announce muiopen">
+        <marquee class="marquee-box">
+            @{
+                var noticeLise = MvcCore.Unity.Get<JN.Data.Service.INoticeService>().List().OrderByDescending(x => x.ID).Take(3).ToList();
+                if (noticeLise.Count() > 0)
+                {
+                    foreach (var item in noticeLise)
+                    {
+                        <span>
+                            <a href="">@item.Title</a>
+                        </span>
+                    }
+                }
+                else
+                {
+                    <span>
+                        @T("暂无公告")
+                    </span>
+                }
+            }
+        </marquee>
+        <a href="" class="announce-more"></a>
+    </div>
+</header>
+<section class="user-container">
+    <div class="home-t1 muiopen">
+        <div class="left">
+            <p class="colorfont">@T("动态钱包")：<span class="colorfont">@((Umodel.Cur3003 ?? 0).ToString("F2"))</span></p>
+            @*<p>@T("矿机型号")：<span>G @userLevel</span></p>
+        <p>@T("矿机产量")：<span>@QXtop.ToString("F2")/ @QXday.ToString("F2")</span></p>*@
+        </div>
+        <a href="/APP/Finance/TransferIn" class="colorfont">
+            <img src="~/Theme/APP/images/icon_scan.png" />
+            @T("收款")
+            <div class="user-level">
+            </div>
+        </a>
+    </div>
+
+    <div class="home-t2 main53d">
+        <!--挖矿-->
+        <div class="mine-left">
+            <div class="mine-box">
+                @*<a href="/APP/User/Mining">*@
+                <a href="###">
+                    <img class="mine-bg" src="~/Theme/APP/img/mining-bg.png" />
+                    <img class="mine" src="~/Theme/APP/img/mineral.png" />
+                </a>
+            </div>
+        </div>
+        <!--左边logo-->
+        <div class="logo-right">
+            <div class="logo-box">
+                <img class="logo-bg" src="~/Theme/APP/img/logo-bg.png" />
+                <img class="logo" src="~/Theme/APP/images/Logo.png" />
+
+            </div>
+        </div>
+    </div>
+    <!--资产-->
+    <div class="home-t3">
+        <div class="assets">
+            <p class="colorfont"><span class="colorfont">@(((Umodel.Cur3001 ?? 0) + (Umodel.Cur3002 ?? 0) + (Umodel.Cur3003 ?? 0) + userMONum).ToString("F2"))</span><br />@T("总资产")</p>
+        </div>
+        <img class="assets-bg" src="~/Theme/APP/img/assets-bg.png" />
+        <ul>
+            <li class="w50 bottomline rightline"><p  class="colorfont margin"><span  class="colorfont">@((Umodel.Cur3001 ?? 0).ToString("F2"))</span><br />@T("USDT")</p>
+            </li>
+            <li class="w50 bottomline"><p  class="colorfont"><span  class="colorfont">@((Umodel.Cur3002 ?? 0).ToString("F2"))</span><br />@T("ETH")</p></li>
+            <li class="w50 rightline" style="border-bottom:none"><p  class="colorfont"><span  class="colorfont">@((Umodel.Cur3004 ?? 0).ToString("F2"))</span><br />@T("BC")</p></li>
+            <li class="w50" style="border-bottom:none"><p  class="colorfont"><span  class="colorfont">@((Umodel.Cur3003 ?? 0).ToString("F2"))</span><br />@T("BTC")</p></li>
+        </ul>
+    </div>
+
+    <div class="user-main">
+        @*<div class="swiper-container banner swiper-container-horizontal">
+                <div class="swiper-wrapper">
+                    @if (sysSet.AppBannerPic == null || sysSet.AppBannerPic.Length == 0)
+                    {
+                        string[] images = Model.AppBannerPic.Split('|');
+                        string[] ImgAlts = Model.AppBannerAlt.Split('|');
+                        string imgAlt = "";
+                        for (int i = 0; i < images.Length; i++)
+                        {
+                            if (images[i].Length > 0)
+                            {
+                                if (ImgAlts.Length > i)
+                                {
+                                    imgAlt = ImgAlts[i];
+                                }
+                                <div class="swiper-slide">
+                                    <a href="@imgAlt">
+                                        <img src="@images[i]" alt="">
+                                    </a>
+                                </div>
+                            }
+                        }
+                    }
+                </div>
+                <div class="swiper-pagination pageList swiper-pagination-clickable swiper-pagination-bullets">
+                </div>
+            </div>*@
+
+        <!--币种价格-->
+        <div class="List-Box muiopen">
+            <h2 class="white">资产</h2>
+            <ul>
+                @if (curList.Count > 0)
+                {
+                    decimal totalMoney = 0;
+                    foreach (var item in curList)
+                    {
+                        var money = JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel);
+                        if (item.WalletCurID != 3005)
+                        {
+                            totalMoney += (money * item.TranPrice) / 1;   // 总资产
+
+                            var price = prices == null ? 0 :Convert.ToDecimal(prices.FirstOrDefault(x => (string)x["id"] == item.English.ToLower())["price_usd"]);
+                            <li>
+                                <div>
+                                    <span>
+                                        @if (item.IsCashTransfer)
+                                        {
+                                            <a class="bu1" href="/APP/CashTransfer/CurTransferout?curid=@item.ID">@T("提币")</a>
+                                        }
+                                        @if (item.IsRecharge)
+                                        {
+                                            <a class="bu1" href="/APP/RechargeTrans/CurTransferEnter?curid=@item.ID">@T("充币")</a>
+                                        }
+
+                                        <a class="bu2" href="/APP/Finance/ApplyTransfer?curid=@item.ID">@T("转帐")</a>
+                                    </span>
+                                    <h3>
+                                        <img src="@item.CurrencyLogo" /><span>@item.EnSigns</span>
+                                    </h3>
+                                </div>
+                                <dl><dd class="colorfont">$ @((price * money).ToString("F4"))</dd><dt class="colorfont">市 值</dt></dl>
+                                <dl><dd class="colorfont">$ @money.ToString("F4")</dd><dt class="colorfont">可 用</dt></dl>
+                            </li>
+                        }
+
+                    }
+                }
+
+            </ul>
+        </div>
+
+    </div>
+</section>
+
+<!--底部导航-->
+
+@Html.Partial("~/Areas/APP/Views/Shared/_Footer.cshtml")
+<!-- 弹窗内容开始 -->
+<div id="background2" class="back back2" style="display: none;">
+    <div id="div3" class="content">
+        <div id="div4">
+            <div class="home-miner">
+                <div id="close">
+                    <span id="close-button">×</span>
+                </div>
+                <img src="~/Theme/APP/img/miner-g.png" />
+                <p>@T("矿机型号")：<span>G@(userLevel)</span></p>
+                <p>@T("预计挖矿量")：<span class="count">@thisQX.ToString("F2")</span> FJC</p>
+
+
+                @*<a class="sign-in" href="~/APP/Login/Index">@T("去登录")</a>
+                    <a href="~/APP/Home/Video">~/Areas/APP/Views/Home/Video.cshtml</a>*@
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!---->
+<script src="/Theme/App/js/swiper.min.js"></script>
+<script type="text/javascript">
+    //轮播图
+    var swiper = new Swiper('.banner', {
+        pagination: '.swiper-pagination',
+        paginationClickable: true,
+        spaceBetween: 30,
+        centeredSlides: true,
+        autoplay: 2500,
+        autoplayDisableOnInteraction: false
+    });
+
+    $(function () {
+        //公告
+        var num = 0;
+        var aWidth = $(".announce ul").width();
+        function goLeft() {
+
+            if (num == -aWidth) {
+                num = 0;
+            }
+            num -= 1;
+            $(".announce ul").css({
+                marginLeft: num
+            })
+        }
+        //设置滚动速度
+        var timer = setInterval(goLeft, 30);
+        //设置鼠标经过时滚动停止
+        $(".announce ul").hover(function () {
+            clearInterval(timer);
+        },
+		function () {
+		    timer = setInterval(goLeft, 30);
+		});
+
+        //顶部滚动效果
+        $(window).scroll(function () {
+
+            if ($(window).scrollTop() >= 20) {
+                $("#fixedBg").addClass('user-header-fixed');
+            }
+            else {
+                $("#fixedBg").removeClass('user-header-fixed');
+            }
+        });
+        //if (!sessionStorage.updateaaa) {//sessionStorage 生命周期浏览器会话 判断不存在或不为1
+        //    //执行方法代码段
+        //    //$('#background2').hide();
+        //    $('#background2').show();
+        //    sessionStorage.updateaaa = 1;//标记变量为1
+        //}
+
+        //$('#close-button').click(function () {
+        //    $('#background2').hide();
+        //});
+    });
+
+    //链接跳转
+    function goUrl(url) {
+        location.href = url;
+    }
+
+    function SignReward() {
+        $.post("@Url.Action("SignRewardAll", "finance")", function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("操作成功")", { icon: 1 }, function () {
+                    location.reload();
+                });
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+            }
+        });
+    }
+</script>
+<!--挖矿量滚动-->
+<script src="~/Theme/APP/js/count.js"></script>
+@*<script type="text/javascript">
+        $(function () {
+            $(".count").numberRock({
+                lastNumber: @bonusMoney,
+                duration: 5000,
+                easing: 'swing',  //慢快慢
+            });
+        });
+    </script>*@

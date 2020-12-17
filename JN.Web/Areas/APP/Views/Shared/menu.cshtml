@@ -1,0 +1,148 @@
+﻿
+@{   string curl = Request.Url.ToString().ToLower();
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO).ToList();
+    string lang = Request["lang"];
+}
+
+<div class="nav clear-float fl">
+    <div class="">
+        <div class="menu">
+            <a class="nav-item @(curl.Contains("/home/index") ? "current" : "")  " href="@Url.Action("index", "indexhome")">@T("首页")</a>
+        </div>
+        @*<div class="menu">
+                <div class="open_menu1 nav-item @(curl.Contains("/app/apptrade/buy") ? "current" : "")">
+                    <a href="JavaScript:;">@T("买入币种")</a>
+
+                    <ul class="nav-sublist1" style=" display:none;">
+
+                        @foreach (var item in cmodelList)
+                        {
+                            <li><a href="@Url.Action("buy", "apptrade")?curid=@item.ID">@item.CurrencyName</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+            <div class="menu">
+                <div class="open_menu2 nav-item @(curl.Contains("/app/apptrade/sell") ? "current" : "")">
+
+                    <a href="@Url.Action("sell", "apptrade")">@T("出售币种")</a>
+                    <ul class="nav-sublist2" style=" display:none;">
+
+                        @foreach (var item in cmodelList)
+                        {
+                            <li><a href="@Url.Action("sell", "apptrade")?curid=@item.ID">@item.CurrencyName</a></li>
+                        }
+
+                    </ul>
+                </div>
+
+
+            </div>
+            <div class="menu">
+                <a class="nav-item @(curl.Contains("/App/trade/newadvertise") ? "current" : "")" href="/App/Trade/NewAdvertise">@T("发布广告")</a>
+            </div>*@
+        <div class="menu">
+            <a class="nav-item @(curl.Contains("/App/user/myinfo") ? "current" : "")  " href="/App/user/myinfo">@T("个人设置")</a>
+        </div>
+        <div class="open_menu2 nav-item ">
+            <a href="@Url.Action("index", "home")">@T("买入/出售币种")</a>
+        </div>
+        <div class="menu">
+            <a class="nav-item @(curl.Contains("/home/index") ? "current" : "")  " href="/APP/RechargeTrans/CurTransferEnter">@T("财务管理")</a>
+        </div>
+    </div>
+    <div class="menu">
+        <a class="nav-item @(curl.Contains("/App/RechargeTrans/CurEnterAccountDetail") ? "current" : "")  " href="/App/RechargeTrans/CurEnterAccountDetail">@T("交易记录")</a>
+    </div> 
+    <div class="menu">
+        <a class="nav-item @(curl.Contains("/app/user/applicationcommunity") ? "current" : "")" href="/App/trade/AdvertiseOrder">@T("订单管理")</a>
+    </div>
+    <div class="menu">
+        <a class="nav-item @(curl.Contains("/app/user/applicationcommunity") ? "current" : "")" href="/app/notice/index">@T("最新消息")</a>
+    </div>
+        <input type="hidden" id="lang" value="@Request["lang"]" />
+        <div class="yuyan">
+            <ul>
+                <li class="@((lang == "zh-CN") ? "cur" : "")"><a onclick="changelang('zh-CN')">中文</a></li>
+                <li class="@((lang == "zh-TW") ? "cur" : "")"><a onclick="changelang('zh-TW')">繁體</a></li>
+                <li class="@((lang == null || lang == "" || lang == "en-US") ? "cur" : "")"><a onclick="changelang('en-US')">EN</a></li>
+            </ul>
+        </div>
+
+        @*<div class="opt">
+            <div class="opt-line"></div>
+            <div class="opt-line"></div>
+            <div class="opt-line"></div>
+        </div>*@
+    </div>
+
+
+
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(".open_menu1").click(function () {
+                $(".nav-sublist1").toggle();
+                $(".nav-sublist2").hide();
+            });
+            $(".open_menu2").click(function () {
+                $(".nav-sublist2").toggle();
+                $(".nav-sublist1").hide();
+            });
+
+
+        });
+        //语言切换
+        function changelang(type) {
+            var lang = $("#lang").val();
+            var reg;
+            if (lang == "zh-CN") {
+                var reg = new RegExp("lang=zh-CN", 'i');
+            }
+            else if (lang == "zh-TW") {
+                var reg = new RegExp("lang=zh-TW", 'i');
+
+            }
+            else {
+                var reg = new RegExp("lang=en-US", 'i');
+            }
+
+            if (window.location.href.match(reg)) {
+                var strUrl = window.location.href.replace(reg, 'lang=' + type);
+                window.location.href = strUrl;
+            } else if (window.location.href.indexOf("?") >= 0) {
+                window.location.href = window.location.href + "&lang=" + type;
+            } else {
+                window.location.href = window.location.href + "?lang=" + type;
+            }
+        }
+    </script>
+
+</div>
+@*<div class="nav clear-float fl">
+        <a class="nav-item @(curl.Contains("/home/index") ? "current" : "")  " href="@Url.Action("index", "indexhome")">@T("首页")</a>
+        <a class="nav-item @(curl.Contains("/app/apptrade/buy") ? "current" : "")" href="@Url.Action("buy", "apptrade")">
+            @T("买入币种")
+            <ul class="nav-sublist">
+                <span class="sanjiao sanjiao-2"></span>
+                @foreach (var item in cmodelList)
+                {
+                    <li><a href="@Url.Action("buy", "apptrade")?curid=@item.ID">@item.CurrencyName</a></li>
+                }
+            </ul>
+        </a>
+        <a class="nav-item @(curl.Contains("/app/apptrade/sell") ? "current" : "")" href="@Url.Action("sell", "apptrade")">@T("出售币种")
+            <ul class="nav-sublist">
+                <span class="sanjiao sanjiao-2"></span>
+                @foreach (var item in cmodelList)
+                {
+                    <li><a href="@Url.Action("sell", "apptrade")?curid=@item.ID">@item.CurrencyName</a></li>
+                }
+
+            </ul>
+
+        </a>
+        <a class="nav-item @(curl.Contains("/App/trade/newadvertise") ? "current" : "")" href="/App/Trade/NewAdvertise">@T("发布广告")</a>
+        <a class="nav-item @(curl.Contains("/App/user/invite") ? "current" : "")" href="/App/user/invite">邀请好友<span class="icon-new"></span></a>
+    </div>*@

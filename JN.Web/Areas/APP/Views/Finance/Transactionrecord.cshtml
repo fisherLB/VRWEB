@@ -1,0 +1,110 @@
+﻿
+@{
+    ViewBag.Title = "Transactionrecord";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">@T("交易记录")</div>
+</header>
+<section class="container">
+    <ul class="wode_list">
+        <li class="on" id="ine1"><a>@T("买入")</a></li>
+        <li class="" id="ine2"><a>@T("发布")</a></li>
+    </ul>
+    <div class="tab-content padding0" id="tab-buy">
+       <ul class="table-view">
+           <li>
+               <a href="/APP/Finance/Details1">
+                   <img src="~/Theme/APP/images/Logo.png" />
+                   <div class="media-body c00d2ff">
+                       @T("买入斐济币") FJB
+                       <p class="mui-ellipsis">2018-08-18 18:25</p>
+                   </div>
+                   <div class="right-number cf40">38579.6</div>
+               </a>
+           </li>
+           <li>
+               <a href="/APP/Finance/Details1">
+                   <img src="~/Theme/APP/images/Logo.png" />
+                   <div class="media-body c00d2ff">
+                       @T("买入斐济币") FJB
+                       <p class="mui-ellipsis">2018-08-18 18:25</p>
+                   </div>
+                   <div class="right-number cf40">38579.6</div>
+               </a>
+           </li>
+       </ul>
+    </div>
+    <div class="tab-content padding0" id="tab-sell">
+        <ul class="table-view">
+            <li>
+                <a href="/APP/Finance/Details1">
+                    <img src="~/Theme/APP/images/Logo.png" />
+                    <div class="media-body c00d2ff">
+                        @T("发布斐济币") FJB
+                        <p class="mui-ellipsis">2018-08-18 18:25</p>
+                    </div>
+                    <div class="right-number c00d2ff">38579.6</div>
+                </a>
+            </li>
+            <li>
+                <a href="/APP/Finance/Details1">
+                    <img src="~/Theme/APP/images/Logo.png" />
+                    <div class="media-body c00d2ff">
+                        @T("发布斐济币") FJB
+                        <p class="mui-ellipsis">2018-08-18 18:25</p>
+                    </div>
+                    <div class="right-number c00d2ff">38579.6</div>
+                </a>
+            </li>
+            <li>
+                <a href="/APP/Finance/Details1">
+                    <img src="~/Theme/APP/images/Logo.png" />
+                    <div class="media-body c00d2ff">
+                        @T("发布斐济币") FJB
+                        <p class="mui-ellipsis">2018-08-18 18:25</p>
+                    </div>
+                    <div class="right-number c00d2ff">38579.6</div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</section>
+<script src="~/Theme/APP/js/jquery-1.10.2.js"></script>
+<script>
+	    $(function () {
+            $('#ine1').click(function () {
+                $('#tab-buy').show();
+                $('#tab-sell').hide();
+                $('#tab-ing').hide();
+                $('#tab-over').hide();
+            })
+            $('#ine2').click(function () {
+                $('#tab-buy').hide();
+                $('#tab-sell').show();
+                $('#tab-ing').hide();
+                $('#tab-over').hide();
+            })
+            $('#ine3').click(function () {
+                $('#tab-buy').hide();
+                $('#tab-sell').hide();
+                $('#tab-ing').show();
+                $('#tab-over').hide();
+            })
+            $('#ine4').click(function () {
+                $('#tab-buy').hide();
+                $('#tab-sell').hide();
+                $('#tab-ing').hide();
+                $('#tab-over').show();
+            })
+
+            $(".wode_list li").click(function () {
+                    $(this).addClass("on").siblings().removeClass("on");
+
+                })
+        });
+</script>

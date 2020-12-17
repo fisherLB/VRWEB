@@ -1,0 +1,594 @@
+﻿@using System.Text.RegularExpressions;
+@model JN.Data.User
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+}
+<div class="container clear-float main">
+    @Html.Partial("/Areas/APP/Views/Home/_Security.cshtml")
+    <div class="fr">
+        <div class="setting-title">@T("安全设置")>@T("修改手机")</div>
+        <div class="setting-panel">
+            <div class="setting-flow clear-float step3">
+                <span class="flow-line"><span class="flow-line-active"></span></span>
+                <span class="flow-item no-margin"><span class="flow-point finish">1</span><div class="flow-decs">@T("验证手机号")</div></span>
+                <span class="flow-item"><span class="flow-point">2</span><div class="flow-decs">@T("验证新号码")</div></span>
+                <span class="flow-item"><span class="flow-point">3</span><div class="flow-decs">@T("完成")</div></span>
+            </div>
+            <div class="form-cont" id="step1">
+                <!-- <div class="decs1 ta-l pt-30">您當前綁定手機號碼：150******12</div> -->
+                <div class="input-cont">
+                    <span class="icon form-phone"></span>
+                    <select class="select" name="oldcountry_code" id="oldcountry">
+                        <option value="+86">@T("+86 中国")</option>
+                        <option value="+1">@T("+1 美国")</option>
+                        <option value="+1">@T("+1 加拿大")</option>
+                        <option value="+852">@T("+852 香港")</option>
+                        <option value="+886">@T("+886 台湾")</option>
+                        <option value="+81">@T("+81 日本")</option>
+                        <option value="+82">@T("+82 韩国")</option>
+                        <option value="+61">@T("+61 澳大利亚")</option>
+                        <option value="+64">@T("+64 新西兰")</option>
+                        <option value="+44">@T("+44 英国")</option>
+                        <option value="+49">@T("+49 德国")</option>
+                        <option value="+33">@T("+33 法国")</option>
+                        <option value="+7">@T("+7 俄罗斯")</option>
+                        <option value="+63">@T("+63 菲律宾")</option>
+                        <option value="+84">@T("+84 越南")</option>
+                        <option value="+960">@T("+960 马尔代夫")</option>
+                        <option value="+378">@T("+378 圣马力诺")</option>
+                        <option value="+501">@T("+501 伯利兹")</option>
+                        <option value="+7">@T("+7 哈萨克斯坦")</option>
+                        <option value="+237">@T("+237 喀麦隆")</option>
+                        <option value="+354">@T("+354 冰岛")</option>
+                        <option value="+36">@T("+36 匈牙利")</option>
+                        <option value="+385">@T("+385 克罗地亚")</option>
+                        <option value="+993">@T("+993 土库曼斯坦")</option>
+                        <option value="+380">@T("+380 乌克兰")</option>
+                        <option value="+241">@T("+241 加蓬")</option>
+                        <option value="+235">@T("+235 乍得")</option>
+                        <option value="+239">@T("+239 圣多美 和普林西比")</option>
+                        <option value="+593">@T("+593 厄瓜多尔")</option>
+                        <option value="+45">@T("+45 丹麦")</option>
+                        <option value="+967">@T("+967 也门")</option>
+                        <option value="+27">@T("+27 南非")</option>
+                        <option value="+62">@T("+62 印度尼西亚")</option>
+                        <option value="+211">@T("+211 南苏丹")</option>
+                        <option value="+1784">@T("+1784 圣文森特和格林纳丁斯")</option>
+                        <option value="+1721">@T("+1721 圣马丁岛（荷兰部分）")</option>
+                        <option value="+996">@T("+996 吉尔吉斯斯坦")</option>
+                        <option value="+253">@T("+253 吉布提")</option>
+                        <option value="+1869">@T("+1869 圣基 茨和尼维斯")</option>
+                        <option value="+359">@T("+359 保加利亚")</option>
+                        <option value="+236">@T("+236 中 非共和国")</option>
+                        <option value="+598">@T("+598 乌拉圭")</option>
+                        <option value="+57">@T("+57 哥伦比亚")</option>
+                        <option value="+243">@T("+243 刚果民主共和国")</option>
+                        <option value="+972">@T("+972 以色列")</option>
+                        <option value="+267">@T("+267 博茨瓦纳")</option>
+                        <option value="+233">@T("+233 加纳")</option>
+                        <option value="+242">@T("+242 刚果共和国")</option>
+                        <option value="+256">@T("+256 乌干达")</option>
+                        <option value="+670">@T("+670 东帝汶")</option>
+                        <option value="+508">@T("+508 圣彼埃尔和密克隆岛")</option>
+                        <option value="+220">@T("+220 冈比亚")</option>
+                        <option value="+974">@T("+974 卡塔尔")</option>
+                        <option value="+231">@T("+231 利比里亚")</option>
+                        <option value="+998">@T("+998 乌兹别克斯坦")</option>
+                        <option value="+1671">@T("+1671 关岛")</option>
+                        <option value="+245">@T("+245 几内亚比绍共和国")</option>
+                        <option value="+98">@T("+98 伊朗")</option>
+                        <option value="+374">@T("+374 亚美尼亚")</option>
+                        <option value="+423">@T("+423 列支敦士登")</option>
+                        <option value="+1758">@T("+1758 圣露西亚")</option>
+                        <option value="+506">@T("+506 哥斯达黎加")</option>
+                        <option value="+964">@T("+964 伊拉克")</option>
+                        <option value="+352">@T("+352 卢森堡")</option>
+                        <option value="+963">@T("+963 叙利亚")</option>
+                        <option value="+91">@T("+91 印度")</option>
+                        <option value="+250">@T("+250 卢旺达")</option>
+                        <option value="+53">@T("+53 古巴")</option>
+                        <option value="+90">@T("+90 土耳其")</option>
+                        <option value="+218">@T("+218 利比亚")</option>
+                        <option value="+975">@T("+975 不丹")</option>
+                        <option value="+224">@T("+224 几内亚")</option>
+                        <option value="+1649">@T("+1649 特克斯和凯科斯群岛")</option>
+                        <option value="+238">@T("+238 开普")</option>
+                        <option value="+880">@T("+880 孟加拉国")</option>
+                        <option value="+505">@T("+505 尼加拉瓜")</option>
+                        <option value="+227">@T("+227 尼日尔")</option>
+                        <option value="+1809">@T("+1809 多明尼加共和国")</option>
+                        <option value="+1264">@T("+1264 安圭拉")</option>
+                        <option value="+234">@T("+234 尼日利亚")</option>
+                        <option value="+255">@T("+255 坦桑尼亚")</option>
+                        <option value="+977">@T("+977 尼泊尔")</option>
+                        <option value="+1767">@T("+1767 多米尼加")</option>
+                        <option value="+92">@T("+92 巴基斯坦")</option>
+                        <option value="+55">@T("+55 巴西")</option>
+                        <option value="+381">@T("+381 塞尔维亚")</option>
+                        <option value="+226">@T("+226 布基纳法索")</option>
+                        <option value="+1246">@T("+1246 巴巴多斯")</option>
+                        <option value="+376">@T("+376 安道尔")</option>
+                        <option value="+675">@T("+675 巴布亚新几 内亚")</option>
+                        <option value="+58">@T("+58 委内瑞拉")</option>
+                        <option value="+973">@T("+973 巴林")</option>
+                        <option value="+682">@T("+682 库克群岛")</option>
+                        <option value="+592">@T("+592 圭亚那")</option>
+                        <option value="+357">@T("+357 塞浦路斯")</option>
+                        <option value="+43">@T("+43 奥地利")</option>
+                        <option value="+248">@T("+248 塞舌尔")</option>
+                        <option value="+52">@T("+52 墨西哥")</option>
+                        <option value="+992">@T("+992 塔吉克斯坦")</option>
+                        <option value="+20">@T("+20 埃及")</option>
+                        <option value="+507">@T("+507 巴拿马")</option>
+                        <option value="+599">@T("+599 库拉索")</option>
+                        <option value="+232">@T("+232 塞拉利昂")</option>
+                        <option value="+1268">@T("+1268 安提瓜 和巴布达")</option>
+                        <option value="+970">@T("+970 巴勒斯 坦领土")</option>
+                        <option value="+680">@T("+680 帕劳")</option>
+                        <option value="+30">@T("+30 希腊")</option>
+                        <option value="+221">@T("+221 塞内加尔")</option>
+                        <option value="+257">@T("+257 布隆迪")</option>
+                        <option value="+686">@T("+686 基里巴斯")</option>
+                        <option value="+251">@T("+251 埃塞俄比亚")</option>
+                        <option value="+1242">@T("+1242 巴哈马")</option>
+                        <option value="+228">@T("+228 多哥")</option>
+                        <option value="+244">@T("+244 安哥拉")</option>
+                        <option value="+595">@T("+595 巴拉圭")</option>
+                        <option value="+94">@T("+94 斯里兰卡")</option>
+                        <option value="+216">@T("+216 突尼斯")</option>
+                        <option value="+371">@T("+371 拉脱维亚")</option>
+                        <option value="+1441">@T("+1441 百慕大群岛")</option>
+                        <option value="+269">@T("+269 科摩罗")</option>
+                        <option value="+47">@T("+47 挪威")</option>
+                        <option value="+66">@T("+66 泰国")</option>
+                        <option value="+372">@T("+372 爱沙尼亚")</option>
+                        <option value="+689">@T("+689 法属波利尼 西亚")</option>
+                        <option value="+855">@T("+855 柬埔寨")</option>
+                        <option value="+222">@T("+222 毛里塔尼亚")</option>
+                        <option value="+65">@T("+65 新加坡")</option>
+                        <option value="+230">@T("+230 毛里求斯")</option>
+                        <option value="+46">@T("+46 瑞典")</option>
+                        <option value="+594">@T("+594 法属圭亚那")</option>
+                        <option value="+375">@T("+375 白俄罗斯")</option>
+                        <option value="+687">@T("+687 新喀里多尼亚")</option>
+                        <option value="+387">@T("+387 波斯 尼亚和黑塞哥维那")</option>
+                        <option value="+268">@T("+268 斯威士兰")</option>
+                        <option value="+421">@T("+421 斯洛伐克")</option>
+                        <option value="+51">@T("+51 秘鲁")</option>
+                        <option value="+679">@T("+679 斐济")</option>
+                        <option value="+966">@T("+966 沙特阿拉伯")</option>
+                        <option value="+509">@T("+509 海地")</option>
+                        <option value="+504">@T("+504 洪都拉斯")</option>
+                        <option value="+373">@T("+373 摩尔多瓦")</option>
+                        <option value="+32">@T("+32 比利时")</option>
+                        <option value="+1787">@T("+1787 波多黎各")</option>
+                        <option value="+590">@T("+590 瓜德罗普岛")</option>
+                        <option value="+965">@T("+965 科威特")</option>
+                        <option value="+56">@T("+56 智利")</option>
+                        <option value="+48">@T("+48 波兰")</option>
+                        <option value="+39">@T("+39 意大利")</option>
+                        <option value="+298">@T("+298 法罗群岛")</option>
+                        <option value="+1345">@T("+1345 开曼群岛")</option>
+                        <option value="+350">@T("+350 直布罗陀")</option>
+                        <option value="+676">@T("+676 汤加")</option>
+                        <option value="+1868">@T("+1868 特立尼 达和多巴哥")</option>
+                        <option value="+263">@T("+263 津巴布韦")</option>
+                        <option value="+502">@T("+502 瓜地马拉")</option>
+                        <option value="+420">@T("+420 捷克")</option>
+                        <option value="+591">@T("+591 玻利维亚")</option>
+                        <option value="+386">@T("+386 斯洛文尼亚")</option>
+                        <option value="+853">@T("+853 澳门")</option>
+                        <option value="+262">@T("+262 留尼汪")</option>
+                        <option value="+41">@T("+41 瑞士")</option>
+                        <option value="+1876">@T("+1876 牙买加")</option>
+                        <option value="+995">@T("+995 格鲁吉亚")</option>
+                        <option value="+1473">@T("+1473 格林纳达")</option>
+                        <option value="+353">@T("+353 爱尔兰")</option>
+                        <option value="+673">@T("+673 文莱")</option>
+                        <option value="+299">@T("+299 格陵兰岛")</option>
+                        <option value="+377">@T("+377 摩纳哥")</option>
+                        <option value="+677">@T("+677 所罗门群岛")</option>
+                        <option value="+678">@T("+678 瓦努阿图")</option>
+                        <option value="+212">@T("+212 摩洛哥")</option>
+                        <option value="+254">@T("+254 肯尼亚")</option>
+                        <option value="+597">@T("+597 苏里南")</option>
+                        <option value="+856">@T("+856 老挝")</option>
+                        <option value="+40">@T("+40 罗马尼亚")</option>
+                        <option value="+249">@T("+249 苏丹")</option>
+                        <option value="+95">@T("+95 缅甸")</option>
+                        <option value="+370">@T("+370 立陶宛")</option>
+                        <option value="+252">@T("+252 索马里")</option>
+                        <option value="+1684">@T("+1684 美属萨摩亚")</option>
+                        <option value="+358">@T("+358 芬兰")</option>
+                        <option value="+264">@T("+264 纳米比亚")</option>
+                        <option value="+962">@T("+962 约旦")</option>
+                        <option value="+229">@T("+229 贝宁")</option>
+                        <option value="+356">@T("+356 马耳他")</option>
+                        <option value="+258">@T("+258 莫桑比克")</option>
+                        <option value="+213">@T("+213 阿尔及利亚")</option>
+                        <option value="+225">@T("+225 象牙海岸")</option>
+                        <option value="+93">@T("+93 阿富汗")</option>
+                        <option value="+265">@T("+265 马拉维")</option>
+                        <option value="+1664">@T("+1664 蒙特塞拉特岛")</option>
+                        <option value="+503">@T("+503 萨尔瓦多")</option>
+                        <option value="+247">@T("+247 阿森松岛")</option>
+                        <option value="+971">@T("+971 阿拉伯 联合酋长国")</option>
+                        <option value="+685">@T("+685 萨摩亚")</option>
+                        <option value="+297">@T("+297 阿鲁巴")</option>
+                        <option value="+968">@T("+968 阿曼")</option>
+                        <option value="+355">@T("+355 阿尔巴尼亚")</option>
+                        <option value="+994">@T("+994 阿塞拜疆")</option>
+                        <option value="+976">@T("+976 蒙古")</option>
+                        <option value="+596">@T("+596 马提尼克")</option>
+                        <option value="+260">@T("+260 赞比亚")</option>
+                        <option value="+266">@T("+266 莱索托")</option>
+                        <option value="+269">@T("+269 马约特")</option>
+                        <option value="+389">@T("+389 马其顿")</option>
+                        <option value="+34">@T("+34 西班牙")</option>
+                        <option value="+351">@T("+351 葡萄牙")</option>
+                        <option value="+240">@T("+240 赤道几内亚")</option>
+                        <option value="+31">@T("+31 荷兰")</option>
+                        <option value="+60">@T("+60 马来西亚")</option>
+                        <option value="+54">@T("+54 阿根廷")</option>
+                        <option value="+261">@T("+261 马达加斯加")</option>
+                        <option value="+223">@T("+223 马里")</option>
+                        <option value="+961">@T("+961 黎巴嫩")</option>
+                        <option value="+382">@T("+382 黑山")</option>
+                    </select>
+                </div>
+                <div class="input-cont">
+                    <span class="icon form-phone"></span>
+                    <input class="input"  type="tel" name="old_mobile" placeholder="@T("请输入原来的手机号码")">
+                    <div class="form-tips"></div>
+                    <div class="error-msg">@T("请输入正确的手机号码")</div>
+                </div>
+                <a id="changeNext" class="btn submit " onclick="changeNext()">@T("下一步")</a>
+            </div>
+
+            <div class="form-cont" id="step2" style="display: none;">
+                <form method="post" id="form">
+                    <div class="input-cont">
+                        <span class="icon form-phone"></span>
+                        <select class="select" name="country_code" id="country">
+                            <option value="+86">@T("+86 中国")</option>
+                            <option value="+1">@T("+1 美国")</option>
+                            <option value="+1">@T("+1 加拿大")</option>
+                            <option value="+852">@T("+852 香港")</option>
+                            <option value="+886">@T("+886 台湾")</option>
+                            <option value="+81">@T("+81 日本")</option>
+                            <option value="+82">@T("+82 韩国")</option>
+                            <option value="+61">@T("+61 澳大利亚")</option>
+                            <option value="+64">@T("+64 新西兰")</option>
+                            <option value="+44">@T("+44 英国")</option>
+                            <option value="+49">@T("+49 德国")</option>
+                            <option value="+33">@T("+33 法国")</option>
+                            <option value="+7">@T("+7 俄罗斯")</option>
+                            <option value="+63">@T("+63 菲律宾")</option>
+                            <option value="+84">@T("+84 越南")</option>
+                            <option value="+960">@T("+960 马尔代夫")</option>
+                            <option value="+378">@T("+378 圣马力诺")</option>
+                            <option value="+501">@T("+501 伯利兹")</option>
+                            <option value="+7">@T("+7 哈萨克斯坦")</option>
+                            <option value="+237">@T("+237 喀麦隆")</option>
+                            <option value="+354">@T("+354 冰岛")</option>
+                            <option value="+36">@T("+36 匈牙利")</option>
+                            <option value="+385">@T("+385 克罗地亚")</option>
+                            <option value="+993">@T("+993 土库曼斯坦")</option>
+                            <option value="+380">@T("+380 乌克兰")</option>
+                            <option value="+241">@T("+241 加蓬")</option>
+                            <option value="+235">@T("+235 乍得")</option>
+                            <option value="+239">@T("+239 圣多美 和普林西比")</option>
+                            <option value="+593">@T("+593 厄瓜多尔")</option>
+                            <option value="+45">@T("+45 丹麦")</option>
+                            <option value="+967">@T("+967 也门")</option>
+                            <option value="+27">@T("+27 南非")</option>
+                            <option value="+62">@T("+62 印度尼西亚")</option>
+                            <option value="+211">@T("+211 南苏丹")</option>
+                            <option value="+1784">@T("+1784 圣文森特和格林纳丁斯")</option>
+                            <option value="+1721">@T("+1721 圣马丁岛（荷兰部分）")</option>
+                            <option value="+996">@T("+996 吉尔吉斯斯坦")</option>
+                            <option value="+253">@T("+253 吉布提")</option>
+                            <option value="+1869">@T("+1869 圣基 茨和尼维斯")</option>
+                            <option value="+359">@T("+359 保加利亚")</option>
+                            <option value="+236">@T("+236 中 非共和国")</option>
+                            <option value="+598">@T("+598 乌拉圭")</option>
+                            <option value="+57">@T("+57 哥伦比亚")</option>
+                            <option value="+243">@T("+243 刚果民主共和国")</option>
+                            <option value="+972">@T("+972 以色列")</option>
+                            <option value="+267">@T("+267 博茨瓦纳")</option>
+                            <option value="+233">@T("+233 加纳")</option>
+                            <option value="+242">@T("+242 刚果共和国")</option>
+                            <option value="+256">@T("+256 乌干达")</option>
+                            <option value="+670">@T("+670 东帝汶")</option>
+                            <option value="+508">@T("+508 圣彼埃尔和密克隆岛")</option>
+                            <option value="+220">@T("+220 冈比亚")</option>
+                            <option value="+974">@T("+974 卡塔尔")</option>
+                            <option value="+231">@T("+231 利比里亚")</option>
+                            <option value="+998">@T("+998 乌兹别克斯坦")</option>
+                            <option value="+1671">@T("+1671 关岛")</option>
+                            <option value="+245">@T("+245 几内亚比绍共和国")</option>
+                            <option value="+98">@T("+98 伊朗")</option>
+                            <option value="+374">@T("+374 亚美尼亚")</option>
+                            <option value="+423">@T("+423 列支敦士登")</option>
+                            <option value="+1758">@T("+1758 圣露西亚")</option>
+                            <option value="+506">@T("+506 哥斯达黎加")</option>
+                            <option value="+964">@T("+964 伊拉克")</option>
+                            <option value="+352">@T("+352 卢森堡")</option>
+                            <option value="+963">@T("+963 叙利亚")</option>
+                            <option value="+91">@T("+91 印度")</option>
+                            <option value="+250">@T("+250 卢旺达")</option>
+                            <option value="+53">@T("+53 古巴")</option>
+                            <option value="+90">@T("+90 土耳其")</option>
+                            <option value="+218">@T("+218 利比亚")</option>
+                            <option value="+975">@T("+975 不丹")</option>
+                            <option value="+224">@T("+224 几内亚")</option>
+                            <option value="+1649">@T("+1649 特克斯和凯科斯群岛")</option>
+                            <option value="+238">@T("+238 开普")</option>
+                            <option value="+880">@T("+880 孟加拉国")</option>
+                            <option value="+505">@T("+505 尼加拉瓜")</option>
+                            <option value="+227">@T("+227 尼日尔")</option>
+                            <option value="+1809">@T("+1809 多明尼加共和国")</option>
+                            <option value="+1264">@T("+1264 安圭拉")</option>
+                            <option value="+234">@T("+234 尼日利亚")</option>
+                            <option value="+255">@T("+255 坦桑尼亚")</option>
+                            <option value="+977">@T("+977 尼泊尔")</option>
+                            <option value="+1767">@T("+1767 多米尼加")</option>
+                            <option value="+92">@T("+92 巴基斯坦")</option>
+                            <option value="+55">@T("+55 巴西")</option>
+                            <option value="+381">@T("+381 塞尔维亚")</option>
+                            <option value="+226">@T("+226 布基纳法索")</option>
+                            <option value="+1246">@T("+1246 巴巴多斯")</option>
+                            <option value="+376">@T("+376 安道尔")</option>
+                            <option value="+675">@T("+675 巴布亚新几 内亚")</option>
+                            <option value="+58">@T("+58 委内瑞拉")</option>
+                            <option value="+973">@T("+973 巴林")</option>
+                            <option value="+682">@T("+682 库克群岛")</option>
+                            <option value="+592">@T("+592 圭亚那")</option>
+                            <option value="+357">@T("+357 塞浦路斯")</option>
+                            <option value="+43">@T("+43 奥地利")</option>
+                            <option value="+248">@T("+248 塞舌尔")</option>
+                            <option value="+52">@T("+52 墨西哥")</option>
+                            <option value="+992">@T("+992 塔吉克斯坦")</option>
+                            <option value="+20">@T("+20 埃及")</option>
+                            <option value="+507">@T("+507 巴拿马")</option>
+                            <option value="+599">@T("+599 库拉索")</option>
+                            <option value="+232">@T("+232 塞拉利昂")</option>
+                            <option value="+1268">@T("+1268 安提瓜 和巴布达")</option>
+                            <option value="+970">@T("+970 巴勒斯 坦领土")</option>
+                            <option value="+680">@T("+680 帕劳")</option>
+                            <option value="+30">@T("+30 希腊")</option>
+                            <option value="+221">@T("+221 塞内加尔")</option>
+                            <option value="+257">@T("+257 布隆迪")</option>
+                            <option value="+686">@T("+686 基里巴斯")</option>
+                            <option value="+251">@T("+251 埃塞俄比亚")</option>
+                            <option value="+1242">@T("+1242 巴哈马")</option>
+                            <option value="+228">@T("+228 多哥")</option>
+                            <option value="+244">@T("+244 安哥拉")</option>
+                            <option value="+595">@T("+595 巴拉圭")</option>
+                            <option value="+94">@T("+94 斯里兰卡")</option>
+                            <option value="+216">@T("+216 突尼斯")</option>
+                            <option value="+371">@T("+371 拉脱维亚")</option>
+                            <option value="+1441">@T("+1441 百慕大群岛")</option>
+                            <option value="+269">@T("+269 科摩罗")</option>
+                            <option value="+47">@T("+47 挪威")</option>
+                            <option value="+66">@T("+66 泰国")</option>
+                            <option value="+372">@T("+372 爱沙尼亚")</option>
+                            <option value="+689">@T("+689 法属波利尼 西亚")</option>
+                            <option value="+855">@T("+855 柬埔寨")</option>
+                            <option value="+222">@T("+222 毛里塔尼亚")</option>
+                            <option value="+65">@T("+65 新加坡")</option>
+                            <option value="+230">@T("+230 毛里求斯")</option>
+                            <option value="+46">@T("+46 瑞典")</option>
+                            <option value="+594">@T("+594 法属圭亚那")</option>
+                            <option value="+375">@T("+375 白俄罗斯")</option>
+                            <option value="+687">@T("+687 新喀里多尼亚")</option>
+                            <option value="+387">@T("+387 波斯 尼亚和黑塞哥维那")</option>
+                            <option value="+268">@T("+268 斯威士兰")</option>
+                            <option value="+421">@T("+421 斯洛伐克")</option>
+                            <option value="+51">@T("+51 秘鲁")</option>
+                            <option value="+679">@T("+679 斐济")</option>
+                            <option value="+966">@T("+966 沙特阿拉伯")</option>
+                            <option value="+509">@T("+509 海地")</option>
+                            <option value="+504">@T("+504 洪都拉斯")</option>
+                            <option value="+373">@T("+373 摩尔多瓦")</option>
+                            <option value="+32">@T("+32 比利时")</option>
+                            <option value="+1787">@T("+1787 波多黎各")</option>
+                            <option value="+590">@T("+590 瓜德罗普岛")</option>
+                            <option value="+965">@T("+965 科威特")</option>
+                            <option value="+56">@T("+56 智利")</option>
+                            <option value="+48">@T("+48 波兰")</option>
+                            <option value="+39">@T("+39 意大利")</option>
+                            <option value="+298">@T("+298 法罗群岛")</option>
+                            <option value="+1345">@T("+1345 开曼群岛")</option>
+                            <option value="+350">@T("+350 直布罗陀")</option>
+                            <option value="+676">@T("+676 汤加")</option>
+                            <option value="+1868">@T("+1868 特立尼 达和多巴哥")</option>
+                            <option value="+263">@T("+263 津巴布韦")</option>
+                            <option value="+502">@T("+502 瓜地马拉")</option>
+                            <option value="+420">@T("+420 捷克")</option>
+                            <option value="+591">@T("+591 玻利维亚")</option>
+                            <option value="+386">@T("+386 斯洛文尼亚")</option>
+                            <option value="+853">@T("+853 澳门")</option>
+                            <option value="+262">@T("+262 留尼汪")</option>
+                            <option value="+41">@T("+41 瑞士")</option>
+                            <option value="+1876">@T("+1876 牙买加")</option>
+                            <option value="+995">@T("+995 格鲁吉亚")</option>
+                            <option value="+1473">@T("+1473 格林纳达")</option>
+                            <option value="+353">@T("+353 爱尔兰")</option>
+                            <option value="+673">@T("+673 文莱")</option>
+                            <option value="+299">@T("+299 格陵兰岛")</option>
+                            <option value="+377">@T("+377 摩纳哥")</option>
+                            <option value="+677">@T("+677 所罗门群岛")</option>
+                            <option value="+678">@T("+678 瓦努阿图")</option>
+                            <option value="+212">@T("+212 摩洛哥")</option>
+                            <option value="+254">@T("+254 肯尼亚")</option>
+                            <option value="+597">@T("+597 苏里南")</option>
+                            <option value="+856">@T("+856 老挝")</option>
+                            <option value="+40">@T("+40 罗马尼亚")</option>
+                            <option value="+249">@T("+249 苏丹")</option>
+                            <option value="+95">@T("+95 缅甸")</option>
+                            <option value="+370">@T("+370 立陶宛")</option>
+                            <option value="+252">@T("+252 索马里")</option>
+                            <option value="+1684">@T("+1684 美属萨摩亚")</option>
+                            <option value="+358">@T("+358 芬兰")</option>
+                            <option value="+264">@T("+264 纳米比亚")</option>
+                            <option value="+962">@T("+962 约旦")</option>
+                            <option value="+229">@T("+229 贝宁")</option>
+                            <option value="+356">@T("+356 马耳他")</option>
+                            <option value="+258">@T("+258 莫桑比克")</option>
+                            <option value="+213">@T("+213 阿尔及利亚")</option>
+                            <option value="+225">@T("+225 象牙海岸")</option>
+                            <option value="+93">@T("+93 阿富汗")</option>
+                            <option value="+265">@T("+265 马拉维")</option>
+                            <option value="+1664">@T("+1664 蒙特塞拉特岛")</option>
+                            <option value="+503">@T("+503 萨尔瓦多")</option>
+                            <option value="+247">@T("+247 阿森松岛")</option>
+                            <option value="+971">@T("+971 阿拉伯 联合酋长国")</option>
+                            <option value="+685">@T("+685 萨摩亚")</option>
+                            <option value="+297">@T("+297 阿鲁巴")</option>
+                            <option value="+968">@T("+968 阿曼")</option>
+                            <option value="+355">@T("+355 阿尔巴尼亚")</option>
+                            <option value="+994">@T("+994 阿塞拜疆")</option>
+                            <option value="+976">@T("+976 蒙古")</option>
+                            <option value="+596">@T("+596 马提尼克")</option>
+                            <option value="+260">@T("+260 赞比亚")</option>
+                            <option value="+266">@T("+266 莱索托")</option>
+                            <option value="+269">@T("+269 马约特")</option>
+                            <option value="+389">@T("+389 马其顿")</option>
+                            <option value="+34">@T("+34 西班牙")</option>
+                            <option value="+351">@T("+351 葡萄牙")</option>
+                            <option value="+240">@T("+240 赤道几内亚")</option>
+                            <option value="+31">@T("+31 荷兰")</option>
+                            <option value="+60">@T("+60 马来西亚")</option>
+                            <option value="+54">@T("+54 阿根廷")</option>
+                            <option value="+261">@T("+261 马达加斯加")</option>
+                            <option value="+223">@T("+223 马里")</option>
+                            <option value="+961">@T("+961 黎巴嫩")</option>
+                            <option value="+382">@T("+382 黑山")</option>
+                        </select>
+                    </div>
+                    <div class="input-cont">
+                        <span class="icon form-phone"></span>
+                        <input class="input" type="tel" name="mobile" placeholder="@T("请输入新手机号码")" id="phone">
+                        <div class="form-tips"></div>
+                        <div class="error-msg">@T("请输入正确的手机号码")</div>
+                    </div>
+                    <div class="input-cont">
+                        <span class="icon form-token"></span>
+                        <input class="input" type="text" name="mobilecode" placeholder="@T("请输入验证码")">
+                        <button class="link get-token" id="yzm" type="button" style="background: #fff;border: 0;">
+                            @T("发送验证码")
+                        </button>
+                        <div class="form-tips"></div>
+                    </div>
+                    <a id="changeSubmit" class="btn submit " onclick="changeSubmit()">@T("确定保存")</a>
+                </form>
+            </div>
+            
+        </div>
+    </div>
+</div>
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<link href="~/Plugin/select/select2.css" rel="stylesheet" /><!--国家下拉搜索选项css-->
+<script src="~/Plugin/select/pinyin.js"></script><!--国家下拉搜索选项js-->
+<script src="~/Plugin/select/select2.js"></script><!--国家下拉搜索选项js-->
+<script>
+    $(function () {
+        $('#country').find("option[value='@((Model.CountryCode ==null ||Model.CountryCode=="") ? "+46": Model.CountryCode)']").attr("selected", true);
+        $('#oldcountry').find("option[value='@((Model.CountryCode ==null ||Model.CountryCode=="") ? "+46": Model.CountryCode)']").attr("selected", true);
+        $("#country").select2({
+            placeholder: 'Select an option',
+        });
+        $("#oldcountry").select2({
+            placeholder: 'Select an option',
+        });
+    });
+    function changeNext()
+    {
+        var phone = $("input[name='old_mobile']").val();
+        $.post("/App/user/vphone", { phone: phone }, function (data) {
+            if (data.Status == 200) {
+                $("#step2").css("display", "block");
+                $("#step1").css("display", "none");
+
+                $(".flow-line-active").addClass("width2-3");
+                $(".flow-point").eq(1).addClass("finish");
+
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+            }
+        });
+    }
+
+
+
+    function changeSubmit() {
+        $.post("/App/user/PhoneSettings", $("#form").serialize(), function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("修改成功")", { icon: 1 });
+                location.href="/App/home"
+            } else {
+                layer.msg(data.Message, { icon: 2 });
+            }
+        });
+    }
+
+
+
+
+    //验证手机
+    function codephone(thisval) {
+        var phone = $("#phone").val();
+        @*var myreg = /^(((13[0-9]{1})|(18[0-9]{1})|(15[0-9]{1})|(17[0-9]{1}))+\d{8})$/;
+        if (!myreg.test(phone)) {
+            layer.msg('@T("请输入有效的手机号码")', { icon: 2 });
+            $("#phone").focus();
+            return false;
+        }*@
+        if (phone != "") {
+            layer.msg('@T("正在发送短信")，@T("请稍后")...');
+            var countrycode = $("#country").val();
+            $.post("/App/user/SendSetMobileMsm", { phone: phone, countrycode: countrycode }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg('@T("短信已发送")', { icon: 1 });
+                    time(thisval);
+                } else {
+
+                    layer.msg(data.Message, { icon: 2 });
+                }
+            });
+        } else {
+            layer.msg('@T("手机不能为空")', { icon: 2 });
+
+            $("#phone").focus();
+            return false;
+        }
+    }
+
+    var yzmbtn = document.getElementById("yzm");
+    if (yzmbtn != null) {
+        var wait = 60;
+        document.getElementById("yzm").disabled = false;
+        function time(o) {
+            if (wait == 0) {
+                o.removeAttribute("disabled");
+                o.innerHTML = "重新获取验证码";
+                wait = 60;
+            } else {
+                o.setAttribute("disabled", true);
+                o.innerHTML = "重新发送(" + wait + ")";
+                wait--;
+                setTimeout(function () {
+                    time(o)
+                },
+                1000)
+            }
+        }
+        document.getElementById("yzm").onclick = function () {
+            codephone(this);
+        }
+    }
+</script>
+

@@ -1,0 +1,69 @@
+﻿@model List<JN.Data.Shop_Tmp_Pro_Img>
+<style>
+    /* Gallery2 */
+    .Gallery2 {
+        height: auto;
+    }
+
+        .Gallery2 ul li {
+            float: left;
+            width: 50px;
+            height: 50px;
+            border: 1px solid #DCDCDC;
+            position: relative;
+            margin-right: 7px;
+            margin-bottom: 8px;
+        }
+
+            .Gallery2 ul li img {
+                width: 50px;
+                height: 50px;
+            }
+
+            .Gallery2 ul li .iLeft {
+                position: absolute;
+                top: 0px;
+                background: rgba(75, 74, 97, 0.36);
+                color: #FFF;
+                width: 15px;
+                height: 15px;
+                line-height: 15px;
+                text-align: center;
+                cursor: pointer;
+                font-style: normal;
+            }
+
+            .Gallery2 ul li .iRight {
+                position: absolute;
+                right: 0px;
+                top: 0px;
+                background: rgba(75, 74, 97, 0.36);
+                color: #FFF;
+                width: 15px;
+                height: 15px;
+                line-height: 15px;
+                text-align: center;
+                cursor: pointer;
+                font-style: normal;
+            }
+</style>
+<ul id="GalleryList">
+
+    @if (Model != null && Model.Any())
+    {
+        foreach (JN.Data.Shop_Tmp_Pro_Img image in Model)
+        {
+            <li style="width: 60px; height: 60px">
+                <a href="javascript:;">
+                    <img style="width:60px;height:60px" src="@image.ImgUrl" />
+                    <i class="iLeft" onclick="DelTempImg(this)" imgid="@image.Id"><a href="javascript:" title="删除">×</a></i>
+                    <i class="iRight" onclick="InserTempImg(this)" imgid="@image.ImgUrl"><a href="javascript:" title="插入编辑器">↑</a></i>
+                </a>
+            </li>
+        }
+    }
+</ul>
+@section scripts{
+
+}
+

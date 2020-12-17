@@ -1,0 +1,113 @@
+﻿@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000).ToList();
+
+    DateTime reserveTime = DateTime.Now.AddDays(-1);//为空时
+
+    //DateTime lastTime = MvcCore.Unity.Get<JN.Data.Service.IBonusDetailService>().List(x => x.BonusID == 1102).Count() > 0 ? MvcCore.Unity.Get<JN.Data.Service.IBonusDetailService>().List(x => x.BonusID == 1102).OrderByDescending(x => x.CreateTime).First().CreateTime : DateTime.Now;  //上次释放时间
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().List().FirstOrDefault();
+    DateTime lastTime = sysSet.ReserveDate2 ?? DateTime.Now.AddYears(-1);
+}
+<!-- Content -->
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+        <li></li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <form class="form-horizontal" id="validation-form" method="post">
+            <div class="control-group">
+                <label class="control-label">上次结算时间：</label>
+                <div class="controls">
+                    @(sysSet.ReserveDate2 == null ? "从未结算过" : sysSet.ReserveDate2.ToString())
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">结算人数：</label>
+                <div class="controls">
+                    @*&& System.Data.Entity.SqlServer.SqlFunctions.DateDiff("DAY", (x.ReserveDate1 ?? reserveTime), DateTime.Now) != 0*@
+                    @(MvcCore.Unity.Get<JN.Data.Service.IUserService>().List(x => x.UserLevel >= (int)JN.Data.Enum.UserLevel.Level3 && x.IsLock == false && x.IsActivation).Count())
+                </div>
+            </div>
+
+            <div class="control-group">
+                <label class="control-label">未结算全区流通：</label>
+                <div class="controls">
+                    @(MvcCore.Unity.Get<JN.Data.Service.ITransferService>().List(x => x.CreateTime >= lastTime).Count() > 0 ? MvcCore.Unity.Get<JN.Data.Service.ITransferService>().List(x => x.CreateTime >= lastTime).Sum(x => x.TransferMoney) : 0)
+                </div>
+            </div>
+
+            <div class="hr hr-dotted"></div>
+
+            <div class="control-group">
+                <label class="control-label"></label>
+                <div class="controls">
+                    <button type="button" class="btn btn-icon-stacked btn-block btn-primary glyphicons chevron-right dosf" style="width:260px">
+                        <i></i><span class="strong">开始手动结算</span><span style="font-weight:normal; color:#ccc">请等待进度条到达100%再刷新本页面</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+
+        <div class="row">
+            <div class="col-xs-12" style="padding:20px 20px">
+                <h4 id="rwtitle">任务进度(未开始)</h4>
+                <div class="widget">
+                    <div class="widget-head progress progress-primary" id="widget-progress-bar">
+                        <div class="bar" style="width: 0%;"><strong class="steps-info"></strong> - <strong class="steps-percent">0%</strong></div>
+                    </div>
+                </div>
+                @*<p id="info"></p>*@
+            </div><!-- /span -->
+        </div><!-- /row -->
+        @*<div class="clearfix form-actions">
+                <div class="col-md-offset-3 col-md-9">
+                    <a href="/@(JN.Services.Tool.ConfigHelper.GetConfigString("AdminPath"))/balance/daybalance" class="btn btn-info">
+                        <i class="icon-ok bigger-110"></i>
+                        手动进行日结算（如果系统设定秒结则无需进行日结算）
+                    </a>
+                </div>
+            </div>*@
+
+        <!-- PAGE CONTENT ENDS -->
+    </div><!-- /.col -->
+</div><!-- /.row -->
+@section scripts{
+<script type="text/javascript">
+     setTimeout('check()', 1000);
+    function check() {
+        $.getJSON("@(Url.Action("getproc2"))", function (data, textStatus, jqXHR) {
+            // data 是该请求返回的数据(可能经过处理)
+            // textStatus 可能是"success"、 "notmodified"等
+            // jqXHR 是经过jQuery封装的XMLHttpRequest对象(保留其本身的所有属性和方法)
+
+            var sc = parseInt(data.data.CurrentRow / data.data.TotalRow * 100);
+            $('#widget-progress-bar .steps-info').html(sc + "% " + data.data.CurrentRow + "/" + data.data.TotalRow);
+            //$(".progress-bar").attr("style", "width:" + sc + "%")
+            $('#widget-progress-bar .steps-percent').html(sc + "%");
+            $('#widget-progress-bar .bar').width(sc + "%");
+            //$("#tbname").html(data.data.CurrentTable);
+            $("#rwtitle").html(data.data.TransInfo);
+            setTimeout('check()', 1000);
+        });
+    };
+
+    $(".dosf").on("click", function () {
+        $(this).attr("disabled", "disabled");
+        $.post('@(Url.Action("doVIPBonus"))', {}, function (data) {
+            if (data == 'ok')
+            {
+                alert("操作成功");
+                $("#rwtitle").html("释放进行中...　请在进度条达条100%后再退出页面");
+            }
+        });
+
+    });
+</script>
+}

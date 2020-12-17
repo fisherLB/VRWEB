@@ -1,0 +1,153 @@
+﻿@{
+    Layout = null;
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+}
+<!DOCTYPE html>
+<html>
+<!-- <![endif]-->
+<head>
+    <title> 管理员登录</title>
+
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+    <!-- Bootstrap -->
+    <link href="/Plugin/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <!-- Main Theme Stylesheet :: CSS -->
+    <link href="/common/theme/css/style-dark.css?1369414386" rel="stylesheet" />
+</head>
+<body class="login">
+
+    <!-- Wrapper -->
+    <div id="login">
+
+        <!-- Box -->
+        <div class="form-signin">
+            <h3>登录您的帐号</h3>
+
+            <!-- Row -->
+            <div class="row-fluid row-merge">
+
+                <!-- Column -->
+                <div class="span7">
+                    <div class="inner">
+                        <!-- Form -->
+                        <form class="form-horizontal margin-none" id="frmLogin" method="post">
+                            <label class="strong">管理员帐户</label>
+                            <input type="text" name="username" id="username" class="input-block-level" placeholder="登录帐户或邮箱" value="admin" />
+                            <label class="strong">密码</label>
+                            <input type="password" name="password" class="input-block-level" placeholder="输入您的密码" value="111111" />
+                            @if (cacheSysParam.SingleAndInit(x => x.ID == 3508).Value.ToInt() == 1)
+                            {
+                                <label class="strong">手机验证码</label>
+                                <input type="text" name="smscode" class="input-block-level" placeholder="输入手机验证码" style="width:150px" />
+                                <a class="code-a" href="#" onclick="reqUID()" id="dTip0">获取验证码</a>
+                            }
+
+                            <label class="strong">验证码</label>
+                            <input type="text" name="code" class="input-block-level" placeholder="当前不需要输入验证码" style="width:150px" />
+                            <img id="imgCode" src="@(Url.Action("GetCodeImage","Login"))?id=1" onclick="ChangeCheckCode();return false;" style="border:none; height:33px" />
+                            <div class="row-fluid">
+                                <div class="span5 center">
+                                    <button class="btn btn-block btn-primary" id="btnlogin" type="button">登 录</button>
+                                </div>
+                            </div>
+                        </form>
+                        <!-- // Form END -->
+
+                    </div>
+                </div>
+                <!-- // Column END -->
+                <!-- Column -->
+                <div class="span5">
+                    <div class="inner center">
+                        @*<p>注意事项</p>*@
+                        <a href="#" class="btn btn-icon-stacked btn-block btn-facebook glyphicons facebook"><i></i><span>请不要在公共电脑</span><span class="strong">登录后台系统</span></a>
+                    </div>
+                </div>
+                <!-- // Column END -->
+            </div>
+            <!-- // Row END -->
+            <div class="ribbon-wrapper"><div class="ribbon primary">管理员</div></div>
+        </div>
+        <!-- // Box END -->
+
+    </div>
+    <!-- JQuery -->
+    <script src="~/common/theme/scripts/jquery.min.js"></script>
+    <script src="~/Plugin/bootstrap/js/bootstrap.min.js"></script>
+    <script src="/Plugin/bootstrap/extend/bootbox.js"></script>
+    <script src="~/common/theme/scripts/jquery.form.js"></script>
+    <script type="text/javascript">
+        $("#btnlogin").click(function () {
+            $("#frmLogin").ajaxSubmit({
+                url: "@Url.Action("Index")",
+                type: "post",
+                success: function (data) {
+                    if (data.Status == 200) {
+                        bootbox.alert("登录成功，确认后为您跳转页面!", function (result) {
+                            location.href = "@(Url.Action("Index","Home"))";
+                        });
+                    } else {
+                        ChangeCheckCode();
+                        bootbox.alert("登录失败！错误信息：<br />" + data.Message);
+                    }
+                },
+                error: function (error) {
+                    alert(error);
+                }
+            });
+        });
+        function ChangeCheckCode() {
+            var oldUrl = $('#imgCode').attr("src");
+            $('#imgCode').attr("src", oldUrl + '1');
+        }
+    </script>
+    <script>
+        //发送短信验证
+        function reqUID() {
+            var username = $("#username").val();
+            var dTip = document.getElementById("dTip0");
+            dTip.innerHTML = '<font color="#999999">发送中...</font>';
+            $.post("@Url.Action("SendMobileMsm", "login")", { username: username }, function (data) {
+                //alert(data)
+                if (data.Status == 200) {
+                    alert("短信已发送！");
+                    //dTip.innerHTML = "<font color='#669900'>短信已发送！</font>";
+                    //dTip.style.display = "";
+                } else {
+                    //var strs = str.split("|$|");
+                    alert(data.Message);
+                    //dTip.innerHTML = "<font color='#ff0000'>" + data.Message + "</font>";
+                    //dTip.style.display = "";
+                }
+            });
+        }
+
+        var wait = 60;
+        document.getElementById("dTip0").disabled = false;
+        function time(o) {
+            if (wait == 0) {
+                o.removeAttribute("disabled");
+                o.innerHTML = "重新获取";
+                wait = 60;
+            } else {
+                o.setAttribute("disabled", true);
+                o.innerHTML = "重新发送(" + wait + ")";
+                wait--;
+                setTimeout(function () {
+                    time(o)
+                },
+                1000)
+            }
+        }
+        document.getElementById("dTip0").onclick = function () {
+            reqUID();
+            time(this);
+        }
+    </script>
+</body>
+</html>

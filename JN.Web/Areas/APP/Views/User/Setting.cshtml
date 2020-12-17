@@ -1,0 +1,382 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    string lang = "";
+    if (Request["lang"] != null && Request["lang"] != "" && !string.IsNullOrWhiteSpace(Request["lang"]))
+    {
+        lang = Request["lang"].Trim();
+    }
+    else
+    {
+        lang = JN.Services.Resource.ResourceProvider.Culture ?? "zh-CN";
+    }
+    JN.Data.ShopSysSetting sysShop = MvcCore.Unity.Get<JN.Data.Service.IShopSysSettingService>().Single(1);
+    var userLevel = 0;
+    var MOlist = MvcCore.Unity.Get<JN.Data.Service.IMachineOrderService>().List(x => x.IsBalance).OrderBy(x => x.ID).ToList();
+    if (MOlist.Count > 0)
+    {
+        userLevel = MOlist.Where(x => x.UID == Umodel.ID).Max(x => x.ShopID) ?? 0;
+    }
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return">
+        <a href="/app/User/Personal"></a>
+	    @*<a href="javascript:history.go(-1);"></a>*@
+	</div>
+	
+	<div class="logo">@T("设置")</div>
+</header>
+
+<section class="container muiopen">
+    <div class="setting-menu setting-photo" onclick="showtab('coinWarp');">
+        <div class="setting-img">
+            <img src="@(string.IsNullOrEmpty(Umodel.HeadFace) ? "/Theme/App/images/member.png" : Umodel.HeadFace)" id="preview" />
+        </div>
+        <div class="node">
+            <h1>ID:@Umodel.UserName</h1>
+        </div>
+
+            <div class="member">
+                <img src="/Theme/APP/images/ico_member.png">
+                G @userLevel @T("会员")
+            </div>
+            <div class="user-level">
+                @*<h3>@T("等级")</h3>
+                @for (int i = 0; i < Umodel.UserLevel; i++)
+                {
+                    <i></i>
+                }*@
+            </div>
+
+            <span>@T("更换头像")</span>
+        </div>
+        <div class="clr-small"></div>
+        <div class="setting-menu">
+            <a href="@Url.Action("MyInfo")" class="setting-menu-10">
+                <i></i>
+                <h3>@T("完善资料")</h3>
+            </a>
+        </div>
+        <div class="clr-small"></div>
+        @if (string.IsNullOrEmpty(Umodel.Password3))
+        {
+            <div class="setting-menu">
+                <a href="@Url.Action("SettingPassword3")" class="setting-menu-5">
+                    <i></i>
+                    <h3>@T("设置安全口令")</h3>
+                </a>
+            </div>
+            <div class="clr-small"></div>
+        }
+
+        <div class="setting-menu">
+            @*<a href="@Url.Action("SettingMobile")" class="setting-menu-1">
+                <i></i>
+                <h3>@T("电话号码")</h3>
+
+                <span>@Umodel.Mobile</span>
+            </a>*@
+            <a href="###" class="setting-menu-1">
+                <i></i>
+                <h3>@T("电话号码")</h3>
+
+                <span>@Umodel.Mobile</span>
+            </a> <div class="clr-small"></div>
+            @*<a href="javascript:void();" class="setting-menu-2" id="Lang">
+
+                <i></i>
+                <h3>@T("多语言")</h3>
+                <span>@(lang == "en-US" ? "English" : "中文")</span>
+            </a>*@
+        </div>
+        <div class="clr-small"></div>
+
+        <div class="setting-menu">
+            <a href="@Url.Action("SettingPassword")" class="setting-menu-5">
+                <i></i>
+                <h3>@T("登录密码")</h3>
+
+                <span>@T("点击修改")</span>
+            </a>
+
+            <a href="@Url.Action("SettingPassword2")" class="setting-menu-6">
+                <i></i>
+                <h3>@T("交易密码")</h3>
+
+                <span>@T("点击修改")</span>
+            </a>
+        </div>
+
+        <div class="clr-small"></div>
+        @*@if (JN.Services.Tool.ConfigHelper.GetConfigBool("HaveShop"))
+        {
+            var shopModel = MvcCore.Unity.Get<JN.Data.Service.IShop_InfoService>().Single(x => x.UID == Umodel.ID && x.IsActivation);
+            <div class="setting-menu">
+                @if (shopModel == null && sysShop.MostStore == true)
+                {
+                    <a href="/APP/shop/AddShopInfo" class="setting-menu-9">
+                        <i></i>
+                        <h3>@T("申请开店")</h3>
+                    </a>
+                }
+                else if (shopModel != null && sysShop.MostStore == true)
+                {
+                    <a href="/APP/shop/AddShopInfo" class="setting-menu-9">
+                        <i></i>
+                        <h3>@T("我的店铺")</h3>
+                    </a>
+                    <a href="/APP/shop/ShopProduct" class="setting-menu-16">
+                        <i></i>
+                        <h3>@T("产品管理")</h3>
+                    </a>
+                    <a href="/APP/shop/AddProduct" class="setting-menu-9">
+                            <i></i>
+                            <h3>@T("添加商品")</h3>
+                        </a>
+                    <a href="/APP/shop/ShopOrder" class="setting-menu-17">
+                        <i></i>
+                        <h3>@T("店铺订单")</h3>
+                    </a>
+                }
+                <a href="/APP/shop/MyOrder" class="setting-menu-10">
+                    <i></i>
+                    <h3>@T("购买订单")</h3>
+                </a>
+                <a href="/APP/shop/MyAddress" class="setting-menu-11">
+                    <i></i>
+                    <h3>@T("地址管理")</h3>
+                </a>
+            </div>
+        }
+        else
+        {
+            <div class="setting-menu">
+                <a href="###" class="setting-menu-9" onclick="NoOpen()">
+                    <i></i>
+                    <h3>@T("我的店铺")</h3>
+                </a>
+                <a href="###" class="setting-menu-10" onclick="NoOpen()">
+                    <i></i>
+                    <h3>@T("我的订单")</h3>
+                </a>
+                <a href="###" class="setting-menu-11" onclick="NoOpen()">
+                    <i></i>
+                    <h3>@T("地址管理")</h3>
+                </a>
+            </div>
+        }*@
+        <div class="clr-small"></div>
+
+        <div class="setting-menu">
+            @*<a href="@Url.Action("Write", "Mail")" class="setting-menu-12">
+                <i></i>
+                <h3>@T("投诉建议")</h3>
+            </a>
+
+            <a href="@Url.Action("invite","user")" class="setting-menu-13">
+                <i></i>
+                <h3>@T("分享")</h3>
+            </a>*@
+
+            @*<a href="###" class="setting-menu-14">
+                <i></i>
+                <h3>@T("版本")</h3>
+
+                <span>1.2.2</span>
+            </a>*@
+
+            @*<a href="###" class="setting-menu-15">
+                <i></i>
+                <h3>@T("关于")</h3>
+            </a>*@
+        </div>
+        <div class="clr-small"></div>
+
+        <div class="logout">
+            <button type="button" class="exitbtn" onclick="SafeExit()">@T("退出登录")</button>
+        </div>
+</section>
+
+<!--修改头像弹窗-->
+<div class="coinWarp" id="coinWarp" onclick="hidetab(this.id);" style="z-index: 10000; display: none; bottom: -100%;">
+    <div class="coinLitBox">
+        <ul>    
+			@*<li>
+				<a href="">手机拍照</a>
+			</li>*@
+			<li>
+                <form method="post" enctype="multipart/form-data" id="headFaceFrom" class="g-core-image-upload-form" style="display: block; cursor: pointer; position: absolute; left: 0px; top: 0px; width: 1242px; height: 61px; opacity: 0; margin: 0px; padding: 0px; overflow: hidden;">
+                    <input onchange="javascript: setImagePreview(); checkinfo(this)" name="imgurl" id="imgurl" type="file" accept="image/jpg,image/jpeg,image/png,image/gif" style="width: 100%; height: 100%;" />
+                </form>
+				<a href="">@T("相册选择图片")</a>
+			</li>
+		</ul>
+		
+		<ul>
+			<li class="cancle">
+				<a href="">@T("取消")</a>
+			</li>
+        </ul>
+    </div>
+</div>
+	
+<!--选择语言弹窗-->
+<div class="popup">
+    <div class="popup-box">
+        <div class="popup-box-title">@T("选择语言")</div>
+        
+        <div class="popup-box-content">
+            <form>
+                <div class="choose-list">
+                    <input type="hidden" id="Requestlang" value="@Request["lang"]" />
+                    <ul>
+                        <li>
+                            <input type="radio" name="lang" value="en-US" @(Request["lang"] == "en-US" ? "checked" : "")>
+                            @*<input type="radio" name="lang" value="en-US" @(Request["lang"] == "" ? "checked" : "")>*@
+                            <label>English</label>
+                        </li>
+                        
+                        <li>
+                            <input type="radio" name="lang" value="zh-CN" @(Request["lang"] == "en-US" ? "" : "checked")>
+                            <label>简体中文</label>
+                        </li>
+                    </ul>
+                </div>
+            </form>
+        </div>
+        
+        <div class="popup-submit">
+            <button class="cancle-btn">@T("取消")</button>
+            <button type="button" class="confirm-btn" onclick="ChangeLang()">@T("确认")</button>
+        </div>
+    </div>
+</div>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+
+
+@*语言设置开始*@
+<script>
+    //选择语言
+    $(function () {
+        $('#Lang').click(function () {
+            $('.popup').fadeIn();
+
+            var h = ($(window).height() - $('.popup-box').height()) / 2;
+            $('.popup-box').css('margin-top', h);
+        });
+
+        $('.cancle-btn').click(function () {
+            $('.popup').fadeOut();
+        });
+    });
+    function ChangeLang() {
+        var type = $("input[name='lang']:checked").val();
+        location.href = '@Url.Action("Setting", "user")?lang=' + type;
+        //var lang = $("#Requestlang").val();
+        //var reg;
+        //if (lang == "zh-CN") {
+        //    var reg = new RegExp("lang=zh-CN", 'i');
+        //}
+        //else if (lang == "en-US") {
+        //    var reg = new RegExp("lang=en-US", 'i');
+        //}
+        //else{//默认状态
+        //    var reg = new RegExp("lang=zh-CN", 'i');
+        //}
+        //if (window.location.href.match(reg)) {
+        //    window.location.href = window.location.href.replace(reg, 'lang=' + type);
+        //} else if (window.location.href.indexOf("?") >= 0) {
+        //    window.location.href = window.location.href + "&lang=" + type;
+        //} else {
+        //    window.location.href = window.location.href + "?lang=" + type;
+        //}
+    }
+</script>
+@*语言设置结束*@
+
+@*头像设置开始*@
+<script type="text/javascript">
+    //选择头像
+    function showtab(id) {
+        $("#" + id).css("display", "block");
+        $("." + id).animate({ bottom: "0" }, 200)
+    }
+    function hidetab(id) {
+        $("#" + id).css("display", "none");
+        $("." + id).css('bottom', '-100%');
+    }
+    //提交上传的头像
+    function checkinfo(id) {
+        $("#headFaceFrom").ajaxSubmit({
+            url: "@Url.Action("headFace")",
+            type: "post",
+        success: function (data) {
+            if (data.Status != 200) {
+                layer.msg("@T("头像上传失败")", { icon: 2 });
+            }
+        },
+        error: function (aa) {
+        }
+    });
+    }
+
+    //下面用于图片上传预览功能
+    function setImagePreview(avalue) {
+        var docObj = document.getElementById("imgurl");
+
+        var imgObjPreview = document.getElementById("preview");
+        if (docObj.files && docObj.files[0]) {
+            //火狐下，直接设img属性
+            imgObjPreview.style.display = 'block';
+            imgObjPreview.style.width = '100%';
+            imgObjPreview.style.height = '100%';
+            //imgObjPreview.src = docObj.files[0].getAsDataURL();
+
+            //火狐7以上版本不能用上面的getAsDataURL()方式获取，需要一下方式
+            imgObjPreview.src = window.URL.createObjectURL(docObj.files[0]);
+        }
+        else {
+            //IE下，使用滤镜
+            docObj.select();
+            var imgSrc = document.selection.createRange().text;
+            var localImagId = document.getElementById("preview");
+            //必须设置初始大小
+            localImagId.style.width = "100%";
+            localImagId.style.height = "100%";
+            //图片异常的捕捉，防止用户修改后缀来伪造图片
+            try {
+                localImagId.style.filter = "progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale)";
+                localImagId.filters.item("DXImageTransform.Microsoft.AlphaImageLoader").src = imgSrc;
+            }
+            catch (e) {
+                layer.msg("@T("您上传的图片格式不正确，请重新选择!")", { icon: 2 });
+                return false;
+            }
+            imgObjPreview.style.display = 'none';
+            document.selection.empty();
+        }
+        return true;
+    }
+
+</script>
+@*头像设置结束*@
+<script>
+    function SafeExit() {
+        layer.confirm('@T("确定退出登录？")', {
+            title:"@T("操作确认")",
+            btn: ['@T("狠心退出")', '@T("我在想想")'] //按钮
+        }, function () {
+             window.location = "@Url.Action("Logout", "home")";
+        });
+    }
+</script>

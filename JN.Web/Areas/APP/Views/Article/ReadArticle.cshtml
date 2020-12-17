@@ -1,0 +1,46 @@
+﻿@model JN.Data.Article
+@{ 
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    int cId = Request["cId"].ToInt();
+}
+<link rel="stylesheet" href="/theme/app/css/notice_84a334d49a.css">
+
+<div class="wrapper">
+    <div class="page_wrap">
+        <div class="page notice">
+            <div class="aside notice-cont all">
+                <div class="subnav">
+                    <div class="head">
+                        @{
+                            int id = Model.ClassID;
+                            var classList = MvcCore.Unity.Get<JN.Data.Service.ArticleClassService>().List(x => x.Pid > 0 && (x.IsNotice ?? false)).ToList();
+                            if (classList != null && classList.Count > 0)
+                            {
+                                int num = 1;
+                                foreach (var item in classList)
+                                {
+                                    <a href="@((item.IsShowBottom ?? false)==true ? "/App/article/readarticle" : "/App/article/articlelist")?cId=@item.ID"><h5 class="@(item.ID == id ? "h5-on" : "")"> <li class="@(item.ID == id ? "selected" : "") ">@(num). @item.ClassName<span class="file-icon @(item.ID == id ? "file-icon-on" : "")"></span></h5></a>
+                                    num++;
+                                }
+                            }
+                        }
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                _czc.push(["_trackEventw", '首页', "/chongzhi.help.html"]);
+            </script>
+            <div class="notice-cont">
+                <h1 class="h1">@Model.Title</h1>
+                <h5 class="h5">发布时间：<span>@Model.CreateTime.ToString("yyyy-MM-dd HH:mm")</span> &nbsp; 来源：<span class="guanjianzi">@Model.Source</span>&nbsp; &nbsp; 点击量：<span class="guanjianzi">@Model.ReadCount</span></h5>
+
+                <p class="p-text">@MvcHtmlString.Create(Model.Content)</p>
+
+                <p class="signature">@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</p>
+            </div>
+
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,109 @@
+﻿@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+}
+<link href="/Theme/app/css/user.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return mui-action-back">
+	    @*<a href="javascript:history.go(-1);"></a>*@
+	</div>
+	
+	<div class="logo">@T("个人消息")</div>
+</header>
+
+<section class="container">
+	@*<div class="no-content">
+		<i></i>
+		<p>暂无内容</p>
+	</div>*@
+	
+    <div class="article-list" id="MessageList">
+        @*<a href="">
+            <h3>消息标题</h3>
+            <p>类型：发送</p>
+            <p>2018-6-27 20:51:42</p>
+            <em class="remind"></em>
+        </a>
+
+        <a href="">
+            <h3>消息标题</h3>
+            <p>类型：接收</p>
+            <p>2018-6-27 11:16:52</p>
+            <em class="remind"></em>
+        </a>
+
+        <a href="">
+            <h3>消息标题</h3>
+            <p>类型：接收</p>
+            <p>2018-6-27 11:16:52</p>
+        </a>*@
+    </div>
+	
+	@*<div class="load-more">
+	    <a href="">点击加载更多</a>
+	</div>*@
+	
+	<!--<div class="load-no-more">
+	    <span>没有更多了</span>
+	</div>-->
+</section>
+
+<script src="~/Plugin/layer/layui/layui.js"></script><!--layui插件js-->
+<link href="~/Plugin/layer/layui/css/layui.css" rel="stylesheet" />
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#MessageList', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("GetMessageList", "mail")?page=' + page, function (res) {
+                    var strhtml = "";
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function (index, item) {
+                        strhtml = '';
+                        strhtml += '<a href="@Url.Action("SubMailContent")?ID=' + item.ID + '">';
+                        strhtml += '<h3>' + item.Title + '</h3>';
+                        strhtml += ' <p>' + ChangeDateFormat(item.CreateTime) + '</p>';
+                        if (!item.IsRead) {
+                            strhtml += '<em class="remind"></em>';
+                        }
+                        strhtml += '</a>';
+                        lis.push(strhtml);
+                    });
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                    startime();
+                });
+            }
+        });
+
+    });
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return month
+            + "-"
+            + currentDate
+            + ""
+            + " "
+            + currentHours
+            + ":"
+            + currentMinutes;
+    }
+</script>

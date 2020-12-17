@@ -1,0 +1,159 @@
+﻿
+@{
+    ViewBag.Title = "我的矿机";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    var Param = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => (x.WalletCurID ?? 0) != 3005).OrderBy(x => x.ID).ToList();
+}
+
+
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+        @*<a href="~/APP/User/Miner"></a>*@
+    </div>
+    <div class="logo">@T("我的矿机")</div>
+</header>
+<div class="jp_pro_div listcontainer1">
+
+</div>
+<!-- 弹窗内容开始 -->
+<div id="background2" class="back back2" style="display: none;">
+    <div id="div3" class="content">
+        <div id="div4">
+            <div class="home-miner">
+                <div id="close">
+                    <span id="close-button">×</span>
+                </div>
+                <div class="form-box">
+                    <div class="form-group">
+                        <label>@T("选择币种")</label>
+                        <select id="coinid-ID" class="form-control">
+                            @foreach (var coinlist in Param)
+                            {
+                                <option value="@coinlist.WalletCurID">@coinlist.CurrencyName</option>
+                            }
+                        </select>
+                    </div>
+                   
+                </div>
+                <button type="button" id="btnSubmit" data-v-act="" class="sign-in">@T("确认")</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '.listcontainer1', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getMOList", "shop")?page=' + page + '&isbalance=true', function (res) {
+                    var strhtml = "";
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function (index, item) {
+                        strhtml = '<div class="jp_pro_div_3">';
+                        strhtml += '<div class="jp_pro_div_3_2 height8">';
+                        strhtml += '<div class="jp_pro_div_3_3"><a href=""><img src="' + item.ImageUrl + '"></a></div>';
+                        strhtml += '<div class="jp_pro_div_3_4 height8">';
+                        strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("名称")：' + item.ProductName + '</div>';
+                        strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("编号")：' + item.InvestmentNo + '</div>';
+                        //if (item.PayWay == "系统后台赠送" || item.PayWay == "注册赠送") {
+                        if (item.PayWay == "系统后台赠送") {
+                            strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("日期")：' + '---/--/--' + '</div>';
+                        }
+                        else {
+                            strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("日期")：' + getTime(item.CreateTime) + '</div>';
+                        }
+                        strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("矿机产量")：' + item.AddupInterest + '</div>';
+
+                        if (item.PayWay == "系统后台赠送") {
+                            strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("已使用天数")：' + '--' + '</div>';
+                        }
+                        else {
+                            strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("已使用天数")：' + item.ReserveInt1 + '</div>';
+                        }
+                        strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("算力数量")：' + item.HashnestNum + '</div>';
+                        strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("价格")：' + item.SettlementMoney + '</div>';
+                        strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("每天可收益")：' + (item.HashnestNum * item.TimesType) + '</div>';
+                        if (item.IsBalance) {
+                            strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("状态")：@T("运行中")</div>';
+                        }
+                        else {
+                             strhtml += '<div class="jp_pro_div_3_6 colorfont">@T("状态")：@T("停止")</div>';
+                        }
+
+                        strhtml += '<div class="jp_pro_div_3_8">';
+                        if (!item.IsBalance && (item.ReserveInt1 >= (item.Duration * item.ActivationNums))) {
+                            strhtml += '<span class="f_r"><a class="bg09bae0 " href="###"  onclick="actPay(' + item.ID + ')">@T("激活矿机")</a></span>';
+                        }
+                        strhtml += '</div>';
+
+                        strhtml += '</div>';
+                        strhtml += '</div>';
+                        strhtml += '</div>';
+
+
+
+                        @*strhtml = '<div data-v-bed62194="" class="weui-media-box weui-media-box_text runing"><div data-v-bed62194="" class="weui-media-box_appmsg"><div data-v-bed62194="" class="weui-media-box__hd"><img data-v-bed62194="" src="http://wp18010101.test.upcdn.net' + item.ImageUrl + '" alt="" class="weui-media-box__thumb" /></div><div data-v-bed62194="" class="weui-media-box__bd">'
+                        strhtml += '<h4 data-v-bed62194="" class="weui-media-box__title"><span data-v-bed62194="">@T("名称")：</span>' + item.ProductName + '</h4><p data-v-bed62194="" class="weui-media-box__desc"><span data-v-bed62194="">@T("编号")：</span> <span data-v-bed62194="">' + item.InvestmentNo + '</span></p><p data-v-bed62194="" class="weui-media-box__desc"><span data-v-bed62194="">@T("日期")：</span> <span data-v-bed62194="">' + getTime(item.CreateTime) + '</span></p><div data-v-bed62194="" class="weui-media-box__desc"><span data-v-bed62194="">@T("剩余")：<div data-v-bed62194="" style="display: inline-block;letter-spacing: -1px;"><span class="countdown" data="' + getTime(item.ReserveDate1) + '"></span><div class="vux-clocker-tpl"></div></div></span> </div><p></p><div data-v-bed62194="" class="shop-list-set"><button data-v-bed62194="" class="weui-btn blue-bg weui-btn_mini weui-btn_default" onclick="javascript: window.location.href = \'/AppCenter/user/computerDetail/' + item.ID + '\'">@T("查看")</button></div></div></div></div>'*@
+                        lis.push(strhtml);
+                    });
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                    //countDown();
+                });
+            }
+        });
+
+        var getTime = function (value) {
+            var date = new Date(parseInt(value.replace("/Date(", "").replace(")/", ""), 10));
+            var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+            var day = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+            var hour = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+            var minutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+            var sec = date.getSeconds() < 10 ? "0" + date.getSeconds() : date.getSeconds();
+            return date.getFullYear() + "/" + month + "/" + day + " " + hour + ":" + minutes + ":" + sec;
+        }
+
+    });
+    var isSubmit = false;
+    $(function () {
+        $("#btnSubmit").click(function () {
+            if (isSubmit) return;
+            isSubmit = true;
+            $.confirm("@T("是否激活这台矿机？")", "@T("确认?")", function () {
+                var coinid = $("#coinid-ID").val();
+                var Id = $("#btnSubmit").attr("data-v-act");
+                $.post("@Url.Action("ActivationPay")", { id: Id, coinid: coinid }, function (data) {
+                    $('#background2').hide();
+                    if (data.Status == 200) {
+                        $.toast("@T("激活成功!")", 3000, function () {
+                            location.reload();
+                        });
+                    } else {
+                        $.toast(data.Message, "forbidden");
+                        isSubmit = false;
+                    }
+                })
+            }, function () {
+                isSubmit = false; $('#background2').hide();
+                });
+        });
+        $('#close-button').click(function () {
+            $('#background2').hide();
+        });
+    });
+    function actPay(obj) {
+        $("#btnSubmit").attr("data-v-act", obj);
+        $('#background2').show();
+        }
+</script>
+

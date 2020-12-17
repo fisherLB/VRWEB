@@ -1,0 +1,128 @@
+﻿@model JN.Data.Currency
+@{
+    //ViewBag.Title = "转入";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+
+    decimal money = JN.Services.Manager.Users.WalletCur((int)Model.WalletCurID, Umodel);
+
+    var curList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.LineSwitch && x.IsCashTransfer).ToList();
+}
+<link href="/Theme/App/css/base.css" rel="stylesheet">
+
+
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="@Url.Action("index", "home")"></a>*@
+    </div>
+
+    <div class="logo">@T(ViewBag.Title)</div>
+
+    <div class="header-btn muiopen">
+        <a href="@Url.Action("CurTransferOutList", "CashTransfer")?curid=@Model.ID">@T("提现记录")</a>
+    </div>
+</header>
+@*<div style="margin-top:50px;">
+        <a>离线</a>/
+        <a>现金</a>
+    </div>*@
+<section class="container">
+    @*<div class="tab-title">
+        <div class="tab-item">
+            <div class="lava"></div>
+            @foreach (var item in curList)
+            {
+                <a href="@((item.IsCashCurrency ?? false) ? Url.Action("RMBCash", "CashTransfer"): Url.Action("CurTransferOut", "CashTransfer"))?curid=@item.ID" class="@(item.ID == Model.ID ? "active":"")">@T(item.CurrencyName)</a>
+            }     
+        </div>
+    </div>*@
+
+    <div class="tab-content">
+        <div class="form-widget">
+            <form action="" id="frmEdit" method="post">
+                <div class="form-box">
+                    <div class="clr-small"></div>
+                    <div class="form-group">
+                        <label class="form-label fontcolor alignright">@T("转出数量")</label>
+
+                        <div class="form-control">
+                            <input placeholder="@T("可转出数量")@money.ToString("F4")" name="amount" class="primary-input">
+
+                            @*<span class="trade-all">全部</span>*@
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label fontcolor topalign alignright">@T("接受地址")</label>
+
+                        <div class="form-control padding">
+                            @*<input name="address" value="">*@
+                            <textarea class="textareasize"></textarea>
+                        </div>
+
+                    </div>
+                    @if (Model.NetworkType == (int)JN.Data.Enum.CurrencyNetworkType.Ripple || Model.NetworkType == (int)JN.Data.Enum.CurrencyNetworkType.EOS)
+                    {
+                        <div class="form-group">
+                            <label class="form-label">@T("标签(tag)<br>备注(memo)")</label>
+
+                            <div class="form-control">
+                                <textarea class="fs12 bgtransp" id="textarea" rows="5" name="Tag" placeholder="@T("请输入标签或备注")"></textarea>
+                            </div>
+                        </div>
+                    }
+
+                    <div class="form-group">
+                        <label class="form-label fontcolorn alignright">@T("交易密码")</label>
+
+                        <div class="form-control">
+                            <input type="password" name="password2" placeholder="@T("请输入交易密码")">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-submit">
+                    <button type="button" id="btnEdit" class="form-submit-btn">@T("确认转出")</button>
+                </div>
+                <input type="hidden" name="curid" value="@Model.ID"/>
+            </form>
+        </div>
+    </div>
+
+</section>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    $("#btnEdit").click(function () {
+        $('#btnEdit').attr("disabled", "disabled");
+        $("#frmEdit").ajaxSubmit({
+            url: "@Url.Action("RaSend")",
+            type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                       layer.msg("@T("提交成功，请您等待审核")", { icon: 1 }, function () {
+                            location.href = "@Url.Action("CurTransferOutList", "CashTransfer")?curid=@Model.ID";
+                        });
+                } else {
+                layer.msg(data.Message, { icon: 2 });
+                    $('#btnEdit').removeAttr("disabled");
+                }
+            },
+            error: function (error) {
+                layer.msg(error, { icon: 2 });
+                $('#btnEdit').removeAttr("disabled");
+            }
+        });
+    });
+</script>
+
+
+

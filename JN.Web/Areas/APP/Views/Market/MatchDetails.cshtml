@@ -1,0 +1,275 @@
+﻿@model JN.Data.Matching
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    int uid = Umodel.ID == Model.SupplyUID ? Model.AcceptUID : Model.SupplyUID;
+    var otherParty = MvcCore.Unity.Get<JN.Data.Service.IUserService>().SingleAndInit(x => x.ID == uid);
+    var RefereeUser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().SingleAndInit(x => x.ID == otherParty.RefereeID);
+}
+<link href="/Theme/App/css/trade.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return">
+	    <a href="javascript:history.go(-1);"></a>
+	</div>
+	
+	<div class="logo">@T("交易订单详情")</div>
+</header>
+
+<section class="container">
+    <div class="trade-people">
+        <div class="trade-people-photo">
+            <img src="@(string.IsNullOrEmpty(Umodel.HeadFace) ? "/Theme/App/images/member.png" : Umodel.HeadFace)">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@Umodel.UserName</h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+    <div class="trade-order-details">
+        <h3>@T("对方会员信息")</h3>
+        <ul>
+            <li>
+                <label>@T("会员编号")</label>
+                <span>@otherParty.UserName</span>
+            </li>
+            <li>
+                <label>@T("电话号码")</label>
+                <span>@otherParty.Mobile</span>
+            </li>
+            <li>
+                <label>@T("推荐人编号")</label>
+                <span>@RefereeUser.UserName</span>
+            </li>
+
+            <li>
+                <label>@T("推荐人电话号码")</label>
+                <span>@RefereeUser.Mobile</span>
+            </li>
+            @{
+                var bankDefault = MvcCore.Unity.Get<JN.Data.Service.IUserBankCardService>().Single(x => x.UID == otherParty.ID);
+            }
+            @if (bankDefault != null)
+            {
+                <li>
+                    <label>@T("银行名称")</label>
+                    <span>@bankDefault.BankName</span>
+                </li>
+                <li>
+                    <label>@T("开户行")</label>
+                    <span>@bankDefault.BankOfDeposit</span>
+                </li>
+                <li>
+                    <label>@T("银行户名")</label>
+                    <span>@bankDefault.BankUser</span>
+                </li>
+                <li>
+                    <label>@T("银行卡号")</label>
+                    <span>@bankDefault.BankCard</span>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-order-details">
+        <h3>@T("订单信息")</h3>
+        <ul>
+            <li>
+                <label>@T("创建时间")</label>
+                <span>@Model.CreateTime</span>
+            </li>
+
+            <li>
+                <label>@T("订单单号")</label>
+                <span>@Model.MatchingNo</span>
+            </li>
+
+            <li>
+                <label>@T("状态")</label>
+                <span class="order-details-status">@typeof(JN.Data.Enum.MatchingStatus).GetEnumDesc(Model.Status)</span>
+            </li>
+
+            <li>
+                <label>@T("类型")</label>
+                <span>@T(Umodel.ID == Model.SupplyUID ? "购买" : "出售")</span>
+            </li>
+            <li>
+                <label>@T("数量")</label>
+                <span>@Model.MatchAmount</span>
+            </li>
+            @*<li>
+                <label>@T("付款方式")</label>
+                <span>@(MvcCore.Unity.Get<JN.Data.Service.ISupplyHelpService>().SingleAndInit(x => x.SupplyNo == Model.SupplyNo).PayWay)</span>
+            </li>*@
+            @*@{
+                var bankDefault = MvcCore.Unity.Get<JN.Data.Service.IUserBankCardService>().Single(x => x.ID == Model.BankID);
+            }
+            @if (bankDefault != null)
+            {
+                <li>
+                    <label>@T("银行名称")</label>
+                    <span>@bankDefault.BankName</span>
+                </li>
+                <li>
+                    <label>@T("开户行")</label>
+                    <span>@bankDefault.BankOfDeposit</span>
+                </li>
+                <li>
+                    <label>@T("银行户名")</label>
+                    <span>@bankDefault.BankUser</span>
+                </li>
+                <li>
+                    <label>@T("银行卡号")</label>
+                    <span>@bankDefault.BankCard</span>
+                </li>
+            }*@
+            @if (!string.IsNullOrEmpty(Model.ProofImageUrl))
+            {
+                <li>
+                    <label>@T("付款截图")</label>
+                    <span><a href="@Url.Action("ProofImageUrl", "Market")?id=@Model.ID"><img src="@Model.ProofImageUrl" style="width: 50%;height: auto;" /></a></span>
+                </li>
+            }
+        </ul>
+    </div>
+    <div class="clr"></div>
+
+    @if (Model.Status == 1 && Model.SupplyUID == Umodel.ID)
+    {
+        <div class="upload-photo">
+            <h3>@T("请上传付款截图")</h3>
+            <form action="" method="post" id="addWrite">
+                <ul>
+                    <li id="imgDisplay" style="display:none">
+                        <div class="upload-photo-box">
+                            <a href="###" class="delete-photo" onclick="deleteimages()"></a>
+                            <div class="loaded-photo-thumbnail">
+                                <img src="/Theme/App/img/sample1.jpg" id="img">
+                            </div>
+                        </div>
+                    </li>
+                    <li id="fileDisplay" style="display:block">
+                        <div class="upload-photo-box">
+                            <div class="add-photo-btn">
+                                <input type="file" name="imgurl" accept="image/jpg,image/jpeg,image/png,image/gif" onchange="checkinfo(this)">
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+                <input name="id" id="id" type="hidden" value="@Model.ID" />
+            </form>
+        </div>
+    
+        <div class="form-submit">
+            <button type="button" class="form-submit-btn" onclick="Submission()">@T("提交")</button>
+        </div>
+    }
+    @if (Model.Status == 3 && Model.AcceptUID == Umodel.ID)
+    {
+        <div class="form-submit">
+            <button type="button" class="form-submit-btn" onclick="VerifyPay(@Model.ID,1)">@T("确认收款")</button>
+
+            <button type="button" class="form-submit-btn" onclick="Falsehood(@Model.ID,0)">@T("虚假汇款信息")</button>
+        </div>
+    }
+
+</section>
+<script src="~/Plugin/Jquery/jquery.form.js"></script>
+<script type="text/javascript">
+    $("#content").keyup(function () {//输入商家描述
+        var buyPrice = $("#content").val().length;
+        $("#WordCount").html($("#content").val().length);
+    })
+    //提交付款截图
+    function Submission() {
+        $("#addWrite").ajaxSubmit({
+            url: "@Url.Action("ConfirmPay", "Market")",
+            type: "post",
+        success: function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("您已成功上传凭证！确认打款：您已经成功点击【确认打款】，请联系对方点击【确认收款】")！", { icon: 1 }, function () {
+                    location.href = location.href;
+                });
+               
+            } else {
+                layer.msg("付款失败：" + data.Message, { icon: 2 });
+            }
+        },
+        error: function (error) {
+            layer.msg(error);
+        }
+    });
+    }
+    //确认付款
+    function VerifyPay(id, type) {
+        $.post("@Url.Action("FinshPay", "Market")", { id: id, type: type }, function (data) {
+            if (data.Status == 200) {
+                layer.msg("@T("您已经成功点击【确认收款】，若未收到款项，后果自负")！", { icon: 1 }, function () {
+                    location.href = location.href;
+                });
+               
+            } else {
+                layer.msg("@T("确认失败")：" + data.Message, { icon: 2 });
+            }
+        });
+    }
+    //虚假信息
+    function Falsehood(id, type) {
+
+        layer.open({
+            title: false,
+            content: '@T("不要轻易点击，否则会封掉您的账号")'
+, btn: ['@T("确定")', '@T("取消")', ]
+, yes: function (index, layero) {
+    $.post("@Url.Action("FinshPay", "Market")", { id: id, type: type }, function (data) {
+        if (data.Status == 200) {
+            layer.msg("@T("提交成功，即将为您跳转")！", { icon: 1 }, function () {
+                location.href = location.href;
+            });
+            
+        } else {
+            layer.msg("@T("提交失败")：" + data.Message, { icon: 2 });
+        }
+    });
+}
+, cancel: function () {
+    //右上角关闭回调
+    //return false 开启该代码可禁止点击该按钮关闭
+}
+        });
+    }
+</script>
+<script type="text/javascript">
+    if (window.FileReader) {
+        function checkinfo(obj) {
+            var len = obj.files.length;
+            console.log(obj.files);
+            for (var i = 0 ; i < len ; i++) {
+                showimg(obj.files[i]);
+            }
+        }
+        function showimg(imges) {
+            var a = new FileReader();
+            a.readAsDataURL(imges);
+            a.onload = function () {
+                $("#img").attr("src", a.result);
+                $("#imgDisplay").css("display", "block");
+                $("#fileDisplay").css("display", "none");
+            }
+        }
+        function deleteimages() {
+            $("#imgDisplay").css("display", "none");
+            $("#fileDisplay").css("display", "block");
+        }
+    }
+</script>

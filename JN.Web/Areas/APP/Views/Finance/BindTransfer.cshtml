@@ -1,0 +1,209 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.OtherTransfer>
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO).ToList();
+    string curl = Request.Url.ToString().ToLower();
+    int num = 1;
+    decimal poundage = cacheSysParam.SingleAndInit(x => x.ID == 3101).Value.ToDecimal();
+    JN.Data.Currency cmodel = cmodelList.FirstOrDefault();
+}
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script><!--ajax提交表单-->
+
+<link rel="stylesheet" href="/Theme/app/css/wallet_a56710a361.css">
+<link href="~/Theme/app/css/Pager.css" rel="stylesheet" />
+
+<div class="container transter-box">
+    <div class="wallet-box">
+        <div class="top">
+            <p>账户总资产</p>
+            <p><span class="assetNum text-primary" id="D_canAsset">100000</span>CNY</p>
+        </div>
+        <ul class="sub-bar-top">
+            <li class="bizhong">币种</li>
+            <li class="geshu">数量</li>
+            <li class="keyong">估值$</li>
+        </ul>
+        <ul class="sub-bar-top">
+            <li class="bizhong color02d8f3">FPI</li>
+            <li class="geshu color02d8f3">98995</li>
+            <li class="geshu"><span>99004.90</span></li>
+        </ul>
+
+    </div>
+
+    <nav class="exchange-btn">
+        <ul>
+
+            <li><a href="/App/RechargeTrans/CurTransferEnter?curid=9" class="btn1"><span>FPI 充币</span> </a></li>
+            <li><a href="/App/CashTransfer/CurTransferout" class="btn1"><span>FPI 提币</span> </a></li>
+            <li><a href="/App/Finance/BindTransfer" class="active-btn1"><span>平台转账</span> </a></li>
+            <li><a href="/App/trade/AdvertiseOrder" class="btn1"><span>订单管理 </span></a></li>
+
+        </ul>
+    </nav>
+
+    @*<div class="tabs clear-float">
+        @foreach (var item in cmodelList)
+        {
+            <div class="tab get @(curl.Contains("/app/finance/applytransfer?curid=" + item.ID) ? "actived" : (string.IsNullOrEmpty(Request["curid"]) && num == 1) ? "actived" : "")"><a href="/App/finance/applytransfer?curid=@item.ID">@(item.CurrencyName)转账 </a></div>
+
+            <div class="tab get @(curl.Contains("/app/finance/bindtransfer?curid=" + item.ID) ? "actived":"")"><a href="/App/finance/bindtransfer?curid=@item.ID">@(item.CurrencyName)转出 </a></div>
+            num++;
+        }
+    </div>*@
+
+    <div class="panel clear-float">
+        <form id="form" class="form-cont">
+            <div class="btc-send ">
+                <div class="tips-panel">温馨提示：该功能为@(cmodel.CurrencyName)转出到分红系统</div>
+                <div class="normal-form form-cont clear-float">
+                    <div class="form-item input-cont">
+                        @T("绑定状态：") <span> @T(Umodel.BindStatus ? "已绑定:【" + Umodel.BindUserName + "】" : "无")</span>
+                        <br />
+                        @T("可用：") @T(cmodel.CurrencyName)<span> @(JN.Services.Manager.Users.WalletCur(cmodel.WalletCurID ?? 0, Umodel).ToDouble())</span>
+                    </div>
+                    <div class="input-cont">
+                        @*<div class="input-cont">
+                                <span class="icon form-password"></span>
+                                <input class="input" type="text" readonly="readonly" name="UserName" value="@T("可用")@T(Model.CurrencyName):@(JN.Services.Manager.Users.WalletCur(Model.WalletCurID ?? 0, Umodel.ID).ToDouble())">
+                                <div class="form-tips"></div>
+                                <div class="error-msg"></div>
+                            </div>*@
+
+                        <div class="form-item input-cont">
+                            <div class="input-name">转出数量: </div>
+                            <input class="input" name="money" id="money" placeholder="@T("请输入转出数量")">
+                            <div class="form-tips"></div>
+                            <div class="error-msg"></div>
+                        </div>
+                        <div class="form-item input-cont">
+                            <div class="input-name">实际金额: </div>
+                            <input type="text" name="ActualMoney" id="ActualMoney" class="input" readonly value="" placeholder="">
+
+                            <input class="input" type="hidden" name="poundage" id="poundage" value="@poundage">
+                            <div class="form-tips"></div>
+                            <div class="error-msg"></div>
+                        </div>
+                        <div class="form-item input-cont">
+                            <div class="input-name">交易密码: </div>
+                            <input class="input" name="password2" type="password" placeholder="@T("请输入交易密码")">
+                            <div class="form-tips"></div>
+                            <div class="error-msg"></div>
+                        </div>
+                        <input type="hidden" name="curid" value="@cmodel.ID">
+                        <a id="btnSubmit" class="btn submit">@T("确定提交")</a>
+                    </div>
+                </div>
+
+            </div>
+        </form>
+
+
+
+
+
+        <script>
+                $("#money").change(function () {
+                    var ActualMoney = parseFloat($("#money").val()) * (1 + parseFloat($("#poundage").val()));
+                    $("#ActualMoney").val(ActualMoney.toFixed(2));
+                });
+                $("#btnSubmit").click(function () {
+                    $.post('@Url.Action("BindTransfer")', $('#form').serialize(), function (d) {
+                        if (d.Status != 200) {
+                            alert(d.Message);
+                        } else {
+                            alert(d.Message);
+                            location.reload();
+                        }
+
+                    }, 'json');
+
+                });
+
+        </script>
+
+    </div>
+
+    @*<div class="panel">
+        @{
+            decimal d = 0;//币种估值
+            decimal walletcur = JN.Services.Manager.Users.WalletCur((int)cmodel.WalletCurID, Umodel);//余额
+            if ((cmodel.GetPriceType ?? 0) == 1)
+            {
+                d = JN.Services.Manager.Stocks.getcurrentprice(cmodel) * walletcur;
+            }
+            else
+            {
+                d = JN.Services.Tool.StringHelp.GetPrice("https://api.coinmarketcap.com/v1/ticker/" + cmodel.English, cmodel.English, "usd", true).ToDecimal() * walletcur;
+            }
+        }
+        <div class="h3">@T("钱包可余额"): <span class="link available"> @walletcur</span> @cmodel.EnSigns</div>
+        <div class="wallet-view"><span class="s-text available">@T("可用资产"): <span>@walletcur</span> @cmodel.EnSigns</span><span class="s-text locked">@T("估值"): <span>$@d</span> USD</span></div>
+    </div>*@
+
+    <div class="panel">
+        <div class="h3" style="margin:0;">@T("钱包可余额"): <span class="link available"> @JN.Services.Manager.Users.WalletCur((int)cmodel.WalletCurID, Umodel)</span> @cmodel.EnSigns</div>
+
+        <div class="wallet-view">
+            <div class="s-text available">
+                <span>@T("可用资产"):</span>
+                <b>@JN.Services.Manager.Users.WalletCur((int)cmodel.WalletCurID, Umodel)</b>
+                <span>@cmodel.EnSigns</span>
+            </div>
+            <div class="s-text locked">
+                <span>@T("估值"): </span>
+                <b>@JN.Services.Manager.Users.WalletCurFro(cmodel.ID, Umodel.ID)</b>
+                <span>@cmodel.EnSigns</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="list-box">
+        <h3 class="bindtransfer-h3">账单记录</h3>
+        <ul class="sell-out" id="listcontainer2">
+            <li>
+                <a>
+                    <div>
+                        <p>转账用户:<span>A</span></p>
+                        <p class="float-r">类型:<span>转入</span></p>
+                    </div>
+                    <div>
+                        <p>转账金额:<span>300.00000</span></p>
+                        <p class="p-right">手续费:<span>0.00000</span></p>
+                    </div>
+                    <div>实际金额:<span>0.00000</span></div>
+                    <div>日期:<span>2018-02-26</span></div>
+                </a>
+            </li>
+            <li>
+                <a>
+                    <div>
+                        <p>转账用户:<span>A</span></p>
+                        <p class="float-r">类型:<span>转出</span></p>
+                    </div>
+                    <div>
+                        <p>转账金额:<span>2000.00000</span></p>
+                        <p class="p-right">手续费:<span>10.00000</span></p>
+                    </div>
+                    <div>实际金额:<span>2010.00000</span></div>
+                    <div>日期:<span>2018-02-26</span></div>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    @*<div class="panel transactions-panel">
+        <div class="filter">
+            <div class="body" id="_BindTransfer">
+                <!--数据开始-->
+                @Html.Partial("_BindTransfer", Model)
+                <!--分页-->
+            </div>
+        </div>
+    </div>*@
+</div>

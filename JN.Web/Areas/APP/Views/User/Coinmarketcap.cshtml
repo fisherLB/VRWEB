@@ -1,0 +1,79 @@
+﻿
+@{
+    ViewBag.Title = "Coinmarketcap";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+
+    var curPriceList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().ListCache("curPriceList");
+}
+<link href="~/Theme/APP/css/user.css" rel="stylesheet" />
+
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo">@T("币币信息")</div>
+</header>
+<section class="container coinmarketcap">
+    <div class="table-responsive bg091931">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>@T("币种")</th>
+                    <th>@T("价格")</th>
+                    @*<th>@T("涨跌")</th>*@
+                </tr>
+            </thead>
+            <tbody>
+                @if (curPriceList.Count > 0)
+            {
+                foreach (var item in curPriceList)
+                {
+                        <tr>
+                            <td>
+                                <a>
+                                    <img src="@item.CurrencyLogo" />
+                                    <p>@item.EnSigns<br /><span>@item.English</span></p>
+                                </a>
+                            </td>
+                            <td><a href="#">$@item.TranPrice</a></td>
+                            @*<td><p class="gules">+0.09%</p></td>*@
+                        </tr>
+
+                    }
+                }
+
+                @*<tr>
+                        <td>
+                            <a>
+                                <img src="~/Theme/APP/img/btc.png" />
+                                <p>BTC<br /><span>Bitcoin</span></p>
+                            </a>
+                        </td>
+                        <td><a href="#">$6,287.83</a></td>
+                        <td><p class="gules">+0.09%</p></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a>
+                                <img src="~/Theme/APP/img/eth.png" />
+                                <p>BTC<br /><span>Ethereum</span></p>
+                            </a>
+                        </td>
+                        <td><a href="#">$6,287.83</a></td>
+                        <td><p class="green">-0.10%</p></td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <a>
+                                <img src="~/Theme/APP/img/usdt.png" />
+                                <p>BTC<br /><span>Tether</span></p>
+                            </a>
+                        </td>
+                        <td><a href="#">$6,287.83</a></td>
+                        <td><p class="gules">+0.09%</p></td>
+                    </tr>*@
+
+            </tbody>
+        </table>
+    </div>
+</section>

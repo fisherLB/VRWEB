@@ -1,0 +1,84 @@
+﻿@model JN.Data.Advertise
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    JN.Data.Currency cashCurrency = (JN.Data.Currency)ViewBag.CashCurrency;
+
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+}
+<link href="/Theme/app/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+
+    <div class="logo">@T("广告详情")</div>
+</header>
+
+<section class="container">
+    <div class="trade-people">
+        <div class="trade-people-photo">
+            <img src="@(Umodel.HeadFace ?? "/Theme/app/images/member.png")">
+        </div>
+
+        <div class="trade-people-name">
+            <h3>@Umodel.UserName @(!string.IsNullOrWhiteSpace(Umodel.RealName) ? "(" + Umodel.RealName + ")" : "") </h3>
+        </div>
+    </div>
+    <div class="clr"></div>
+
+    <div class="trade-order-details">
+        <h3>@T("订单信息")</h3>
+        <ul>
+            <li>
+                <label>@T("创建时间")</label>
+                <span>@Model.CreateTime.ToString("yyyy-MM-dd HH:mm:ss")</span>
+            </li>
+
+            <li>
+                <label>@T("编号")</label>
+                <span>@Model.OrderID</span>
+            </li>
+
+            <li>
+                <label>@T("状态")</label>
+                <span class="order-details-status">@T(typeof(JN.Data.Enum.AdvertiseStatus).GetEnumDesc(Model.Status))</span>
+            </li>
+
+            <li>
+                <label>@T("类型")</label>
+                <span>@T(Model.Direction == 0 ? "在线出售" : "在线购买")</span>
+            </li>
+
+            <li>
+                <label>@T("币种")</label>
+                <span>@Model.CurName</span>
+            </li>
+
+            <li>
+                <label>@T("价格")</label>
+                <span>@Model.Price.ToDouble()</span>
+            </li>
+
+            <li>
+                <label>@T("数量")</label>
+                <span>@Model.Quantity.ToDouble()</span>
+            </li>
+            <li>
+                <label>@T("已成交量")</label>
+                <span>@Model.HaveQuantity.ToDouble()</span>
+            </li>
+            <li>
+                <label>@T("总金额")</label>
+                <span class="order-details-price">@((Model.Price * Model.Quantity).ToDouble())</span>
+            </li>      
+        </ul>
+    </div>
+</section>

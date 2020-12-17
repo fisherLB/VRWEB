@@ -1,0 +1,71 @@
+﻿
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    //var dqlist = MvcCore.Unity.Get<JN.Data.Service.ITimeDepositService>().List(x => x.UID == Umodel.ID && x.Status < 2);
+    //decimal mydq = dqlist.Count() > 0 ? dqlist.Sum(x => x.DepositAmount) : 0;
+
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+}
+<link rel="stylesheet" href="/theme/app/css/invite_1262ef6184.css">
+<div class="wrap">
+    <div class="img-header card-center"></div>
+    <div class="cont clear-float">
+        <div class="cont-title"><span class="cont-title-left"></span><span class="cont-title-text">可樂刮刮卡</span><span class="cont-title-right"></span></div>
+
+        <div class="lucky-card-cont" total="1" offset="0">
+
+            <div class="lucky-card UNACTIVATED" card-id="44641">
+                <div class="card-name">可盈可樂刮刮卡</div>
+                <div class="card-slide-area">
+                    <span class="card-border-left"></span>
+                    <span class="card-content">
+
+                        <div class="card-slider no-slide">
+                            <div class="card-text-1">完成一筆交易可刮開</div>
+                            <div class="card-text-2">有效期: 2017-09-19~2017-09-25 </div>
+                            <a href="buy.html" class="link">立即交易</a>
+                        </div>
+
+                    </span>
+                    <span class="card-border-right"></span>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="cont rule">
+        <div class="cont-title"><span class="cont-title-left"></span><span class="cont-title-text">活動規則</span><span class="cont-title-right"></span></div>
+        <p>1. 登陸可盈可樂，在“我的”→“邀請好友”可以分享圖片或者鏈接到朋友圈或者微信好友，即可獲得刮刮卡。</p>
+        <p>2. 目前刮刮卡獲得的途徑只能通過手機端分享，電腦端暫不支持。</p>
+        <p>3. 得到刮刮卡後，下筆交易完成即可刮開刮刮卡，刮得的比特幣將直接進入您的可盈可樂錢包。</p>
+        <p>4. 您通過分享每天可以獲得多至3張刮刮卡。</p>
+        <p>5. 可盈可樂保留本活動的最終解釋權。</p>
+
+        <br>
+        <p>舉例：如果您將圖片或者邀請鏈接發到朋友圈或者微信好友、微信群，即可獲得刮刮卡一張，下次交易結束即可刮開刮刮卡，掛到的比特幣將直接打到您的可盈可樂錢包。</p>
+
+    </div>
+</div>
+<div id="qrcode" class="qrcode" qrcode="https://www.coincola.com/mobile/signup?ref=U22BUaaf">
+    <div class="qrcode-cont"></div>
+    <div class="invite-card-cont">
+        <img class="invite-card" src="" alt="">
+        <div class="card-to-save">點擊右鍵保存圖片</div>
+    </div>
+    <div class="invite-text-cont">
+        <p class="p">複製下面這段文字給好友，好友通過你的專屬鏈接註冊成功，你就可以享受好友的交易提成了</p>
+        <textarea class="textarea"></textarea>
+    </div>
+</div>
+
+<script src="/theme/app/js/invite_d35c576fdc.js" charset="utf-8"></script>

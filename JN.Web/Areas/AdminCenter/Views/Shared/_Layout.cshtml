@@ -1,0 +1,345 @@
+﻿@{
+    string curl = Request.Url.ToString().ToLower();
+}
+<!DOCTYPE html>
+<!--[if lt IE 7]> <html class="ie lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>    <html class="ie lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>    <html class="ie lt-ie9"> <![endif]-->
+<!--[if gt IE 8]> <html class="ie gt-ie8"> <![endif]-->
+<!--[if !IE]><!-->
+<html>
+<!-- <![endif]-->
+<head>
+    <title>后台管理</title>
+    <!-- Meta -->
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0, minimum-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta http-equiv="X-UA-Compatible" content="IE=9; IE=8; IE=7; IE=EDGE" />
+    <!-- Bootstrap -->
+    <link href="/Plugin/bootstrap/css/bootstrap.css" rel="stylesheet" />
+    <link href="/Plugin/bootstrap/css/responsive.css" rel="stylesheet" />
+    <!-- Glyphicons Font Icons -->
+    <link href="/common/theme/css/glyphicons.css" rel="stylesheet" />
+    <!-- Uniform Pretty Checkboxes -->
+    <link href="/common/theme/scripts/plugins/forms/pixelmatrix-uniform/css/uniform.default.css" rel="stylesheet" />
+    <!--[if IE]><!-->
+    <script src="/common/theme/scripts/plugins/other/excanvas/excanvas.js"></script><!--<![endif]-->
+    <!--[if lt IE 8]><script src="/common/theme/scripts/plugins/other/json2.js"></script><![endif]-->
+    <!-- Bootstrap Extended -->
+    <link href="/Plugin/bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap.min.css" rel="stylesheet">
+    <link href="/Plugin/bootstrap/extend/jasny-bootstrap/css/jasny-bootstrap-responsive.min.css" rel="stylesheet">
+    @*<link href="/Plugin/bootstrap/extend/bootstrap-wysihtml5/css/bootstrap-wysihtml5-0.0.2.css" rel="stylesheet">*@
+    <link href="/Plugin/bootstrap/extend/bootstrap-select/bootstrap-select.css" rel="stylesheet" />
+    <link href="/Plugin/bootstrap/extend/bootstrap-toggle-buttons/static/stylesheets/bootstrap-toggle-buttons.css" rel="stylesheet" />
+    <!-- DateTimePicker Plugin -->
+    <link href="/common/theme/scripts/plugins/forms/bootstrap-datetimepicker/css/datetimepicker.css" rel="stylesheet" />
+    <!-- JQueryUI -->
+    <link href="/common/theme/scripts/plugins/system/jquery-ui/css/smoothness/jquery-ui-1.9.2.custom.min.css" rel="stylesheet" />
+    <!-- Notyfy Notifications Plugin -->
+    <link href="/common/theme/scripts/plugins/notifications/notyfy/jquery.notyfy.css" rel="stylesheet" />
+    <link href="/common/theme/scripts/plugins/notifications/notyfy/themes/default.css" rel="stylesheet" />
+    <!-- Main Theme Stylesheet :: CSS -->
+    <link href="/common/theme/css/style-dark.css?1369414383" rel="stylesheet" />
+    <style>
+        .pagination {
+            margin: 0;
+        }
+
+        .cancel td {
+            color: #ccc;
+            text-decoration: line-through;
+        }
+
+        .red td {
+            color: #f00;
+        }
+    </style>
+</head>
+<body class="">
+    <!-- Main Container Fluid -->
+    <div class="container-fluid fluid menu-left">
+        <!-- Top navbar -->
+        <div class="navbar main hidden-print">
+            <!-- Brand -->
+            <a href="#" class="appbrand pull-left"><span>后台管理 <span>v1.5</span></span></a>
+            <!-- Menu Toggle Button -->
+            <button type="button" class="btn btn-navbar">
+                <span class="icon-bar"></span> <span class="icon-bar"></span> <span class="icon-bar"></span>
+            </button>
+            <!-- // Menu Toggle Button END -->
+            <!-- Top Menu -->
+            <ul class="topnav pull-left tn1"></ul>
+            <!-- // Top Menu END -->
+            <!-- Top Menu Right -->
+            <ul class="topnav pull-right">
+                <!-- Profile / Logout menu -->
+                <li class="account">
+                    <a data-toggle="dropdown" href="#" class="glyphicons logout lockx"><span class="hidden-phone text">我的</span><i></i></a>
+                    <ul class="dropdown-menu pull-right">
+                        <li><a href="#" class="glyphicons cogwheel">系统设置<i></i></a></li>
+                        <li><a href="#" class="glyphicons camera">我的邮件<i></i></a></li>
+                        <li class="highlight profile">
+                            <span>
+                                <span class="heading">个人资料 <a href="#" class="pull-right">编辑</a></span>
+                                <span class="img"></span>
+                                <span class="details">
+                                    <a href="#">管理员</a>
+                                    @JN.Services.AdminLoginHelper.CurrentAdmin().AdminName
+                                </span>
+                                <span class="clearfix"></span>
+                            </span>
+                        </li>
+                        <li>
+                            <span>
+                                <a class="btn btn-default btn-mini pull-right" href="@(Url.Action("Logout","Home"))">退出系统</a>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+                <!-- // Profile / Logout menu END -->
+            </ul>
+            <!-- // Top Menu Right END -->
+
+        </div>
+        <!-- Top navbar END -->
+        <!-- Sidebar menu & content wrapper -->
+        <div id="wrapper">
+            <!-- Sidebar Menu -->
+            <div id="menu" class="hidden-print">
+                <!-- Scrollable menu wrapper with Maximum height -->
+                <div class="slim-scroll" data-scroll-height="1200px">
+                    <!-- Sidebar Profile -->
+                    <span class="profile">
+                        <a class="img" href="#"><img src="/common/theme/images/Administrator.png" alt="Mr. Awesome" /></a>
+                        <span>
+                            <strong>管理员</strong>
+                            <a href=#" class="glyphicons right_arrow">@JN.Services.AdminLoginHelper.CurrentAdmin().AdminName <i></i></a>
+                        </span>
+                    </span>
+                    <!-- // Sidebar Profile END -->
+                    <!-- Sidebar Mini Stats -->
+                    <div id="notif">
+                        <ul>
+                            <li><a href="" class="glyphicons envelope"><i></i> </a></li>
+                            <li><a href="" class="glyphicons shopping_cart"><i></i> </a></li>
+                            <li><a href="" class="glyphicons log_book"><i></i> </a></li>
+                            <li><a href="" class="glyphicons user_add"><i></i> </a></li>
+                        </ul>
+                    </div>
+                    <!-- // Sidebar Mini Stats END -->
+                    <!-- Regular Size Menu -->
+                    <ul>
+
+                        <!-- Menu Regular Item -->
+                        <li class="glyphicons display active"><a href="@(Url.Action("Index","Home"))"><i></i><span>平台首页</span></a></li>
+                        @*<li class="hasSubmenu glyphicons user @(curl.Contains("/user/")? "active" : "")">
+                            <a data-toggle="collapse" href="#menu_user"><i></i><span>用户中心</span></a>
+                            <ul class="collapse  @(curl.Contains("/user/") ? "in" : "")" id="menu_user">
+                                <li class="@(curl.Contains("/user/modify") ? "active" : "")"><a href="@Url.Action("Modify", "User")"><span>添加初始用户</span></a></li>
+                                <li class="@(curl.Contains("/user/list?isactivation=0") ? "active" : "")"><a href="@Url.Action("List", "User", new { isactivation=0})"><span>未激活的用户</span></a></li>
+                                <li class="@(curl.Contains("/user/list?isactivation=1") ? "active" : "")"><a href="@Url.Action("List", "User", new { isactivation=1})"><span>已激活的用户</span></a></li>
+                              
+                                <li class="@(curl.Contains("/user/lock") ? "active" : "")"><a href="@Url.Action("Lock", "User")"><span>被冻结的用户</span></a></li>
+                                <li class="@(curl.Contains("/user/authenticationlist?isauthentication=0") ? "active" : "")"><a href="@Url.Action("authenticationlist", "User", new { isauthentication = 0 })"><span>用户信息认证</span></a></li>
+                                <li class="@(curl.Contains("/user/usertranswitch") ? "active" : "")"><a href="@Url.Action("UserTranSwitch", "User")"><span>交易锁管理</span></a></li>
+                                <li class="@(curl.Contains("/user/userbankcardlist") ? "active" : "")"><a href="@Url.Action("userbankcardlist", "User")"><span>会员银行信息</span></a></li>
+                              
+                            </ul>
+                          
+                        </li>*@
+                  
+                        <li class="hasSubmenu glyphicons share_alt @(curl.Contains("/VRUsers/") ? "active" : "")">
+                            <a data-toggle="collapse" href="#menu_racoin"><i></i><span>VR</span></a>
+                            <ul class="collapse  @(curl.Contains("/VRUsers/") ? "in" : "")" id="menu_racoin">
+                               
+                                <li class="@(curl.Contains("/VRUsers/index") ? "active" : "")"><a href="@Url.Action("index", "VRUsers")"><span>VR用户</span></a></li>
+                               
+                                <li class="@(curl.Contains("/VRUsers/card") ? "active" : "")"><a href="@Url.Action("card", "VRUsers")"><span>卡密</span></a></li>
+                                
+                               
+                            </ul>
+                        </li>
+                        @*<li class="hasSubmenu glyphicons share_alt @(curl.Contains("/exchangecurrency/") ? "active" : "")">
+                            <a data-toggle="collapse" href="#menu_exchange"><i></i><span>币种兑换</span></a>
+                            <ul class="collapse  @(curl.Contains("/exchangecurrency/") ? "in" : "")" id="menu_exchange">
+                                <li class="@(curl.Contains("/exchangecurrency/modify") ? "active" : "")"><a href="@Url.Action("Modify", "ExchangeCurrency")"><span>添加规则</span></a></li>
+                                <li class="@(curl.Contains("/exchangecurrency/rulerlist")||curl.Contains("/exchangecurrency/offsales") ? "active" : "")"><a href="@Url.Action("RulerList", "ExchangeCurrency")"><span>规则管理</span></a></li>
+                            </ul>
+                        </li>*@
+
+                    
+
+
+                        <li class="hasSubmenu @(curl.Contains("/sysparam/") ? "active" : "")">
+                            <a data-toggle="collapse" class="glyphicons settings" href="#menu_syssetting"><i></i><span>系统设置</span></a>
+                            <ul class="collapse @(curl.Contains("/sysparam/") ? "in" : "")" id="menu_syssetting">
+                              
+                                <li class="@(curl.Contains("/sysparam/sysparam") ? "active" : "")"><a href="@Url.Action("SysParam", "SysParam")"><span>初始参数设置</span></a></li>
+                                @*<li class=""><a href="@Url.Action("UserVerify", "SysParam")"><span>用户密码级别设置</span></a></li>*@
+                                <li class="@(curl.Contains("/sysparam/syssetting") ? "active" : "")"><a href="@Url.Action("SysSetting", "SysParam")"><span>系统运行设置</span></a></li>
+                                @if (JN.Services.Tool.ConfigHelper.GetConfigBool("MultiLanguage"))
+                                {
+                                    <li class="@(curl.Contains("/sysparam/language") ? "active" : "")"><a href="@Url.Action("Language", "SysParam")"><span>多语言支持</span></a></li>
+                                }
+                                @*<li class="@(curl.Contains("/sysparam/shopSetting") ? "active" : "")"><a href="@Url.Action("shopSetting", "SysParam")"><span>商城设置</span></a></li>*@
+                            </ul>
+                        </li>
+                        <li class="hasSubmenu @(curl.Contains("/adminuser/") ? "active" : "")">
+                            <a data-toggle="collapse" class="glyphicons old_man" href="#menu_admin"><i></i><span>管理员管理</span></a>
+                            <ul class="collapse @(curl.Contains("/adminuser/") ? "in" : "")" id="menu_admin">
+                                <li class="@(curl.Contains("/adminuser/modify") ? "active" : "")"><a href="@Url.Action("Modify", "AdminUser")"><span>添加管理员</span></a></li>
+                                <li class="@(curl.Contains("/adminuser/index") ? "active" : "")"><a href="@Url.Action("Index", "AdminUser")"><span>管理员管理</span></a></li>
+                                <li class="@(curl.Contains("/adminuser/role") ? "active" : "")"><a href="@Url.Action("Role", "AdminUser")"><span>管理员角色</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="hasSubmenu @(curl.Contains("/log/") ? "active" : "")">
+                            <a data-toggle="collapse" class="glyphicons log_book" href="#menu_log"><i></i><span>系统日志</span></a>
+                            <ul class="collapse @(curl.Contains("/log") ? "in" : "")" id="menu_log">
+                                <li class="@(curl.Contains("/log/useractlog") ? "active" : "")"><a href="@Url.Action("UserActLog", "Log")"><span>行为日志</span></a></li>
+                                <li class="@(curl.Contains("/log/syslog") ? "active" : "")"><a href="@Url.Action("SysLog", "Log")"><span>系统日志</span></a></li>
+                                <li class="@(curl.Contains("/log/warninglog") ? "active" : "")"><a href="@Url.Action("WarningLog", "Log")"><span>预警日志</span></a></li>
+                                <li class="@(curl.Contains("/log/smslog") ? "active" : "")"><a href="@Url.Action("SMSLog", "Log")"><span>短信日志</span></a></li>
+                            </ul>
+                        </li>
+                        <li class="hasSubmenu @(curl.Contains("/develop/") ? "active" : "")">
+                            <a data-toggle="collapse" class="glyphicons leaf" href="#menu_develop"><i></i><span>开发人员选项</span></a>
+                            <ul class="collapse @(curl.Contains("/develop/") ? "in" : "")" id="menu_develop">
+                         
+                                <li class=""><a href="@Url.Action("UserActLog", "Develop")"><span>行为日志</span></a></li>
+                                <li class=""><a href="@Url.Action("SysLog", "Develop")"><span>系统日志</span></a></li>
+                                <li class=""><a href="@Url.Action("TimingPlan", "Develop")"><span>定时作业计划</span></a></li>
+                                @*<li class=""><a href="#"><span>平台主题</span></a></li>
+                                    <li class=""><a href="#"><span>登录主题</span></a></li>*@
+                                <li class="hasSubmenu @(curl.Contains("/icons") ? "active" : "")">
+                                    <a data-toggle="collapse" href="#menu_develop_kf"><i></i><span>技术支持</span></a>
+                                    <ul class="collapse @(curl.Contains("/icons") ? "in" : "")" id="menu_develop_kf">
+                                        <li class="@(curl.Contains("/icons") ? "active" : "")"><a href="@Url.Action("Icons", "Develop")"><span>图标大全(后台)</span></a></li>
+                                        <li class="@(curl.Contains("/usericons") ? "active" : "")"><a href="@Url.Action("UserIcons", "Develop")"><span>图标大全(前台)</span></a></li>
+                                        <li class="@(curl.Contains("/ui") ? "active" : "")"><a href="@Url.Action("UI", "Develop")"><span>UI</span></a></li>
+                                        <li class="@(curl.Contains("/widgets") ? "active" : "")"><a href="@Url.Action("Widgets", "Develop")"><span>Widgets</span></a></li>
+                                        <li class="@(curl.Contains("/advancedprofile") ? "active" : "")"><a href="@Url.Action("AdvancedProfile", "Develop")"><span>AdvancedProfile</span></a></li>
+                                        <li class=""><a href="#"><span>注意事项</span></a></li>
+                                    </ul>
+                                </li>
+                            </ul>
+                        </li>
+                        <li class="glyphicons database_plus"><a href="@Url.Action("Index", "DBManage")"><i></i><span>数据库备份与恢复</span></a></li>
+                        <li class="glyphicons keys"><a href="@Url.Action("ChangePassword", "Home")"><i></i><span>修改密码</span></a></li>
+                        <li class="glyphicons power"><a href="@Url.Action("LogOut", "Home")"><i></i><span>安全退出</span></a></li>
+                    </ul>
+                    <div class="clearfix"></div>
+                </div>
+                <!-- // Scrollable Menu wrapper with Maximum Height END -->
+            </div>
+            <!-- // Sidebar Menu END -->
+            @RenderBody()
+            <div class="modal fade" id="childwindow" tabindex="-1" role="dialog" aria-hidden="true" style="width:auto">
+                <div class="modal-dialog modal-sm">
+                    <div class="modal-content">
+                        <div class="color-line"></div>
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title" id="childwindowtitle"></h4>
+                        </div>
+                        <section id="childwindowiframe">
+                            <div class="modal-body" style="text-align:center">
+                                <p style="text-align:center">载入中，请稍候...</p>
+                            </div>
+                        </section>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="clearfix"></div>
+        <!-- // Sidebar menu & content wrapper END -->
+        <!-- // Footer END -->
+    </div>
+    <!-- // Main Container Fluid END -->
+    <!-- JQuery -->
+    <script src="/common/theme/scripts/plugins/system/jquery.min.js"></script>
+    <!-- JQueryUI -->
+    <script src="/common/theme/scripts/plugins/system/jquery-ui/js/jquery-ui-1.9.2.custom.min.js"></script>
+    <!-- JQueryUI Touch Punch -->
+    <!-- small hack that enables the use of touch events on sites using the jQuery UI user interface library -->
+    <script src="/common/theme/scripts/plugins/system/jquery-ui-touch-punch/jquery.ui.touch-punch.min.js"></script>
+    <!-- Modernizr -->
+    <script src="/common/theme/scripts/plugins/system/modernizr.js"></script>
+    <!-- Bootstrap -->
+    <script src="/Plugin/bootstrap/js/bootstrap.min.js"></script>
+    <!-- SlimScroll Plugin -->
+    <script src="/common/theme/scripts/plugins/other/jquery-slimScroll/jquery.slimscroll.min.js"></script>
+    <!-- Common Demo Script -->
+    <script src="/common/theme/scripts/demo/common.js?1369414383"></script>
+    <!-- Holder Plugin -->
+    <script src="/common/theme/scripts/plugins/other/holder/holder.js"></script>
+    <!-- Uniform Forms Plugin -->
+    @*<script src="/common/theme/scripts/plugins/forms/pixelmatrix-uniform/jquery.uniform.min.js"></script>*@
+    <!-- Global -->
+    <script>
+        var basePath = '/common/';
+    </script>
+    <!-- Bootstrap Extended -->
+    @*<script src="/Plugin/bootstrap/extend/bootstrap-select/bootstrap-select.js"></script>*@
+    <script src="/Plugin/bootstrap/extend/bootstrap-toggle-buttons/static/js/jquery.toggle.buttons.js"></script>
+    <script src="/Plugin/bootstrap/extend/bootstrap-hover-dropdown/twitter-bootstrap-hover-dropdown.min.js"></script>
+    <script src="/Plugin/bootstrap/extend/jasny-bootstrap/js/jasny-bootstrap.min.js"></script>
+    @*<script src="/Plugin/bootstrap/extend/jasny-bootstrap/js/bootstrap-fileupload.js"></script>*@
+    <script src="/Plugin/bootstrap/extend/bootbox.js"></script>
+    @*<script src="/Plugin/bootstrap/extend/bootstrap-wysihtml5/js/wysihtml5-0.3.0_rc2.min.js"></script>
+        <script src="/Plugin/bootstrap/extend/bootstrap-wysihtml5/js/bootstrap-wysihtml5-0.0.2.js"></script>*@
+    <!-- Notyfy Notifications Plugin -->
+    <script src="/common/theme/scripts/plugins/notifications/notyfy/jquery.notyfy.js"></script>
+    <!-- DateTimePicker Plugin -->
+    <script src="/common/theme/scripts/plugins/forms/bootstrap-datetimepicker/js/bootstrap-datetimepicker.min.js"></script>
+    <!-- Cookie Plugin -->
+    <script src="/common/theme/scripts/plugins/system/jquery.cookie.js"></script>
+    <!-- Colors -->
+    <script>
+        var primaryColor = '#e25f39',
+            dangerColor = '#bd362f',
+            successColor = '#609450',
+            warningColor = '#ab7a4b',
+            inverseColor = '#45484d';
+    </script>
+    <!-- Dashboard Demo Script -->
+    @*<script src="/common/theme/scripts/demo/index.js?1369414383"></script>*@
+    <script type="text/javascript">
+        function winopen(title, url, width) {
+            if (browser.versions.iPhone || browser.versions.android) {
+                $('.modal-dialog').width(350);
+            }
+            else {
+                if (width != "") $('.modal-dialog').width(width);
+            }
+            $('#childwindowiframe').load(url);
+            $("#childwindowtitle").html(title);
+            $("#childwindow").modal();
+        }
+        function winclose() {
+            $("#childwindow").modal('hide');
+        }
+
+        var browser = {
+            versions: function () {
+                var u = navigator.userAgent, app = navigator.appVersion;
+                return {
+                    trident: u.indexOf('Trident') > -1, //IE内核
+                    presto: u.indexOf('Presto') > -1, //opera内核
+                    webKit: u.indexOf('AppleWebKit') > -1, //苹果、谷歌内核
+                    gecko: u.indexOf('Gecko') > -1 && u.indexOf('KHTML') == -1, //火狐内核
+                    mobile: !!u.match(/AppleWebKit.*Mobile.*/) || !!u.match(/AppleWebKit/), //是否为移动终端
+                    ios: !!u.match(/\(i[^;]+;( U;)? CPU.+Mac OS X/), //ios终端
+                    android: u.indexOf('Android') > -1 || u.indexOf('Linux') > -1, //android终端或者uc浏览器
+                    iPhone: u.indexOf('iPhone') > -1 || u.indexOf('Mac') > -1, //是否为iPhone或者QQHD浏览器
+                    iPad: u.indexOf('iPad') > -1, //是否iPad
+                    webApp: u.indexOf('Safari') == -1 //是否web应该程序，没有头部与底部
+                };
+            }()
+        }
+
+    </script>
+    @RenderSection("scripts")
+</body>
+</html>

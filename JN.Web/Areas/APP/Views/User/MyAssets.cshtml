@@ -1,0 +1,76 @@
+﻿@{
+    ViewBag.Title = "我的资产";
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+    var cmodelList1 = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => (x.IsCashCurrency ?? false)).ToList();
+    var cmodelList2 = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => !(x.IsCashCurrency ?? false)).ToList();
+    double tocount = 0;
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+	<div class="header-return mui-action-back">
+	    @*<a href="javascript:history.go(-1);"></a>*@
+	</div>
+	
+	<div class="logo">@T(ViewBag.Title)</div>
+</header>
+
+<section class="container">
+	@*<div class="assets-balance">
+		<ul>
+			<li>
+				<p>余额</p>
+				<h3>1000000.00000000000000</h3>
+			</li>
+			
+			<li>
+				<p id="ChooseUnit" class="assets-unit">
+					<span>RMB[中国]</span>
+				</p>
+				<h3>800</h3>
+			</li>
+		</ul>
+	</div>*@
+	
+	<div class="assets-title">@T("数字资产")</div>
+	<div class="assets-list">
+		<ul>
+            @foreach (var item in cmodelList1)
+            {
+                tocount = JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel).ToDouble();
+                <li>
+				<span>@T(item.CurrencyName)</span>
+				<h3>@(tocount.ToString("F5"))</h3>
+			</li>
+            }
+		</ul>
+	</div>
+	
+	<div class="assets-title">@T("其他")</div>
+	<div class="assets-list">
+		<ul>
+            @foreach (var item in cmodelList2)
+            {
+                tocount = JN.Services.Manager.Users.WalletCur((int)item.WalletCurID, Umodel).ToDouble();
+                <li>
+                    <span>@T(item.CurrencyName)</span>
+                    <h3>@(tocount.ToString("F5"))</h3>
+                </li>
+            }
+		</ul>
+	</div>
+	
+	@*<div class="form-tips">
+		说明：资产的统计包含可用资产加冻结资产。
+	</div>*@
+</section>
+

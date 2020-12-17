@@ -1,0 +1,58 @@
+﻿@model JN.Data.Shop_Home_Group
+@{
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+
+
+<div id="content">
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <div class="innerLR">
+        <div class="col-xs-12">
+            @using (Ajax.BeginForm("AddHomeGroup", new { }, new AjaxOptions() { HttpMethod = "Post", OnSuccess = "afterPost" }, new { id = "saveForm", @class = "form-horizontal" }))
+            {
+                <div class="control-group">
+                    <input type="hidden" id="id" name="id" value="@Model.Id" />
+                    <label class="control-label">分组名称：</label>
+                    <div class="controls">
+                        <span class="input-icon">
+                            <input type="text" name="Name" value="@Model.Name" />
+                        </span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label">分组标题：</label>
+                    <div class="controls">
+                        <span class="input-icon">
+                            <input type="text" name="Title" value="@Model.Title" />
+                        </span>
+                    </div>
+                </div>
+                <div class="controls">
+                    <input id="submit" name="Submit" type="submit" class="btn" value="提 交" />
+                </div>
+
+            }
+        </div>
+    </div>
+</div>
+
+@section scripts{
+    <script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript">
+        //提交后返回结果
+        function afterPost(data) {
+            if (data.Status == 200) {
+                alert("保存成功，即将为您跳转页面!");
+                location.href = "@(Url.Action("HomeGroup", "MallManagement"))";
+            } else {
+                alert("保存失败！错误信息：" + data.Message);
+            }
+        }
+    </script>
+}
+

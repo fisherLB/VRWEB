@@ -1,0 +1,158 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("theme3") + ".cshtml";
+    var ArticleClassList = MvcCore.Unity.Get<JN.Data.Service.IArticleClassService>().List(x => x.Pid == 0 && (x.IsNotice ?? true)).ToList();
+    List<JN.Data.Article> ArticleList = null;
+}
+
+@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.Advertise>
+
+<div class="content" id="content_yield">
+    <div class="purchase-s4"></div>
+   
+    @*<div class="row">
+        <div class="col-sm-8">
+            <p>2017-03-15 10:55:37 UTC jin**** subscribe 6.0T PACMiC v5<a href="/contracts/list" style="margin-left:50px;">MORE</a></p>
+        </div>
+        <div class="col-sm-4">
+            <div class="share-box pull-right">
+                <a href="javascript: void(window.open('http://www.facebook.com/dialog/feed?app_id=687896424653958&amp;display=popup&amp;link=https://www.hashnest.com&amp;name=Hashnest 加速回本云算力合约 PACMiC.&amp;caption=HASHNEST&amp;redirect_uri=https://www.facebook.com','','menubar=no,toolbar=auto,resizable=yes,scrollbars=yes,height=600,width=800'));">
+                    <div class="society facebook" data-placement="top" data-toggle="tooltip" title="分享到Facebook"></div>
+                </a>
+                <a href="javascript: void(window.open('http://twitter.com/home/?status='+encodeURIComponent('Hashnest 加速回本云算力合约 PACMiC.https://www.hashnest.com/contracts/new?contract_id=5'),'','menubar=no,toolbar=auto,resizable=yes,scrollbars=yes,height=600,width=800'));">
+                    <div class="society twitter" data-placement="top" data-toggle="tooltip" title="分享到Twitter"></div>
+                </a>
+                <a href="javascript: void(window.open('http://service.weibo.com/share/share.php?pic=https://dn-bitmain.qbox.me/hashnest80F48333-7147-4201-941A-810B71D41816.png&amp;title='+encodeURIComponent('Hashnest 加速回本云算力合约 PACMiC.https://www.hashnest.com/contracts/new?contract_id=5@比特大陆'),'','menubar=no,toolbar=auto,resizable=yes,scrollbars=yes,height=600,width=800'));">
+                    <div class="society weibo" data-placement="top" data-toggle="tooltip" title="分享到新浪微博"></div>
+                </a>
+            </div>
+        </div>
+    </div>*@
+    @{
+
+     }
+    <div class="stamp">
+        <div class="stamp-img">
+            <p></p>
+           @{
+               foreach (var item in ArticleClassList)
+               {
+                <p class="MsoNormal" style="text-align: center;"><span style="font-size: 24px;">@T(item.ClassName)</span></p>
+                <p class="MsoNormal"><br /></p>
+                   ArticleList = MvcCore.Unity.Get<JN.Data.Service.IArticleService>().List(x => x.ClassID == item.ID).ToList();
+                   foreach (var list in ArticleList)
+                   {
+                    <p class="MsoNormal"><span style="font-size: 18px;">@list.Title</span></p>
+                    <p class="MsoNormal">@MvcHtmlString.Create(list.Content) </p>
+                    <p class="MsoNormal"><br /></p>
+                    <p class="MsoNormal"><br /></p>
+                   }
+               }
+        }
+                   
+                      
+            @*<p class="MsoNormal" style="text-align: center;"><span style="font-size: 24px;">加速回本云算力合约PACMIC V5</span></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 18px;">什么是加速回本云算力合约？</span></p>
+            <p class="MsoNormal">加 速回本云算力合约（PACMiC）是HASHNEST推出的全新云算力产品。加速回本云算力（PACMiC）不需支付维护费，而维护费都由BITMAIN 承担。在买家回本之前，未偿还的本金还会收到利润。本金在回本完毕之后，矿机重新归BITMAIN所有，合同结束。因为加速回本云算力（PACMiC）是 不需要支付维护费的，因此回本周期将大大加速。与此同时，还能收获较高的利润。</p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 18px;">PACMiC</span><span style="font-size: 18px;">的认购</span></p>
+            <p class="MsoNormal">本期合约每份1BTC，每份合约代表6TH/s算力。用户在支付成功后，合约即刻生效。</p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 18px;">PACMiC</span><span style="font-size: 18px;">本金的返回和利润计算</span></p>
+            <p class="MsoNormal">合约生效后，Hashnest以Antpool.com的PPLNS分配方式计算挖矿收益并返还本金和支付利润。以合约生效后Antpool的第1个爆块时间为计算利润的开始时间。从这个时刻到合约结束，每秒都产生利润。</p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 18px;">利润的计算公式：</span></p>
+            <p class="MsoNormal">未还款本金（BTC）&times; 0.45 （聪/BTC/秒）&times; 爆块花费时间（秒）</p>
+            <p class="MsoNormal">每次爆块后的收益在支付完利润后，剩余部分用于返还本金。每次返还本金后，未归还本金相应减少。</p>
+            <p class="MsoNormal">*在Antpool.com 发现1个块并经过6个网络确认后，再将爆块信息传递给hashnest.com， 所以hashnest 的返还本金时间和支付利润时间与爆块时间有差别</p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 18px;">合约暂停执行：</span></p>
+            <p class="MsoNormal">在合约开始的120天之后，如果用户的本金依然没有得到返还，且此时因为难度上涨和比特币汇率下跌，导致一个理想的S9矿机100%PPS产出不能覆盖其电费支出（电价定为0.098美元/千瓦时），且持续时间10天以上，那么合约暂停执行，挖矿停止，收益分配和利润分享也暂停；在暂停执行之后，如果因为难度下跌和比特币汇率行情上涨，S9矿机可以重新开机，那么合约恢复执行。</p>
+            <p class="MsoNormal">&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size: 18px;">合约的结束</span></p>
+            <p class="MsoNormal">当本金返还完成后，本合约即到期结束。</p>
+            <p class="MsoNormal">BITMAIN有可能会选择提前归还本金，让用户进一步加速回本。</p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal" style="text-align: center;"><br /></p>
+            <p class="MsoNormal" style="text-align: center;"><br /></p>
+            <p class="MsoNormal" style="text-align: center;"><span style="font-size: 24px;">常见问题</span></p>
+            <p class="MsoNormal">&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size: 18px;">问：</span><span style="font-size: 18px;">PACMiC</span><span style="font-size: 18px;">合约可以转让交易吗？</span></p>
+            <p class="MsoNormal"><span style="font-size: 18px;">答：PACMiC合约不可以转让交易。</span></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 18px;"><br /></span></p>
+            <p class="MsoNormal"><span style="font-size: 18px;">问：算力需要支付电费和维护费吗？</span></p>
+            <p class="MsoNormal"><span style="font-size: 18px;"></span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答：不需要支付电费和维护费，这些电费和维护费都是由BITMAIN支付的。所有的挖矿收益用于分享利润和返还本金。</span></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问：算力合约可以提前赎回吗？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答：不可以提前赎回，需等到返还完本金后结束。</span></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问：合约结束后会退回矿机吗？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答： 不，PACMIC合约与HASHNEST其他类型的云算力是不同类型的产品</span></p>
+            <br />
+            <p class="MsoNormal"><span style="font-size: 16px;">问：如果蚂蚁矿池的运气很差，会不会影响利润？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答：利润的计算只和本金余额有关系，与蚂蚁矿池的运气无关。蚂蚁矿池的运气波动会影响本金归还的速度。</span></p>
+            <p class="MsoNormal">&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问：用户如何赚到利润？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">利润的计算公式：</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">未还款本金（BTC）&times; 0.45 （聪/BTC/秒）&times; 爆块花费时间（秒）</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">每次爆块后的收益在支付完利润后，剩余部分用于返还本金。</span></p>
+            <p class="MsoNormal">&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问：何时开始计算用户的利润？利润支付到哪里？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答：合约生效后，第一个爆块时起计算利润。利润会支付到用户在Hashnest平台的钱包。</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;"><br /></span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问:什么是自动追加功能？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答:</span><span style="font-size: 16px;">开启自动追加本金功能后，爆块收益会追加购买合约算力，利润收益会追加到未回本金中。</span><br /><span style="font-size: 16px;">停用后，返回本金和利润会继续转入账户余额中</span></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><br /></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问:我已经购买了PACMIC合约，如果我用原来的合约利润自动追加购买了新合约，那么新的合约何时停止？</span></p>
+            <span style="font-size: 16px;">答:</span>
+            <span style="font-size: 16px;">和以前的规定一样，一个PACMIC合约只有在本金返还给用户后，合约才终止。如果BTC价格降得太低导致合约不产生收益，那么合约会暂时停止（而不是中止），直到能继续产生收益的时候继续执行。</span>
+            <br />
+            <span style="font-size: 16px;"></span>
+            <span style="font-size: 16px;"></span>
+            <p><br /></p>
+            <p class="MsoNormal">&nbsp;&nbsp;&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问：</span><span style="font-size: 16px;">合约何时结束？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答：当本金全额归还时，合约结束。</span></p>
+            <p class="MsoNormal">&nbsp;</p>
+            <p class="MsoNormal"><span style="font-size: 16px;">问：这款产品是本金绝对无风险的产品吗？</span></p>
+            <p class="MsoNormal"><span style="font-size: 16px;">答：PACMiC 并非绝对没有本金损失风险。在难度超常规上涨、或者币价超常规下跌时，Antminer S9在PACMiC的用户收回投资以前也有可能停机，从而导致合约暂停执行（这种暂 停可能持续很长时间甚至永久），此时本金就出现了不能收回投资的风险。S9是目前市场上效率最高的矿机，在不利情况下会是目前市场上最后停机的矿机，且挖 矿难度上涨趋于停滞，我们综合判断本金不能收回的概率非常低，但PACMiC并非绝对无风险的云挖矿产品。</span></p>
+            <br />
+            <p><br /></p>
+            <p></p>*@
+        </div>
+    </div>
+    <script>
+$('input#check_accept').iCheck({checkboxClass: 'icheckbox_flat-red'});
+
+$('input#check_accept').on('ifChanged', function(event){
+  check();
+});
+
+$("#new_contract_amount").on('input',function(e){
+   check();
+});
+
+function check(){
+  var input_number = parseInt($("#new_contract_amount").val());
+  if( $("input#check_accept").is(':checked') && input_number <= 0 ){
+    $("#confirm_pay").removeAttr("disabled");
+  }else{
+    $("#confirm_pay").attr("disabled","true");
+  }
+}
+
+$(document).ready(function(){
+  $(".on-background.background-fill").html(translate_js()["open"]);
+$(".state-background.background-fill").html(translate_js()["off"]);
+});</script>
+</div>

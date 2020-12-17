@@ -1,0 +1,210 @@
+﻿@{
+    Layout = null;
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000);
+}
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width = device-width, initial-scale = 1.0, maximum-scale = 1.0, user-scalable = 0">
+
+    <title>@T("注册")</title>
+
+    <link href="/Theme/App/css/base.css" rel="stylesheet">
+    <link href="/Theme/App/css/login.css" rel="stylesheet">
+    <script src="/Theme/App/js/jquery-1.11.2.min.js"></script>
+
+    <link href="~/Plugin/layer/skin/default/layer.css" rel="stylesheet" /><!--layer前端框架css-->
+    <script src="~/Plugin/layer/layer.js"></script><!--layer前端框架js-->
+</head>
+
+<body>
+    <header class="header">
+        <div class="header-return">
+            <a href="javascript:history.go(-1);"></a>
+        </div>
+
+        <div class="logo">@T("注册")</div>
+    </header>
+
+    <section class="container">
+        <div class="register">
+            <div class="form-widget">
+                <form id="form" method="post">
+                    <div class="form-box">
+                        <div class="form-group">
+                            <label class="form-label">@T("推荐人")</label>
+                            <div class="form-control">
+                                <input placeholder="@T("请输入推荐人(ID)")" type="text" name="RefereeUser" value="@ViewBag.username" @(!string.IsNullOrEmpty(ViewBag.username) ? "readonly=\"readonly\"" : "") maxlength="30">
+                            </div>
+                        </div>
+
+                        @*<div class="form-group">
+            <label class="form-label">@T("ID")</label>
+
+            <div class="form-control">
+                <input placeholder="@T("请填写昵称")" type="text" name="username" maxlength="30" >
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="form-label">@T("真实姓名")</label>
+
+            <div class="form-control">
+                <input placeholder="@T("请输入真实姓名")" type="text" name="RealName" maxlength="30">
+            </div>
+        </div>*@
+                        @*<div class="form-group col-lg-6">
+            <label>@T("真实姓名")</label>
+            <input type="text" name="RealName" class="form-control" placeholder="@T("请输入真实姓名")" required>
+        </div>*@
+                        <div class="form-group">
+                            <div class="form-control">
+                                <select name="countrycode" id="country_code">
+                                    <option value="+86" selected>@T("+86 中国")</option>
+                                    <option value="+1">@T("+1 美国")</option>
+                                    <option value="+886">@T("+886 台湾")</option>
+                                    <option value="+852">@T("+852 香港")</option>
+                                    <option value="+81">@T("+81 日本")</option>
+                                    <option value="+84">@T("+84 越南")</option>
+                                    <option value="+61">@T("+61 澳大利亚")</option>
+                                    <option value="+65">@T("+65 新加坡")</option>
+                                    <option value="+62">@T("+62 印度尼西亚")</option>
+                                    <option value="+60">@T("+60 马来西亚")</option>
+                                    <option value="+66">@T("+66 泰国")</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">@T("手机号码")</label>
+
+                            <div class="form-control form-phone">
+                                <input type="tel" name="mobile" id="mobile" placeholder="@T("请輸入手机号码")" maxlength="11">
+                            </div>
+                        </div>
+
+                        @if (cacheSysParam.Single(x => x.ID == 3501).Value.ToInt() >= 1)
+                        {
+                            <div class="form-group">
+                                <label class="form-label">@T("验证码")</label>
+
+                                <div class="form-control form-getcode">
+                                    <input maxlength="6" type="number" name="smscode" placeholder="@T("请输入验证码")">
+                                    <button id="btnSendCode" type="button" onclick="SendMobile(this)">@T("发送验证码")</button>
+                                </div>
+                            </div>
+                        }
+
+                        <div class="form-group">
+                            <label class="form-label">@T("登录密码")</label>
+
+                            <div class="form-control">
+                                <input type="password" name="password" maxlength="30"  placeholder="@T("请输入6~32位数字、字母、数字加字母")">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T("确认登录密码")</label>
+
+                            <div class="form-control">
+                                <input type="password" name="reppassword" maxlength="30"  placeholder="@T("请输入确认登录密码")">
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">@T("交易密码")</label>
+
+                            <div class="form-control">
+                                <input type="password" name="password2" maxlength="30" placeholder="@T("请输入6~32位数字、字母、数字加字母")">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">@T("确认交易密码")</label>
+
+                            <div class="form-control">
+                                <input type="password" name="reppassword2" maxlength="30"  placeholder="@T("请输入确认交易密码")">
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="form-submit">
+                        <button type="button" class="form-submit-btn" id="btnSubmit">@T("注册")</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</body>
+</html>
+<script>
+    $(function() {
+        $("input[name='mobile']").val("18" + parseInt(10 * Math.random())  + parseInt(10 * Math.random())  + parseInt(10 * Math.random()) + parseInt(10 * Math.random()) + parseInt(10 * Math.random()) + parseInt(10 * Math.random()) + parseInt(10 * Math.random()) + parseInt(10 * Math.random()) + parseInt(10 * Math.random()));
+    });
+
+    $("#btnSubmit").click(function () {
+        $('#btnSubmit').attr("disabled", "disabled");
+        $.post('@Url.Action("index", "reg")', $('#form').serialize(), function (d) {
+            if (d.Status == 200) {
+                layer.msg("@T("注册成功")", { icon: 1}, function () {
+                    //location.href = "/App/Reg/Download"
+                    location.href = "/App/Login/index"
+                });
+            } else {
+                layer.msg(d.Message, {
+                    icon: 2
+                });
+                $('#btnSubmit').removeAttr("disabled");
+            }
+        }, 'json')
+    });
+
+    //验证手机
+    function SendMobile(thisval) {
+        $('#btnSendCode').attr("disabled", "disabled");
+        var mobile = $("input[name='mobile']").val();
+        var country_code = $("#country_code").val();
+        // var code = $("#code").val();
+        @*var myreg = /^0?(13|14|15|16|17|18|19)[0-9]{9}$/;
+        if (!myreg.test(mobile)) {
+            layer.msg('@T("请输入有效的手机号码")', { icon: 2 });
+            $("input[name='mobile']").focus();
+            $('#btnSendCode').removeAttr("disabled");
+            return false;
+        }*@
+        if (mobile != "") {
+            layer.msg('@T("正在发送短信，请稍后")...');
+            $.post("@Url.Action("SendRegMobileMsm", "reg")", { myphone: mobile, country_code: country_code }, function (data) {
+                if (data.Status == 200) {
+                    layer.msg('@T("短信已发送")', { icon: 1 });
+                    time(thisval);
+                } else {
+                    layer.msg(data.Message, { icon: 2 });
+                    $('#btnSendCode').removeAttr("disabled");
+                }
+            });
+        } else {
+            layer.msg('@T("手机不能为空")', { icon: 2 });
+            $('#btnSendCode').removeAttr("disabled");
+            $("input[name='mobile']").focus();
+            return false;
+        }
+    }
+
+    var wait = 60;
+    function time(o) {
+        if (wait == 0) {
+            o.removeAttribute("disabled");
+            o.innerHTML = "@T("重新获取")";
+            wait = 60;
+        } else {
+            o.setAttribute("disabled", true);
+            o.innerHTML = "@T("重发")" + "(" + wait + ")";
+            wait--;
+            setTimeout(function () {
+                time(o)
+            },
+            1000);
+        }
+    }
+</script>

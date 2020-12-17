@@ -1,0 +1,135 @@
+﻿@using PagedList.Mvc;
+@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Remittance>
+
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 8000);
+    //List<JN.Data.SysParam> sysParamList = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().List(x => x.PID == 1900).ToList();
+
+    JN.Data.User Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+
+    var param1901 = cacheSysParam.SingleAndInit(x => x.ID == 1901);
+    decimal minMoney = param1901.Value.ToDecimal();
+    decimal poundage = param1901.Value3.ToDecimal();
+
+    var cmodelList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().List(x => x.TranSwitch && !x.IsICO);
+    string curl = Request.Url.ToString().ToLower();
+    int num = 1;
+}
+
+<link rel="stylesheet" href="/theme/app/css/wallet_a56710a361.css">
+<script src="~/Plugin/Jquery/jquery.unobtrusive-ajax.min.js"></script>
+<link href="~/theme/app/css/Pager.css" rel="stylesheet" />
+@{Html.RegisterMvcPagerScriptResource();}
+<div class="container transter-box">
+    <div class="tabs clear-float">
+
+        @foreach (var item in cmodelList)
+        {
+            <div class="tab get @(curl.Contains("/App/rechargetrans/curtransferenter?curid=" + item.ID) ? "actived" : (string.IsNullOrEmpty(Request["curid"]) && num==1) ? "actived" : "")"><a href="/App/RechargeTrans/CurTransferEnter?curid=@item.ID">@T(item.CurrencyName)@T("充值")  </a></div>
+            num++;
+        }
+        <div class="tab get @(curl.Contains("/App/rechargetrans/rmbrecharge") ? "actived" : (string.IsNullOrEmpty(Request["curid"]) && num==1) ? "actived" : "")"><a href="/App/rechargetrans/rmbrecharge?curid=@cacheSysParam.SingleAndInit(x => x.ID == 2001).ID">@T(cacheSysParam.SingleAndInit(x => x.ID == 2001).Name)@T("充值") </a></div>
+    </div>
+    <div class="panel clear-float">
+        <form id="frmEdit">
+            <div class="btc-send">
+                <div class="tips-panel">
+                    温馨提示：
+                    <br>
+                    @T("1 为方便财务精准区分您的汇款信息，请您在汇款时确保汇款金额")
+                    <br>
+                    @T("2 每笔汇款充值金额要求") <span class="color_red">@T("最低为")@(minMoney)@T("人民币")（@T("小于") @(minMoney) @T("人民币不予受理")）</span><br>
+                    @T("3 在进行连续多笔汇款时，")<span class="color_red">@T("请填写不同的汇款金额")</span> @T("以便财务能够清晰区分您的汇款信息")
+                </div>
+                <div class="normal-form form-cont clear-float">
+                    <div class="form-item input-cont">
+                        <div class="input-name">@T("汇款方式"): </div>
+                        @Html.DropDownList("rechargeway", new SelectList(cacheSysParam.Where(x => x.PID == 3900 && x.Value.ToInt() == 1 && x.IsUse).OrderBy(x => x.Sort), "Name", "Name"), new { @class = "select", })
+                        <div class="form-tips"></div>
+                    </div>                  
+                    <div class="form-item input-cont">
+                        <div class="input-name">@T("汇款人姓名"): </div>
+                        <input type="text" name="transfername" id="transfername" class="input" readonly value="@(cacheSysParam.SingleAndInit(x => x.ID == 3901).Value2)">
+                        <div class="form-tips"></div>
+                    </div>
+                    <div class="form-item input-cont">
+                        <div class="input-name">@T("汇款账户"): </div>
+                        <input type="text" name="transferaccount" id="transferaccount" class="input" readonly value="@(cacheSysParam.SingleAndInit(x => x.ID == 3901).Value3)">
+                        <div class="form-tips"></div>
+                    </div>
+                    <div class="form-item input-cont">
+                        <div class="input-name">@T("充值金额"): </div>
+                        <input id="rechargeamount" onkeyup="this.value=this.value.replace('/\D/g,&#39;&#39;')" class="input" style="margin-left:0px;" type="text" value="" placeholder="仅支持100元以上" name="rechargeamount">
+                        <div class="form-tips"></div>
+                    </div>
+                    @*<div class="form-item input-cont">
+                            <div class="input-name">@T("实际金额"): </div>
+                            <input class="input" id="actualamount" type="text" value="" name="actualamount" readonly="readonly" style="margin-left:0px;">
+                            <div class="form-tips"></div>
+                        </div>*@
+                    <div class="form-item input-cont">
+                        <div class="input-name">@T("备注"): </div>
+                        <input class="input" type="text" value="" name="remark" style="margin-left:0px;">
+                        <div class="form-tips"></div>
+                    </div>
+                    <a class="btn submit " id="btnSubmit">@T("生成充值表单")</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+    <script src="~/Plugin/Jquery/jquery.form.js"></script>
+    <script>                        
+        $("#btnSubmit").click(function () {
+            $("#frmEdit").ajaxSubmit({
+                url: "@Url.Action("RMBRecharge")",
+                type: "post",
+            success: function (data) {
+                if (data.Status == 200) {
+                    layer.msg("@T("充值表单已提交")，@T("请等待系统审核")！", { icon: 1 })
+                    location.reload();
+                } else {
+                    layer.msg(data.Message, { icon: 2 })
+                }
+            },
+            error: function (error) {
+
+                M.dialog2 = jqueryAlert({
+                    'content': error,
+                    'modal': true,
+                    'buttons': {
+                        '@T("确定")': function () {
+                            M.dialog2.close();
+                        }
+                    }
+                })
+            }
+        });
+        });
+
+
+        $("#rechargeway").on('change', function () {
+            var name= $("#rechargeway").val();
+            $.post('@Url.Action("getparamInfo", "RechargeTrans")', { paramName: name }, function (data) {
+                $("#transfername").val(data.data.Value2);
+                $("#transferaccount").val(data.data.Value3);
+            })
+        });
+    </script>
+    <div class="panel">
+        <div class="h3">@T("钱包可余额"): <span class="link available"> @JN.Services.Manager.Users.WalletCur(2001, Umodel)</span> </div>
+        <div class="wallet-view"><span class="s-text available">@T("可用资产"): <span>@JN.Services.Manager.Users.WalletCur(2001, Umodel)</span> </span></div>
+    </div>
+    <div class="panel transactions-panel">
+        <div class="filter">
+            <div class="body" id="_RMBRecharge">
+                <!--数据开始-->
+                @Html.Partial("_RMBRecharge", Model)
+                <!--数据结束-->
+                <!--分页-->
+            </div>
+        </div>
+    </div>
+</div>

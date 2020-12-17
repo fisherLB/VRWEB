@@ -1,0 +1,106 @@
+﻿@model JN.Data.Shop_Info
+@{
+    Layout = "~/Areas/APP/Views/Shared/_Layout" + JN.Services.Tool.ConfigHelper.GetConfigString("Theme") + ".cshtml";
+    //var cacheSysParam = MvcCore.Unity.Get<JN.Data.Service.ISysParamService>().ListCache("sysparams", x => x.ID < 6000);
+    JN.Data.User Umodel = null;
+    if (JN.Services.UserLoginHelper.CurrentUser() == null)
+    {
+        Response.Redirect(Url.Action("Index", "Login"));
+    }
+    else
+    {
+        Umodel = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(JN.Services.UserLoginHelper.CurrentUser().ID);
+    }
+
+    var sysSet = MvcCore.Unity.Get<JN.Data.Service.ISysSettingService>().Single(1);
+
+    var curList = MvcCore.Unity.Get<JN.Data.Service.ICurrencyService>().ListCache("coinList").Where(x => x.LineSwitch && !x.IsICO).OrderByDescending(x => x.ID).Take(2).ToList();
+}
+<link href="/Theme/App/css/user.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return">
+        <a href="javascript:history.go(-1);"></a>
+    </div>
+
+    <div class="logo">@T("产品管理")</div>
+</header>
+
+<section class="container">
+    <div class="product-container">
+        <div class="product" id="productList">
+        </div>
+    </div>
+    
+
+    <div class="add-address">
+        <a href="/app/shop/AddProduct">
+            <i></i>
+            <span>@T("添加产品")</span>
+        </a>
+    </div>
+</section>
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#productList', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("getProductList", "shop")?page=' + page, function (res) {
+                    var strhtml = "";
+                    //假设你的列表返回在data集合中
+                    layui.each(res.data, function (index, item) {
+                        strhtml = "";
+                        strhtml += '<div class="product-box">';
+                        strhtml += '<a href="/app/shop/AddProduct?ID=' + item.Id + '">';
+                        strhtml += '<img class="fl" src="' + item.ImageUrl + '">';
+                        strhtml += '<div class="product-info fl">';
+                        strhtml += '<h3>' + item.ProductName + '</h3>';
+                        strhtml += '<p>¥' + item.RealPrice + '</p>';
+                        strhtml += '</div>';
+                        strhtml += '</a>';
+                        strhtml += '<div class="product-edit">';
+                        strhtml += '<a href="/app/shop/AddProduct?ID=' + item.Id + '">@T("编辑")</a>';
+                        if (item.Status) {
+                            strhtml += '<span onclick="funDownPro(' + item.Id + ')">@T("下架")</span>';
+                        }
+                        else {
+                            strhtml += '<span onclick="OnProduct(' + item.Id + ')">@T("上架")</span>';
+                        }
+                        strhtml += '</div>';
+                        strhtml += '</div>';
+                        lis.push(strhtml);
+                    });
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+        function funDownPro(gId) {
+            $.post("/APP/Shop/OffProduct", { id: gId }, function (data) {
+                if (data.Status != "200") {
+                    alert(data.Message);
+                }
+                window.location = "/APP/shop/ShopProduct";
+            });
+
+        }
+
+        function OnProduct(gId) {
+            $.post("/APP/Shop/OnProduct", { id: gId }, function (data) {
+                if (data.Status != "200") {
+                    alert(data.Message);
+                } else {
+                    window.location = "/APP/shop/ShopProduct";
+                }
+
+            });
+
+        }
+</script>

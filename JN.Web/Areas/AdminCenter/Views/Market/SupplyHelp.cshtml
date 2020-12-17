@@ -1,0 +1,303 @@
+﻿@using PagedList.Mvc;
+@using PagedList;
+@model PagedList.PagedList<JN.Data.SupplyHelp>
+@{
+    string action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+    Layout = "~/Areas/AdminCenter/Views/Shared/_Layout.cshtml";
+}
+<div id="content">
+    <!-- Breadcrumb -->
+    <ul class="breadcrumb">
+        <li><a href="@Url.Action("Index", "Home")" class="glyphicons home"><i></i> 首页</a></li>
+        <li class="divider"></li>
+        <li>@ViewBag.Title</li>
+    </ul>
+    <div class="separator bottom"></div>
+    <!-- // Breadcrumb END -->
+    <div class="innerLR">
+        <div class="tabbable">
+            <ul class="nav nav-tabs" id="myTab">
+                <li class="@(action == "supplyhelp" ? "active" : "")">
+                    <a href="@Url.Action("SupplyHelp")">
+                        提供帮助
+                    </a>
+                </li>
+                <li class="@(action == "accepthelp" ? "active" : "")">
+                    <a href="@Url.Action("AcceptHelp")">
+                        接受帮助
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=all").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=all">
+                        已匹配数据
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=overduepayment").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=overduepayment">
+                        超期未付款订单
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=overdueverified").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=overdueverified">
+                        超期未验证付款单
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=falseorders").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=falseorders">
+                        虚假订单
+                    </a>
+                </li>
+                <li class="@((Request.Url.ToString().ToLower().Contains(("/market/matchdlist?ac=cancel").ToLower())) ? "active" : "")">
+                    <a href="@Url.Action("MatchdList")?ac=cancel">
+                        已取消订单
+                    </a>
+                </li>
+            </ul>
+            <div class="filter-bar margin-bottom-none">
+                <form method="get">
+
+                    <!-- Filter -->
+                    <div>
+                        <select name="datefiled" style="width: 80px;">
+                            <option value="CreateTime" @(Request["datefiled"] == "CreateTime" ? "selected" : "")>创建时间</option>
+                            <option value="EndTime" @(Request["datefiled"] == "EndTime" ? "selected" : "")>截止时间</option>
+                            <option value="RepeatQueuingTime" @(Request["datefiled"] == "RepeatQueuingTime" ? "selected" : "")>重排时间</option>
+                            <option value="CancelTime" @(Request["datefiled"] == "CancelTime" ? "selected" : "")>取消时间</option>
+                            <option value="AllDealTime" @(Request["datefiled"] == "AllDealTime" ? "selected" : "")>完成时间</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateform" class="input-mini datepicker" value="@Request["dateform"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="dateto" class="input-mini datepicker" value="@Request["dateto"]" style="width: 63px;" />
+                            <span class="add-on glyphicons calendar"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="numberfiled" style="width: 80px;">
+                            <option value="AcceptAmount" @(Request["numberfiled"] == "AcceptAmount" ? "selected" : "")>金额</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label>从:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberform" class="input-mini" style="width: 30px;" value="@Request["numberform"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <label>到:</label>
+                        <div class="input-append">
+                            <input type="text" name="numberto" class="input-mini" style="width: 30px;" value="@Request["numberto"]" />
+                            <span class="add-on glyphicons euro"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div style="margin-left:10px">
+                        <select name="keyfiled" style="width: 80px;">
+                            <option value="UserName" @(Request["keyfiled"] == "UserName" ? "selected" : "")>会员编号</option>
+                            <option value="SupplyNo" @(Request["keyfiled"] == "SupplyNo" ? "selected" : "")>单号</option>
+                        </select>
+                    </div>
+                    <div>
+                        <div class="input-append">
+                            <input type="text" name="keyword" class="input-mini" style="width: 150px;" value="@Request["keyword"]" placeholder="请输入查询关键词" />
+                            <span style="margin: 0;" class="btn-action single glyphicons circle_question_mark" data-toggle="tooltip" data-placement="top" data-original-title="使用模糊查询可在关键字前后加上“%”"><i></i></span>
+                        </div>
+                    </div>
+                    <!-- // Filter END -->
+                    <!-- Filter -->
+                    <div>
+                        <input type="hidden" name="IsAsc" value="0" />
+                        <input type="hidden" name="OrderFiled" value="ID" />
+                        <input type="submit" value="查询" />
+                        <input type="button" onclick="location.href='@(Request.Url.PathAndQuery.Replace(ViewContext.RouteData.Values["action"].ToString(), ViewContext.RouteData.Values["action"].ToString() +"Export"))'" value="导出" />
+
+                    </div>
+                    <div class="clearfix"></div>
+                    <!-- // Filter END -->
+
+                </form>
+
+            </div>
+
+            <table id="sample-table-1" class="table table-striped table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th class="center">
+                            编号
+                        </th>
+                        <th>参与者</th>
+                        <th>申请金额</th>
+                        <th style="width:80px">到期时间</th>
+                        <th>已排队</th>
+                        <th>利率</th>
+                        <th>已发利息</th>
+                        <th>总额(本+利)</th>
+                        <th>已匹配</th>
+                        @*<th>已提出</th>*@
+                        <th>状态</th>
+                        <th>属性</th>
+                        <th style="width:80px">
+                            申请时间
+                        </th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model.Count > 0)
+                    {
+                        for (int i = 0; i < Model.Count; i++)
+                        {
+                            <tr class="@(Model[i].Status == -1 ? "cancel" : "")">
+                                <td class="center">
+                                    @Model[i].SupplyNo
+                                    @if ((Model[i].OrderOrigin ?? 0) == 0)
+                                    {
+                                        <br /><span style="color:#f00">自提供</span>
+                                    }
+                                    else if ((Model[i].OrderOrigin ?? 0) == 2)
+                                    {
+                                        <br /><span style="color:#0094ff">抢单</span>
+                                    }
+                                </td>
+                                <td>
+                                    @Model[i].UserName<br />
+                                    @{
+                                        var onUser = MvcCore.Unity.Get<JN.Data.Service.IUserService>().Single(Model[i].UID);
+                                        if (onUser != null)
+                                        {
+                                            <span>姓名：@onUser.RealName</span><br />
+                                            <span>电话：@onUser.Mobile</span><br />
+                                        }
+                                    }
+                                    @if (!string.IsNullOrEmpty(Model[i].ReserveStr2))
+                                    {
+                                        <span title="@Model[i].ReserveStr2" class="label">订单来源</span>
+                                    }
+                                </td>
+                                <td>
+                                    @Model[i].ExchangeAmount.ToString("F2")
+                                </td>
+                                <td>@Model[i].EndTime</td>
+                                <td>@((Model[i].AreaType == 1 ? JN.Services.Tool.DateTimeDiff.DateDiff(Model[i].ReserveDate1 ?? DateTime.Now, DateTime.Now, "d") + 1 : 0))天<br />
+                                    @if (Model[i].ReserveDate1!=null)
+                                    {
+                                        <span title="@Model[i].ReserveDate1" class="label">解冻时间: @Model[i].ReserveDate1</span>
+                                    }
+                                </td>
+                                <td>@Model[i].AccruaRate</td>
+                                <td>
+                                    @(Model[i].AccrualMoney.ToString("F2"))@MvcHtmlString.Create(Model[i].IsAccrualEffective ? "" : "<span class=\"label label-warning\">未生效</span>")
+
+                                    @*@MvcHtmlString.Create(!string.IsNullOrEmpty(Model[i].AccrualStopReason) ? "<span class=\"label \" title=\"" + Model[i].AccrualStopReason + "\">停发原因</span>" : "")*@
+                                </td>
+                                <td>
+                                    @Model[i].TotalMoney.ToString("F2") @MvcHtmlString.Create(Model[i].IsAccrualEffective ? "" : "<p style='color:#999'>未生效</p>")   @MvcHtmlString.Create(!Model[i].IsAccrualEffective ? "" : "<p style='color:green'>已解冻</p>")
+                                </td>
+                                <td>
+                                    <a href="@Url.Action("MatchdList")?kf=supplyno&kv=@Model[i].SupplyNo">@Model[i].HaveMatchingAmount.ToString("F2")</a>
+                                    <table class="table table-striped table-bordered no-margin-bottom" style="margin-bottom:0">
+                                        @{
+                                            string _supplyNo = Model[i].SupplyNo;
+                                            var mchs = MvcCore.Unity.Get<JN.Data.Service.IMatchingService>().List(x => x.SupplyNo == _supplyNo && x.Status > 0);
+                                            foreach (var item in mchs)
+                                            {
+                                                <tr><td style="padding: 2px 2px; color: #999">@item.MatchingNo</td><td style="padding: 2px 2px; color: #999; ">@item.MatchAmount.ToString("F2")</td><td style="padding: 2px 2px; color: #999; ">@typeof(JN.Data.Enum.MatchingStatus).GetEnumDesc(item.Status)</td></tr>
+                                            }
+                                        }
+                                    </table>
+
+                                </td>
+                                @*<td><a href="@Url.Action("AcceptHelp")?kf=usesupplyno&kv=@Model[i].SupplyNo">@Model[i].HaveAcceptAmount.ToString("F2")</a></td>*@
+                                <td>
+                                    @typeof(JN.Data.Enum.HelpStatus).GetEnumDesc(Model[i].Status)
+                                </td>
+                                <td style="color:#f00">@(Model[i].IsTop ? "顶" : "")&nbsp;@(Model[i].IsRepeatQueuing ? "重排" : "")</td>
+                                <td>@Model[i].CreateTime</td>
+                                <td>
+                                    @if (Model[i].Status == (int)JN.Data.Enum.HelpStatus.NoMatching)
+                                    {
+                                        <a href="###" onclick="tuichu(@Model[i].ID)" class="btn-action glyphicons delete btn-info" data-rel="tooltip" title="取消">
+                                            <i></i>
+                                        </a>
+                                    }
+                                    @if (Model[i].Status == (int)JN.Data.Enum.HelpStatus.Cancel && Model[i].HaveMatchingAmount > 0)
+                                    {
+                                        <a href="###" onclick="huifu(@Model[i].ID)" class="btn-action glyphicons unshare btn-info" data-rel="tooltip" title="恢复">
+                                            <i></i>
+                                        </a>
+                                    }
+                                    @if (Model[i].Status < (int)JN.Data.Enum.HelpStatus.AllMatching && Model[i].Status >= 0)
+                                    {
+                                        <a href="###" onclick="ontop(@Model[i].ID)" class="btn-action glyphicons up_arrow btn-info" data-rel="tooltip" title="置顶">
+                                            <i></i>
+                                        </a>
+                                    }
+                                    @*<a href="@Url.Action("bonusDetail")?kf=supplyno&kv=@Model[i].SupplyNo" class="btn btn-info btn-xs ">奖金</a>*@
+                                </td>
+                            </tr>
+                                                }
+                                            }
+                                            else
+                                            {
+                                <tr><td colspan="15">暂数据！</td></tr>
+                            }
+                </tbody>
+
+            </table>
+
+
+            <div class="separator top form-inline small">
+                <!-- Pagination -->
+                @Html.PagedListPager((IPagedList)Model, page => Url.Action(ViewContext.RouteData.Values["action"].ToString(),
+                       JN.Services.Tool.StringHelp.GetQueryString(HttpUtility.ParseQueryString(Request.Url.Query), page)), new PagedListRenderOptions() { ContainerDivClasses = new string[] { "pagination pagination-small pull-right" } })
+
+
+                <div class="clearfix"></div>
+                <!-- // Pagination END -->
+
+            </div><!-- /.table-responsive -->
+        </div><!-- /span -->
+    </div><!-- /row -->
+</div><!-- /.page-content -->
+
+@section scripts{
+<script type="text/javascript">
+    jQuery(function ($) {
+        $('[data-rel=tooltip]').tooltip({ container: 'body' });
+    })
+    function ontop(sid) {
+        bootbox.confirm('你确定要置顶条记录么？', function (result) {
+            if (result)
+                window.location.href = '@(Url.Action("SupplyHelpCommand"))?id=' + sid + "&commandtype=ontop";
+        });
+    }
+    function tuichu(sid) {
+        bootbox.confirm('您确定要退出这条记录的队列么？', function (result) {
+            if (result)
+                window.location.href = '@(Url.Action("CancelSupplyQueuing"))?id=' + sid;
+        });
+    }
+    function huifu(sid) {
+        bootbox.confirm('您确定要恢复这条记录的队列么？', function (result) {
+            if (result)
+                window.location.href = '@(Url.Action("RecoverySupplyQueuing"))?id=' + sid;
+        });
+    }
+</script>
+}

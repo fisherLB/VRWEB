@@ -1,0 +1,120 @@
+﻿@using Webdiyer.WebControls.Mvc
+@model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Transfer>
+@{
+    //ViewBag.Title = "ApplyTransferList";
+    Layout = "~/Areas/APP/Views/Shared/_Layout18080102.cshtml";
+    @*@using Webdiyer.WebControls.Mvc
+        @model Webdiyer.WebControls.Mvc.PagedList<JN.Data.Transfer>*@
+
+int id = ViewBag.ID;
+}
+<link href="/Theme/App/css/trade.css" rel="stylesheet">
+<header class="header">
+    <div class="header-return mui-action-back">
+        @*<a href="javascript:history.go(-1);"></a>*@
+    </div>
+    <div class="logo text-l">@T(ViewBag.Title)</div>
+</header>
+<!--数据开始-->
+<section class="container">
+    <div class="clr-small"></div>
+    <div id="listcontainer1">
+
+    </div>
+
+</section>
+
+
+<script src="~/Plugin/layer/layui/layui.js"></script><!--layui插件js-->
+<script>
+    layui.use('flow', function () {
+        //var $ = layui.jquery; //不用额外加载jQuery，flow模块本身是有依赖jQuery的，直接用即可。
+        var flow = layui.flow;
+        flow.load({
+            elem: '#listcontainer1', //指定列表容器
+            isAuto: false,//是否自动加载
+            done: function (page, next) { //到达临界点（默认滚动触发），触发下一页
+                var lis = [];
+                //以jQuery的Ajax请求为例，请求下一页数据（注意：page是从2开始返回）
+                $.get('@Url.Action("GetApplyTransferList2")?page=' + page, function (res) {
+                    var strhtml = "";
+                    if (res.data.length > 0) {
+                        layui.each(res.data, function (index, item) {
+                            var str = "";
+                            if (@id== item.UID) {
+                                str = "background: #081b3c;"
+                            }
+                            strhtml += '<div class="transferl-list" style="' + str+'">';
+                            strhtml += '<div class="transferl-info">';
+                            strhtml += '<a href="###">';
+                            strhtml += '<div class="transferl-content">';
+                            if (@id== item.UID) {
+                                strhtml += '<h3>@T("接收用户")</h3>';
+                                strhtml += ' <h3>' + item.ToUserName + '</h3>';
+                            }
+                            else {
+                                strhtml += '<h3>@T("转入用户")</h3>';
+                            strhtml += ' <h3>' + item.UserName + '</h3>';
+                            }
+                            
+                            strhtml += '<p>@T("手续费")：' + item.Poundage.toFixed(3) + '</p>';
+                            strhtml += '<p>@T("实际金额")：' + item.ActualTransferMoney.toFixed(3) + '</p>';
+                            strhtml += '<p>@T("备注")：' + item.Remark + '</p>';
+                            strhtml += '</div>';
+                            strhtml += '<div class="transferl-number">';
+                            strhtml += '<h1>' + item.TransferMoney.toFixed(3) + '</h1>';
+                            if (@id== item.UID) {
+                                strhtml += '<span>@T("转出金额")</span>';
+                            }
+                            else {
+                                strhtml += '<span>@T("转入金额")</span>';
+                            }
+                            strhtml += '</div>';
+                            strhtml += '</a>';
+                            strhtml += '</div>';
+                            
+                            strhtml += '<div class="transferl-bottom">';
+                            strhtml += '<span class="fr">' + ChangeDateFormat(item.CreateTime) + '</span>';
+                            strhtml += '</div>'
+                            strhtml += '</div>';
+                            strhtml += '<div class="clr"></div>';
+                        });
+                    }
+                    @*else {
+                        strhtml += '<div class="load-no-more"><span>@T("没有更多了")</span></div>';
+                    }*@
+                    lis.push(strhtml);
+                    //alert(lis);
+                    //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
+                    //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
+                    next(lis.join(''), page < res.pages);
+                });
+            }
+        });
+    });
+
+    //判断时间范围
+    function ChangeDateFormat(jsondate) {
+        jsondate = jsondate.replace("/Date(", "").replace(")/", "");
+        if (jsondate.indexOf("+") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("+"));
+        }
+        else if (jsondate.indexOf("-") > 0) {
+            jsondate = jsondate.substring(0, jsondate.indexOf("-"));
+        }
+
+        var date = new Date(parseInt(jsondate, 10));
+        var month = date.getMonth() + 1 < 10 ? "0" + (date.getMonth() + 1) : date.getMonth() + 1;
+        var currentDate = date.getDate() < 10 ? "0" + date.getDate() : date.getDate();
+        var currentHours = date.getHours() < 10 ? "0" + date.getHours() : date.getHours();
+        var currentMinutes = date.getMinutes() < 10 ? "0" + date.getMinutes() : date.getMinutes();
+        return month
+            + "-"
+            + currentDate
+            + ""
+            + " "
+            + currentHours
+            + ":"
+            + currentMinutes;
+    }
+</script>

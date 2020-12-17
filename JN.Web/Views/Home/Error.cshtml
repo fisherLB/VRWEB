@@ -1,0 +1,32 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>@T("请检查网络设置或稍后重试")</title>
+    <link href="~/Theme/Error/css/nodata.css" rel="stylesheet" />
+    <style>
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="part1">
+            <div class="imgbox"></div>
+        </div>
+        <div class="part2">
+            <div class="txt">
+                <h1>@T("哎呀！网络不给力")</h1>
+                <h1>@T("请检查网络设置或稍后重试")</h1>
+            </div>
+            <div class="btn-box">
+                <button type="button" onclick="javascript:history.go(-1)">@T("返回上一页")</button>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
